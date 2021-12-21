@@ -1,5 +1,5 @@
 #include <thread>
-#include "framework.h"
+//#include "framework.h"
 #include "scene.h" 
 
 void SceneLoad::Initialize()

@@ -1,7 +1,7 @@
 
 #include "scene.h"
 #include "KeyInput.h"
-#include "framework.h"
+//#include "framework.h"
 
 //**********************************************
 //
@@ -31,6 +31,8 @@ void SceneTitle::Initialize()
 
 void SceneTitle::Update(float elapsedTime)
 {
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
 	timer++;
 	switch (state)
 	{
@@ -40,7 +42,7 @@ void SceneTitle::Update(float elapsedTime)
 		break;
 	case 1:
 		FadeBlack->fadeIn(0.03f);
-		if (KeyInput::KeyRelease() & KEY_START)
+		if (KeyInput::KeyRelease() & KEY_START || gamePad.GetButtonDown() & GamePad::BTN_B)
 		{
 			state++;
 		}

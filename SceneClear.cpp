@@ -1,7 +1,7 @@
 
 #include "scene.h"
 #include "KeyInput.h"
-#include "framework.h"
+//#include "framework.h"
 
 #include <iostream>
 #include <string>    
@@ -35,8 +35,9 @@ void SceneClear::Initialize()
 
 void SceneClear::Update(float elapsedTime)
 {
+	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	if (KeyInput::KeyTrigger() & KEY_START)
+	if (KeyInput::KeyTrigger() & KEY_START || gamePad.GetButtonDown() & GamePad::BTN_B)
 	{
 		SceneManager::Instance().ChangeScene(new SceneTitle());
 		return;
