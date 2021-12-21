@@ -19,6 +19,7 @@
 #include "stageTile.h"
 #include "CameraController.h"
 #include "GeometricPrimitive.h"
+#include "Input/Input.h"
 
 
 class Scene
@@ -105,20 +106,22 @@ private:
 class SceneMain :public Scene
 {
 public:
-#define StageMax 5
+#define StageMax 10
 	//static const int StageMax = 5;
 	static const int StageTileMax = 9;
 	static const int ObstacleMax = 2;
-	float fov = 0;
 private:
 	Player* player = nullptr;
 	Stage* stage = nullptr;
 	EnemyBlueSlime* enemy[5][2] = {nullptr};
-	ObstacleBlock* obstacle[5][ObstacleMax] = { nullptr };
+	ObstacleBlock* obstacle[StageMax][ObstacleMax] = { nullptr };
 	StageBase* stageBase[StageMax] = { nullptr };
 	StageTile* stageTile[StageMax][StageTileMax] = { nullptr };
 	CameraController* cameraController = nullptr;
 
+
+	std::shared_ptr<SkinnedMesh> skyMesh;
+	std::unique_ptr<SkinnedObject> skyObj;
 	//std::unique_ptr<Sprite> img;
 	std::unique_ptr<Transition> FadeBlack;
 	//DirectX::XMFLOAT3 pos = { 0.0f,0.0f,0.0f };

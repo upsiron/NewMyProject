@@ -65,6 +65,13 @@ void SceneMain::Initialize()
 		1000.0f
 	);
 
+	skyMesh = std::make_shared<SkinnedMesh>(device, "Data/Sky/sky.obj",true);
+
+	skyObj = std::make_unique<SkinnedObject>(skyMesh);
+	skyObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	skyObj->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 7.0f));
+	skyObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+
 	//初期化
 	player = new Player();
 	stage = new Stage();
@@ -76,7 +83,7 @@ void SceneMain::Initialize()
 	}
 	for (int i = 0; i < StageTileMax; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < StageMax; j++)
 		{
 			stageTile[j][i] = new StageTile();
 		}
@@ -137,7 +144,7 @@ void SceneMain::Initialize()
 
 	for (int i = 0; i < 9; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < StageMax; j++)
 		{
 			//座標指定
 			stageTile[j][i]->SetPosition(stageBase[j]->squea.SpritPosition[i]);
@@ -267,14 +274,17 @@ void SceneMain::Update(float elapsedTime)
 		//カメラ更新
 		cameraController->Update(elapsedTime);
 
+		skyObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, player->GetPosition().z));
+		skyObj->Update();
+
 		//自機更新
 		player->Update(elapsedTime);
 
 
 		//ステージタイルをランダムで選ばれたパターンごとに配置
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < StageMax; j++)
 		{
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < StageTileMax; i++)
 			{
 				//ステージのHOLEの部分以外で配置
 				if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] != 1)
@@ -288,13 +298,14 @@ void SceneMain::Update(float elapsedTime)
 					// 障害物配置 
 					//------------
 					//今見ているステージタイルとランダムで決まった障害物配置の番号が一緒なら配置
-					if (i == stageBase[j]->SquareRand[0] && stageBase[j]->Rand != 5)
+					//if (i == stageBase[j]->SquareRand[0] && stageBase[j]->Rand != 5)
+					if(stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == 2)
 					{
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][0]->SetPosition(DirectX::XMFLOAT3(
-							stageBase[j]->squea.SpritPosition[stageBase[j]->SquareRand[0]].x,
+							stageBase[j]->squea.SpritPosition[i].x,
 							1.5f, 
-							stageBase[j]->squea.SpritPosition[stageBase[j]->SquareRand[0]].z));
+							stageBase[j]->squea.SpritPosition[i].z));
 						//生存
 						obstacle[j][0]->SetExistFlg(true);
 					}
@@ -324,18 +335,18 @@ void SceneMain::Update(float elapsedTime)
 					// 障害物配置 
 					//------------
 					//使わない障害物を下に配置している
-					obstacle[j][0]->SetPosition(DirectX::XMFLOAT3(
-						stageBase[0]->squea.SpritPosition[0].x,
-						-10.0f,
-						stageBase[0]->squea.SpritPosition[0].z));
-					obstacle[j][1]->SetPosition(DirectX::XMFLOAT3(
-						stageBase[0]->squea.SpritPosition[0].x,
-						-10.0f,
-						stageBase[0]->squea.SpritPosition[0].z));
+					//obstacle[j][0]->SetPosition(DirectX::XMFLOAT3(
+					//	stageBase[0]->squea.SpritPosition[0].x,
+					//	-10.0f,
+					//	stageBase[0]->squea.SpritPosition[0].z));
+					//obstacle[j][1]->SetPosition(DirectX::XMFLOAT3(
+					//	stageBase[0]->squea.SpritPosition[0].x,
+					//	-10.0f,
+					//	stageBase[0]->squea.SpritPosition[0].z));
 
-					//下に行った障害物の存在を消す（当たり判定や描画をしなくしている）
-					obstacle[j][0]->SetExistFlg(false);
-					obstacle[j][1]->SetExistFlg(false);
+					////下に行った障害物の存在を消す（当たり判定や描画をしなくしている）
+					//obstacle[j][0]->SetExistFlg(false);
+					//obstacle[j][1]->SetExistFlg(false);
 				}
 			}
 		}
@@ -486,6 +497,8 @@ void SceneMain::Render()
 
 	// エネミー描画
 	//EnemyManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
+
+	skyObj->Render(context, view, projection, lightDirection, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, false);
 
 	// ワールド座標からスクリーン座標へ
 	DirectX::XMFLOAT3 worldPosition = player->GetPosition();
