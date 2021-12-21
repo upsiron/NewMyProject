@@ -11,6 +11,7 @@ ObstacleBlock::ObstacleBlock()
 	obstacleObj = std::make_unique<SkinnedObject>(obstacleMesh);
 	obstacleObj->SetPosition(DirectX::XMFLOAT3(2.0f, 0.0f, 0.0f));
 	obstacleObj->SetScale(DirectX::XMFLOAT3(1.4f, 1.4f, 1.4f));
+	//obstacleObj->SetScale(DirectX::XMFLOAT3(4.2f, 1.4f, 1.4f));
 	obstacleObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	// モデルが大きいのでスケーリング

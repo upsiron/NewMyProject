@@ -49,7 +49,7 @@ public:
 		{
 			//00
 			{
-			 NONE, NONE, NONE,
+			 NONE, OBST, NONE,
 			 NONE, HOLE, NONE,
 			 NONE, NONE, NONE
 			 },
@@ -95,7 +95,7 @@ public:
 			 },
 			//01
 			{
-			 NONE, HOLE, NONE,
+			 OBST, HOLE, NONE,
 			 NONE, HOLE, NONE,
 			 NONE, NONE, NONE
 			 },
@@ -107,7 +107,7 @@ public:
 			},
 			//03
 			{
-			 NONE, NONE, NONE,
+			 NONE, NONE, OBST,
 			 NONE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			},
@@ -135,7 +135,7 @@ public:
 			 },
 			//2_1
 			{
-			 NONE, HOLE, NONE,
+			 NONE, HOLE, OBST,
 			 NONE, HOLE, NONE,
 			 NONE, NONE, NONE
 			 },
@@ -147,7 +147,7 @@ public:
 			},
 			//2_3
 			{
-			 NONE, NONE, NONE,
+			 OBST, NONE, NONE,
 			 NONE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			},

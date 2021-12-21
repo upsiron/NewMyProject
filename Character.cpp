@@ -104,7 +104,7 @@ void Character::UpdateVerticalMove(float elapsedTime)
 		//DirectX::XMFLOAT3 outNormal; // レイの当たった面の法線 
 
 		//地面に触れているかチェック
-		if (FloorCheck() /*&& position.y > -1.0f*/)
+		if (FloorCheck() && position.y > -1.0f)
 		{
 			position.y = 0.0f;
 			// 着地した
