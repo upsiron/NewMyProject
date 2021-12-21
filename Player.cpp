@@ -44,7 +44,9 @@ Player::Player()
 	SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	//スクロールスピード初期化
-	scrollSpeed = 0.15f;
+	scrollSpeed = 0.2f;
+
+	playerObj->SetMotion(RUN, 0, 0.08f);
 
 	// モデルが大きいのでスケーリング
 	//scale.x = scale.y = scale.z = 0.01f;
@@ -69,6 +71,8 @@ void Player::Update(float elapsedTime)
 
 	//自動スクロール
 	if(debugflg)position.z += scrollSpeed;
+
+	//スクロール加速処理
 	if (GimmickFlg)
 	{
 		//saveScrollSpeed = oldScrollSpeed + 0.05f;
@@ -102,6 +106,13 @@ void Player::Update(float elapsedTime)
 	if (position.x < -1.0f * StageSideEndPos)
 	{
 		position.x = savePos.x;
+	}
+
+	//落下ゲームオーバー
+	if (position.y < -1.5f)
+	{
+		scrollSpeed = 0.0f;
+		GameOverFlg = true;
 	}
 
 	//現在のプレイヤーのポジションを保持
@@ -146,6 +157,8 @@ void Player::DrawDebugGUI()
 			//地面についているかどうか
 			ImGui::Text("true(1)/false(0):%d", IsGround());
 			//デバッグ
+			GamePad& gamePad = Input::Instance().GetGamePad();
+			if (gamePad.GetButtonDown() & GamePad::BTN_Y)debugflg = !debugflg;
 			if (ImGui::Button("Debug"))debugflg = true;
 			if (ImGui::Button("NoDebug"))debugflg = false;
 			ImGui::SliderFloat("scroll", &scrollSpeed, 0.0f, 1.0f);
@@ -350,14 +363,14 @@ void Player::InputShot()
 void Player::InputJump()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_A && IsGround() && position.y > -1.0f)
+	if (gamePad.GetButtonDown() & GamePad::BTN_A /*&& IsGround()*/ && position.y > -1.0f)
 	{
 		// ジャンプ回数制限
 		if (jumpCount < jumpLimit)
 		{
 			//scrollSpeed = scrollSpeed - (saveScrollSpeed - 0.15f);
 			//ジャンプアニメーションセット
-			playerObj->SetMotion(JUMP, 0, 0.1f);
+			playerObj->SetMotion(JUMP, 0, 0.08f);
 			//playerObj->SetAnime(JUMP);
 			jumpCount++;
 			Jump(jumpSpeed);

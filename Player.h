@@ -61,7 +61,7 @@ private:
 	float				moveSpeed = 6.0f;
 	float				turnSpeed = DirectX::XMConvertToRadians(720);
 
-	float               StageSideEndPos = 1.6f * 3.0f; //ステージの端っこの当たり判定用
+	float               StageSideEndPos = 1.4f * 3.0f; //ステージの端っこの当たり判定用
 
 	int					jumpCount = 0;           //ジャンプした回数カウント用
 	int					jumpLimit = 1;           //ジャンプの回数制限用
