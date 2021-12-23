@@ -49,7 +49,7 @@ public:
 		{
 			//00
 			{
-			 NONE, OBST, NONE,
+			 OBST, NONE, NONE,
 			 NONE, HOLE, NONE,
 			 NONE, NONE, NONE
 			 },
