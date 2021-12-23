@@ -180,39 +180,6 @@ void SceneMain::Initialize()
 //--------------------------------------------------------
 void SceneMain::Finalize()
 {
-	//ファイル読み取り
-	std::string Filename = "Text/score.txt";
-	std::ifstream ReadingFile(Filename, std::ios::in);
-	for (int i = 0; i < 5; i++)
-	{
-		ReadingFile >> Result[i];
-	}
-
-	//スコア並び替え
-	for (int i = 0; i < 5; i++)
-	{
-		if ((int)player->GetPosition().z > Result[i])
-		{
-			for (int j = 4; j >= (i + 1); j--)
-			{
-				Result[j] = Result[j - 1];
-			}
-			Result[i] = (int)player->GetPosition().z;
-			break;
-		}
-	}
-
-	//ファイル書き込み
-	Filename = "Text/score.txt";
-	std::ofstream WritingFile;
-	WritingFile.open(Filename, std::ios::out);
-	for (int i = 0; i < 5; i++)
-	{
-		WritingFile << Result[i] << std::endl;
-	}
-	//今回のリザルト書き込み
-	WritingFile << (int)player->GetPosition().z << std::endl;
-
 	//実体解放
 	if (player != nullptr)
 	{
@@ -373,6 +340,7 @@ void SceneMain::Update(float elapsedTime)
 		FadeBlack->fadeOut(0.04f);
 		if (FadeBlack->GetAlpha() >= 1.0f)
 		{
+			ResultMeter();
 			Finalize();
 			SceneManager::Instance().ChangeScene(
 				new SceneLoad(new SceneOver()));
@@ -498,7 +466,7 @@ void SceneMain::Render()
 	// エネミー描画
 	//EnemyManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
 
-	skyObj->Render(context, view, projection, lightDirection, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, false);
+	//skyObj->Render(context, view, projection, lightDirection, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, false);
 
 	// ワールド座標からスクリーン座標へ
 	DirectX::XMFLOAT3 worldPosition = player->GetPosition();
@@ -526,6 +494,42 @@ void SceneMain::Render()
 
 	//imGui
 	Scene::imGuiRender();
+}
+
+void SceneMain::ResultMeter()
+{
+	//ファイル読み取り
+	std::string Filename = "Text/score.txt";
+	std::ifstream ReadingFile(Filename, std::ios::in);
+	for (int i = 0; i < 5; i++)
+	{
+		ReadingFile >> Result[i];
+	}
+
+	//スコア並び替え
+	for (int i = 0; i < 5; i++)
+	{
+		if ((int)player->GetPosition().z > Result[i])
+		{
+			for (int j = 4; j >= (i + 1); j--)
+			{
+				Result[j] = Result[j - 1];
+			}
+			Result[i] = (int)player->GetPosition().z;
+			break;
+		}
+	}
+
+	//ファイル書き込み
+	Filename = "Text/score.txt";
+	std::ofstream WritingFile;
+	WritingFile.open(Filename, std::ios::out);
+	for (int i = 0; i < 5; i++)
+	{
+		WritingFile << Result[i] << std::endl;
+	}
+	//今回のリザルト書き込み
+	WritingFile << (int)player->GetPosition().z << std::endl;
 }
 
 

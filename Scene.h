@@ -161,6 +161,8 @@ public:
 	void Update(float elapsedTime) override;
 	void Render() override;
 
+	void ResultMeter();
+
 	static void SetDirLight(DirectX::XMFLOAT3 dir, DirectX::XMFLOAT3 color);
 
 
