@@ -140,16 +140,19 @@ void StageBase::DrawDebugGUI()
 			angle.z = DirectX::XMConvertToRadians(a.z);
 			// スケール
 			ImGui::InputFloat3("Scale", &scale.x);
-			if (ImGui::CollapsingHeader("rand", ImGuiTreeNodeFlags_DefaultOpen))
-			{
-				//ランド
-				int r = Rand;
-				ImGui::InputInt("rand", &r);
-				for (int i = 0; i < 2; i++)
-				{
-					ImGui::InputInt("SquareRand" + i, &SquareRand[i] + 1);
-				}
-			}
+			//ランド
+			int r = Rand;
+			ImGui::InputInt("rand", &r);
+			//if (ImGui::CollapsingHeader("rand", ImGuiTreeNodeFlags_DefaultOpen))
+			//{
+			//	//ランド
+			//	int r = Rand;
+			//	ImGui::InputInt("rand", &r);
+			//	for (int i = 0; i < 2; i++)
+			//	{
+			//		ImGui::InputInt("SquareRand" + i, &SquareRand[i] + 1);
+			//	}
+			//}
 		}
 	}
 	ImGui::End();
