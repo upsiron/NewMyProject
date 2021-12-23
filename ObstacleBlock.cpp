@@ -92,7 +92,7 @@ void ObstacleBlock::DrawDebugGUI()
 		str = activeNode->GetName();
 	}*/
 	//トランスフォーム
-	if (ImGui::CollapsingHeader("EnemyBlueSlime", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("ObstacleBlock", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		// 位置
 		ImGui::InputFloat3("Position", &position.x);
