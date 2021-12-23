@@ -29,7 +29,6 @@ Player::Player()
 	//アニメーション初期化
 	std::vector<std::string> Animationfilenames{
 		"Data/Banana/runAnime.fbx",
-		//"Data/Banana/ForwardFlip.fbx",
 		"Data/Banana/RunningForwardFlip.fbx",
 		"Data/Banana/KnockedOut.fbx",
 		"Data/Banana/KnockOutRight.fbx",
@@ -73,21 +72,14 @@ void Player::Update(float elapsedTime)
 	if(debugflg)position.z += scrollSpeed;
 
 	//スクロール加速処理
-	if (GimmickFlg)
-	{
-		//saveScrollSpeed = oldScrollSpeed + 0.05f;
-		scrollSpeed = oldScrollSpeed + 0.05f;
-	}
-	else
-	{
-		oldScrollSpeed = scrollSpeed;
-	}
-
-	// 移動入力
-	InputMove(elapsedTime);
-
+	if (GimmickFlg)scrollSpeed = oldScrollSpeed + 0.05f;
+	else oldScrollSpeed = scrollSpeed;
+	
 	// 速力更新処理
 	UpdateVelocity(elapsedTime);
+	
+	// 移動入力
+	InputMove(elapsedTime);
 
 	// ジャンプ入力
 	InputJump();
@@ -97,16 +89,6 @@ void Player::Update(float elapsedTime)
 
 	//プレイヤーの更新
 	playerObj->Update();
-
-	//左右に移動処理
-	if (position.x > StageSideEndPos)
-	{
-		position.x = savePos.x;
-	}
-	if (position.x < -1.0f * StageSideEndPos)
-	{
-		position.x = savePos.x;
-	}
 
 	//落下ゲームオーバー
 	if (position.y < -1.5f)
@@ -229,6 +211,10 @@ DirectX::XMFLOAT3 Player::GetMoveVec()const
 // 移動入力処理
 void Player::InputMove(float elapsedTime)
 {
+	//左右の移動制限
+	if (position.x > StageSideEndPos)position.x = savePos.x;
+	if (position.x < -1.0f * StageSideEndPos)position.x = savePos.x;
+
 	// 進行ベクトルを取得
 	DirectX::XMFLOAT3 moveVec = GetMoveVec();
 
@@ -237,6 +223,26 @@ void Player::InputMove(float elapsedTime)
 
 	// 旋回処理
 	//Turn(elapsedTime, moveVec.x, moveVec.z, turnSpeed);
+
+	//移動方向の向きを向く
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	float ax = gamePad.GetAxisLX();
+
+	if (ax > 0.0f)
+	{
+		if(angle.y < 0.30f)angle.y += 0.02f;
+		playerObj->SetAngle(angle);
+	}
+	else if (ax < 0.0f)
+	{
+		if (angle.y > -0.30f)angle.y -= 0.02f;
+		playerObj->SetAngle(angle);
+	}
+	else
+	{
+		angle.y = 0.0f;
+		playerObj->SetAngle(angle);
+	}
 }
 
 // プレイヤーと敵の衝突判定
