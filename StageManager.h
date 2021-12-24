@@ -49,4 +49,6 @@ public:
 private:
 	std::vector<StageBase*> stages;
 	std::vector<StageBase*> removes;
+
+	int r = 0;
 };
