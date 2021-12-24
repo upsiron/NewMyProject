@@ -72,7 +72,17 @@ void Player::Update(float elapsedTime)
 	if(debugflg)position.z += scrollSpeed;
 
 	//スクロール加速処理
-	if (GimmickFlg)scrollSpeed = oldScrollSpeed + 0.05f;
+	if (GimmickFlg)
+	{
+		//scrollSpeed = oldScrollSpeed + 0.05f;
+		if (jumpCount < jumpLimit)
+		{
+			//ジャンプアニメーションセット
+			playerObj->SetMotion(JUMP, 0, 0.08f);
+			jumpCount++;
+			Jump(30.0f);
+		}
+	}
 	else oldScrollSpeed = scrollSpeed;
 	
 	// 速力更新処理
