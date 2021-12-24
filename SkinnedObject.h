@@ -15,7 +15,10 @@ protected:
 	std::shared_ptr<SkinnedMesh>	mesh;
 	float current_time = 0;
 	size_t current_animation = 0;
-	bool GimmickFlg = false;
+	//ギミック用フラグ
+	bool RedGimmickFlg = false;
+	bool GreenGimmickFlg = false;
+	bool BlueGimmickFlg = false;
 
 	//アニメーション関連の変数
 	int NextMotion{ 4 };
