@@ -72,28 +72,64 @@ void SceneMain::Initialize()
 	skyObj->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 7.0f));
 	skyObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
-	//初期化
+
+	// カメラコントローラー初期化
+	cameraController = new CameraController();
+
+	//プレイヤー初期化
 	player = new Player();
+
+	//基底ステージ初期化
 	stage = new Stage();
 
+	//------------
+	// ステージ
+	//------------
+	//ステージマネージャー初期化
+	StageManager& stageManager = StageManager::Instance();
 	//ステージ初期化
 	for (int i = 0; i < StageMax; i++)
 	{
 		stageBase[i] = new StageBase();
+
+		//座標指定
+		stageBase[i]->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f * i));
+
+		//初期位置だけ穴がないパターン適用
+		stageBase[0]->Rand = 5;
+
+		//ステージマネージャーに追加
+		stageManager.Register(stageBase[i]);
 	}
+
+
+	//--------------
+	// ステージタイル
+	//--------------
+	//ステージタイルマネージャー初期化
+	StageTileManager& stageTileManager = StageTileManager::Instance();
+	//ステージタイル初期化
 	for (int i = 0; i < StageTileMax; i++)
 	{
 		for (int j = 0; j < StageMax; j++)
 		{
 			stageTile[j][i] = new StageTile();
+
+			//座標指定
+			stageTile[j][i]->SetPosition(stageBase[j]->squea.SpritPosition[i]);
+
+			//ステージタイルマネージャーに追加
+			stageTileManager.Register(stageTile[j][i]);
 		}
 	}
 
-	// カメラコントローラー初期化
-	cameraController = new CameraController();
-
+	
+	//------------
+	// 障害物 
+	//------------
 	// 障害物マネージャー初期化
 	ObstacleBlockManager& obstacleBlockManager = ObstacleBlockManager::Instance();
+	// 障害物初期化
 	for (int j = 0; j < StageMax; j++)
 	{
 		for (int i = 0; i < ObstacleMax; i++)
@@ -124,34 +160,32 @@ void SceneMain::Initialize()
 	//	}
 	//}
 
-	//ステージマネージャー初期化
-	StageManager& stageManager = StageManager::Instance();
+	
 
-	for (int i = 0; i < StageMax; i++)
-	{
-		//座標指定
-		stageBase[i]->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f * i));
+	//for (int i = 0; i < StageMax; i++)
+	//{
+	//	//座標指定
+	//	stageBase[i]->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f * i));
 
-		//初期位置だけ穴がないパターン適用
-		stageBase[0]->Rand = 5;
+	//	//初期位置だけ穴がないパターン適用
+	//	stageBase[0]->Rand = 5;
 
-		//ステージマネージャーに追加
-		stageManager.Register(stageBase[i]);
-	}
+	//	//ステージマネージャーに追加
+	//	stageManager.Register(stageBase[i]);
+	//}
 
-	//ステージタイルマネージャー初期化
-	StageTileManager& stageTileManager = StageTileManager::Instance();
+	//
 
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < StageMax; j++)
-		{
-			//座標指定
-			stageTile[j][i]->SetPosition(stageBase[j]->squea.SpritPosition[i]);
-			//ステージタイルマネージャーに追加
-			stageTileManager.Register(stageTile[j][i]);
-		}
-	}
+	//for (int i = 0; i < 9; i++)
+	//{
+	//	for (int j = 0; j < StageMax; j++)
+	//	{
+	//		//座標指定
+	//		stageTile[j][i]->SetPosition(stageBase[j]->squea.SpritPosition[i]);
+	//		//ステージタイルマネージャーに追加
+	//		stageTileManager.Register(stageTile[j][i]);
+	//	}
+	//}
 
 
 	state = 0;
@@ -247,14 +281,15 @@ void SceneMain::Update(float elapsedTime)
 		//自機更新
 		player->Update(elapsedTime);
 
-
+		
 		//ステージタイルをランダムで選ばれたパターンごとに配置
 		for (int j = 0; j < StageMax; j++)
 		{
 			for (int i = 0; i < StageTileMax; i++)
 			{
 				//ステージのHOLEの部分以外で配置
-				if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] != 1)
+				//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] != HOLE)
+				if (stageTile[j][i]->stageTileMapEasy[0][j][i] != 1)
 				{
 					//------------
 					// タイル配置 
@@ -266,7 +301,9 @@ void SceneMain::Update(float elapsedTime)
 					//------------
 					//今見ているステージタイルとランダムで決まった障害物配置の番号が一緒なら配置
 					//if (i == stageBase[j]->SquareRand[0] && stageBase[j]->Rand != 5)
-					if(stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == 2)
+					//障害物１
+					//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB1)
+					if (stageTile[j][i]->stageTileMapEasy[0][j][i] == 2)
 					{
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][0]->SetPosition(DirectX::XMFLOAT3(
@@ -276,19 +313,45 @@ void SceneMain::Update(float elapsedTime)
 						//生存
 						obstacle[j][0]->SetExistFlg(true);
 					}
+					//障害物２
+					//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB2)
+					if (stageTile[j][i]->stageTileMapEasy[0][j][i] == 3)
+					{
+						//エネミーをステージを9等分して指定した位置にセット
+						obstacle[j][1]->SetPosition(DirectX::XMFLOAT3(
+							stageBase[j]->squea.SpritPosition[i].x,
+							1.5f,
+							stageBase[j]->squea.SpritPosition[i].z));
+						//生存
+						obstacle[j][1]->SetExistFlg(true);
+					}
+					//障害物3
+					//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB3)
+					if (stageTile[j][i]->stageTileMapEasy[0][j][i] == 4)
+					{
+						//エネミーをステージを9等分して指定した位置にセット
+						obstacle[j][2]->SetPosition(DirectX::XMFLOAT3(
+							stageBase[j]->squea.SpritPosition[i].x,
+							1.5f,
+							stageBase[j]->squea.SpritPosition[i].z));
+						//生存
+						obstacle[j][2]->SetExistFlg(true);
+					}
 
 					//-------------------
 					// タイルカラーセット 
 					//-------------------
 					//今見ているステージタイルとランダムで決まったステージベースのstageTileMap番号をカラーをセット
-					if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == 3)
+					//stageTile[j][i]->SetTileColor(stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i]);
+					stageTile[j][i]->SetTileColor(stageTile[j][i]->stageTileMapEasy[0][j][i]);
+					/*if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == 5)
 					{
 						stageTile[j][i]->SetTileColor(stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i]);
 					}
 					else
 					{
 						stageTile[j][i]->SetTileColor(stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i]);
-					}
+					}*/
 				}
 				else
 				{
