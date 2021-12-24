@@ -289,7 +289,7 @@ void SceneMain::Update(float elapsedTime)
 			{
 				//ステージのHOLEの部分以外で配置
 				//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] != HOLE)
-				if (stageTile[j][i]->stageTileMapEasy[0][j][i] != 1)
+				if (stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i] != 1)
 				{
 					//------------
 					// タイル配置 
@@ -303,7 +303,7 @@ void SceneMain::Update(float elapsedTime)
 					//if (i == stageBase[j]->SquareRand[0] && stageBase[j]->Rand != 5)
 					//障害物１
 					//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB1)
-					if (stageTile[j][i]->stageTileMapEasy[0][j][i] == 2)
+					if (stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i] == 2)
 					{
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][0]->SetPosition(DirectX::XMFLOAT3(
@@ -315,7 +315,7 @@ void SceneMain::Update(float elapsedTime)
 					}
 					//障害物２
 					//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB2)
-					if (stageTile[j][i]->stageTileMapEasy[0][j][i] == 3)
+					if (stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i] == 3)
 					{
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][1]->SetPosition(DirectX::XMFLOAT3(
@@ -327,7 +327,7 @@ void SceneMain::Update(float elapsedTime)
 					}
 					//障害物3
 					//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB3)
-					if (stageTile[j][i]->stageTileMapEasy[0][j][i] == 4)
+					if (stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i] == 4)
 					{
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][2]->SetPosition(DirectX::XMFLOAT3(
@@ -343,7 +343,7 @@ void SceneMain::Update(float elapsedTime)
 					//-------------------
 					//今見ているステージタイルとランダムで決まったステージベースのstageTileMap番号をカラーをセット
 					//stageTile[j][i]->SetTileColor(stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i]);
-					stageTile[j][i]->SetTileColor(stageTile[j][i]->stageTileMapEasy[0][j][i]);
+					stageTile[j][i]->SetTileColor(stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i]);
 					/*if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == 5)
 					{
 						stageTile[j][i]->SetTileColor(stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i]);
@@ -359,7 +359,7 @@ void SceneMain::Update(float elapsedTime)
 					// タイル配置 
 					//------------
 					//穴が開く部分のタイルを重ねて隠す
-					stageTile[j][i]->SetPosition(stageBase[j]->squea.SpritPosition[7]);
+					stageTile[j][i]->SetPosition(DirectX::XMFLOAT3(stageBase[j]->squea.SpritPosition[6].x, -20.0f, stageBase[j]->squea.SpritPosition[6].z-100.0f));
 
 					//------------
 					// 障害物配置 
@@ -437,6 +437,10 @@ void SceneMain::imGuiUpdate()
 		ImGui::ColorEdit3(u8"環境光", (float*)&ambientColor); // Edit 3 floats representing a color
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), u8"---------Diffuse---------");
 		ImGui::ColorEdit3(u8"平行光", (float*)&diffuseColor); // Edit 3 floats representing a color
+		for (int i = 0; i < StageMax; i++)
+		{
+			ImGui::InputInt("Rand", &stageBase[i]->EasyRand);
+		}
 		//ImGui::TextColored(ImVec4(1, 1, 0, 1), u8"---------半球ライト---------");
 		//ImGui::ColorEdit3(u8"SkyColor", (float*)&SkyColor); // Edit 3 floats representing a color
 		//ImGui::ColorEdit3(u8"GroundColor", (float*)&GroundColor); // Edit 3 floats representing a color
