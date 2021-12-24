@@ -33,11 +33,14 @@ public:
 	// デバッグ用GUI表示
 	void DrawDebugGUI();
 
+	//マップ用のタグ
 	enum MapTag
 	{
 		NONE = 0,
 		HOLE,
-		OBST,
+		OB1,
+		OB2,
+		OB3,
 		RED,
 		GREEN,
 		BLUE,
@@ -49,20 +52,20 @@ public:
 		{
 			//00
 			{
-			 OBST, NONE, NONE,
-			 NONE, HOLE, NONE,
+			 OB1,  OB2,  NONE,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//01
 			{
-			 NONE, HOLE, NONE,
-			 NONE, HOLE, NONE,
+			 NONE, NONE, NONE,
+			 HOLE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			 },
 			//02
 			{
+			 OB1,  NONE, OB2,
 			 NONE, NONE, NONE,
-			 HOLE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			},
 			//03
@@ -74,7 +77,7 @@ public:
 			//04
 			{
 			 NONE, NONE, NONE,
-			 HOLE, HOLE, NONE,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			},
 			//05
@@ -90,31 +93,31 @@ public:
 			//00
 			{
 			 NONE, NONE, RED,
-			 NONE, HOLE, NONE,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//01
 			{
-			 OBST, HOLE, NONE,
+			 OB1,  HOLE, NONE,
 			 NONE, HOLE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//02
 			{
-			 NONE, RED, NONE,
+			 NONE, RED,  NONE,
 			 HOLE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			},
 			//03
 			{
-			 NONE, NONE, OBST,
-			 NONE, HOLE, HOLE,
+			 NONE, NONE, NONE,
+			 HOLE, HOLE, NONE,
 			 NONE, NONE, NONE
 			},
 			//04
 			{
-			 RED, NONE, NONE,
-			 HOLE, HOLE, NONE,
+			 RED,  NONE, OB1,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			},
 			//05
@@ -135,7 +138,7 @@ public:
 			 },
 			//2_1
 			{
-			 NONE, HOLE, OBST,
+			 NONE, HOLE, OB1,
 			 NONE, HOLE, NONE,
 			 NONE, NONE, NONE
 			 },
@@ -147,7 +150,7 @@ public:
 			},
 			//2_3
 			{
-			 OBST, NONE, NONE,
+			 OB1, NONE, NONE,
 			 NONE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			},
@@ -166,6 +169,202 @@ public:
 		},
 	};
 
+	//easy
+	int stageTileMapEasy[3][10][9] =
+	{
+		//0
+		{
+			//00
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//01
+			{
+			 OB1,  OB2,  NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//02
+			{
+			 HOLE, HOLE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//03
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, OB1,  NONE
+			},
+			//04
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 OB1,  NONE, OB2
+			},
+			//05
+			{
+			 NONE, NONE, NONE,
+			 RED,  HOLE, RED,
+			 NONE, NONE, NONE
+			},
+			//06
+			{
+			 NONE, OB1,  NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//07
+			{
+			 NONE, NONE, NONE,
+			 HOLE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//08
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, OB1,  OB2
+			},
+			//09
+			{
+			 OB1,  OB2,  OB3,
+			 NONE, NONE, NONE,
+			 GREEN, GREEN, GREEN
+			},
+		},
+
+		//1
+		{
+			//00
+			{
+			 OB1,  OB2,  NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//01
+			{
+			 NONE, NONE, NONE,
+			 HOLE, HOLE, HOLE,
+			 NONE, NONE, NONE
+			 },
+			//02
+			{
+			 OB1,  NONE, OB2,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//03
+			{
+			 NONE, NONE, NONE,
+			 NONE, HOLE, HOLE,
+			 NONE, NONE, NONE
+			},
+			//04
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//05
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//06
+			{
+			 NONE, NONE, RED,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//07
+			{
+			 OB1,  HOLE, NONE,
+			 NONE, HOLE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//08
+			{
+			 NONE, RED,  NONE,
+			 HOLE, HOLE, HOLE,
+			 NONE, NONE, NONE
+			},
+			//09
+			{
+			 NONE, NONE, NONE,
+			 HOLE, HOLE, NONE,
+			 NONE, NONE, NONE
+			},
+		},
+
+		//2
+		{
+			//00
+			{
+			 OB1,  OB2,  NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//01
+			{
+			 NONE, NONE, NONE,
+			 HOLE, HOLE, HOLE,
+			 NONE, NONE, NONE
+			 },
+			//02
+			{
+			 OB1,  NONE, OB2,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//03
+			{
+			 NONE, NONE, NONE,
+			 NONE, HOLE, HOLE,
+			 NONE, NONE, NONE
+			},
+			//04
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//05
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//06
+			{
+			 NONE, NONE, RED,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//07
+			{
+			 OB1,  HOLE, NONE,
+			 NONE, HOLE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//08
+			{
+			 NONE, RED,  NONE,
+			 HOLE, HOLE, HOLE,
+			 NONE, NONE, NONE
+			},
+			//09
+			{
+			 NONE, NONE, NONE,
+			 HOLE, HOLE, NONE,
+			 NONE, NONE, NONE
+			},
+		},
+	};
+
 	int RayCast(const DirectX::XMFLOAT3& startPosition, const DirectX::XMFLOAT3& endPosition, DirectX::XMFLOAT3* outPosition, DirectX::XMFLOAT3* outNormal, float* outLength);
 
 	//カラー getter/setter
@@ -175,7 +374,9 @@ private:
 
 	int ColorNum = 0;
 
-	DirectX::XMFLOAT4 TileColor[6] = {
+	DirectX::XMFLOAT4 TileColor[8] = {
+		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
+		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
