@@ -109,7 +109,7 @@ public:
 #define StageMax 10
 	//static const int StageMax = 5;
 	static const int StageTileMax = 9;
-	static const int ObstacleMax = 2;
+	static const int ObstacleMax = 3;
 private:
 	Player* player = nullptr;
 	Stage* stage = nullptr;
