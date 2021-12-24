@@ -9,12 +9,6 @@ void StageManager::Update(float elapsedTime)
 	{
 		if (stages.at(i)->GetPosition().z + 10.0f < Player::Instance().GetPosition().z)
 		{
-			//ステージが更新されるたびに障害物の配置位置を更新
-			for (int j = 0; j < 5; j++)
-			{
-				stages.at(i)->SquareRand[j] = rand() % 9;
-			}
-
 			if (Player::Instance().GetPosition().z > 500.0f &&
 				(i == 1 || i == 3))
 			{
@@ -28,10 +22,15 @@ void StageManager::Update(float elapsedTime)
 
 			//ステージ更新時に新しいパターンをランダムで決定
 			stages.at(i)->Rand = rand() % 5;
+			//イージーモードステージ更新時にランダムで決定されたパターンを更新
+			stages.at(i)->EasyRand = r;
 			//ステージを一番前のポジションに持っていく
 			stages.at(i)->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, (stages.at(i)->GetPosition().z + 10.0f * StageMax)));
 		}
 	}
+
+	//次に描画されるイージーモードステージのパターンをランダムで決定
+	if (stages.at(0)->GetPosition().z < Player::Instance().GetPosition().z)r = rand() % 2;
 
 	//更新
 	for (StageBase* stageBase : stages)
