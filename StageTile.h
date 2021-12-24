@@ -240,62 +240,62 @@ public:
 		{
 			//00
 			{
-			 OB1,  OB2,  NONE,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//01
 			{
 			 NONE, NONE, NONE,
-			 HOLE, HOLE, HOLE,
-			 NONE, NONE, NONE
+			 NONE, NONE, NONE,
+			 OB1,  NONE, OB2
 			 },
 			//02
 			{
-			 OB1,  NONE, OB2,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
+			 NONE, HOLE, HOLE,
+			 NONE, HOLE, HOLE,
+			 NONE, HOLE, HOLE
 			},
 			//03
 			{
+			 OB1,  OB2,  NONE,
 			 NONE, NONE, NONE,
-			 NONE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			},
 			//04
 			{
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
+			 NONE, RED,  NONE
 			},
 			//05
 			{
+			 NONE, OB1,  OB2,
 			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
+			 NONE, GREEN, GREEN
 			},
 			//06
 			{
-			 NONE, NONE, RED,
+			 OB1,  RED,  NONE,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//07
 			{
-			 OB1,  HOLE, NONE,
-			 NONE, HOLE, NONE,
+			 NONE, OB1,  NONE,
+			 NONE, NONE, HOLE,
 			 NONE, NONE, NONE
 			 },
 			//08
 			{
-			 NONE, RED,  NONE,
+			 NONE, NONE,  NONE,
 			 HOLE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			},
 			//09
 			{
-			 NONE, NONE, NONE,
-			 HOLE, HOLE, NONE,
+			 NONE, HOLE, NONE,
+			 NONE, HOLE, NONE,
 			 NONE, NONE, NONE
 			},
 		},
