@@ -322,7 +322,7 @@ bool Character::FloorCheck()
 			stageTile->TileRightBottom,
 			playerObj->GetPosition()))
 		{
-			if (stageTile->GetTileColor() == 3)
+			if (stageTile->GetTileColor() == 6)
 			{
 				GimmickFlg = true;
 			}
