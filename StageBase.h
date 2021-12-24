@@ -39,10 +39,8 @@ public:
 	//ステージパターンランダム配置用変数
 	//ステージ用
 	int Rand = 0;
+	int EasyRand = 0;
 	int Pattern = 0;
-	//障害物用
-	int SquareRand[5];
-
 	// レイキャスト
 	//bool RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit);
 

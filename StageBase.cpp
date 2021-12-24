@@ -14,9 +14,6 @@ StageBase::StageBase()
 	stageBaseObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	//ステージパターン初期化
 	Rand = rand() % 5;
-	//障害物の配置場所初期化
-	SquareRand[0] = rand() % 9;
-	SquareRand[1] = rand() % 9;
 }
 
 StageBase::~StageBase()
