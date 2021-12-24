@@ -315,6 +315,7 @@ bool Character::FloorCheck()
 	for (int i = 0; i < stageCount; i++)
 	{
 		StageTile* stageTile = stageTileManager.GetStageTile(i);
+		//床に当たってたらtrue
 		if (Collision::FloorVsPlayer(
 			stageTile->TileLeftTop,
 			stageTile->TileRightTop,
@@ -322,13 +323,21 @@ bool Character::FloorCheck()
 			stageTile->TileRightBottom,
 			playerObj->GetPosition()))
 		{
-			if (stageTile->GetTileColor() == 6)
+			//プレイヤーが乗っている床のいろが赤なら赤のフラグture
+			if (stageTile->GetTileColor() == 5)
 			{
-				GimmickFlg = true;
+				RedGimmickFlg = true;
 			}
+			//プレイヤーが乗っている床のいろが緑なら緑のフラグture
+			else if (stageTile->GetTileColor() == 6)
+			{
+				GreenGimmickFlg = true;
+			}
+			//色がないなら各フラグfalse
 			else
 			{
-				GimmickFlg = false;
+				RedGimmickFlg = false;
+				GreenGimmickFlg = false;
 			}
 			return true;
 		}
