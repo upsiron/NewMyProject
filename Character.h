@@ -30,6 +30,8 @@ public:
 		//// スケール設定
 		//void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
 	
+	void SetVelocity(const DirectX::XMFLOAT3& velocity) { this->velocity = velocity; }
+
 	// 半径取得
 	float GetRadius() const { return radius; }
 
@@ -114,9 +116,10 @@ protected:
 	int		health = 5;
 	int		maxHealth = 5;
 	float	gravity = -1.0f;
+	float   oldGravity = 0.0f;
 	DirectX::XMFLOAT3 velocity = { 0,0,0 };
 	
-	//今のところ使用しない
+
 	bool	isGround = false;
 	float	slopeRate = 1.0f;
 	float	friction = 0.5f;
@@ -130,7 +133,6 @@ protected:
 	float	jumpSpeed = 20.0f;
 	float   scrollSpeed = 0.15f;
 	float   oldScrollSpeed = 0.0f;
-	float   saveScrollSpeed = 0.15f;
 private:
 
 	// 垂直速力処理更新
