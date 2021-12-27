@@ -54,7 +54,7 @@ public:
 	   const DirectX::XMFLOAT3& RightBottom,
 	   const DirectX::XMFLOAT3& PlayerPos);
 
-   static bool VerticalFrontWallVsPlayer(
+   static bool FrontWallVsPlayer(
 	   const DirectX::XMFLOAT3& LeftTop,
 	   const DirectX::XMFLOAT3& RightTop,
 	   const DirectX::XMFLOAT3& LeftBottom,

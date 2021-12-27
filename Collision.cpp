@@ -182,7 +182,7 @@ bool Collision::SideRightWallVsPlayer(
 	return false;
 }
 
-bool Collision::VerticalFrontWallVsPlayer(
+bool Collision::FrontWallVsPlayer(
 	const DirectX::XMFLOAT3& LeftTop,
 	const DirectX::XMFLOAT3& RightTop,
 	const DirectX::XMFLOAT3& LeftBottom,
