@@ -324,21 +324,14 @@ bool Character::FloorCheck()
 			playerObj->GetPosition()))
 		{
 			//プレイヤーが乗っている床のいろが赤なら赤のフラグture
-			if (stageTile->GetTileColor() == 5)
-			{
-				RedGimmickFlg = true;
-			}
+			if (stageTile->GetTileColor() == 5) RedGimmickFlg = true;
+			else RedGimmickFlg = false;
+
 			//プレイヤーが乗っている床のいろが緑なら緑のフラグture
-			else if (stageTile->GetTileColor() == 6)
-			{
-				GreenGimmickFlg = true;
-			}
+			if (stageTile->GetTileColor() == 6) GreenGimmickFlg = true;
 			//色がないなら各フラグfalse
-			else
-			{
-				RedGimmickFlg = false;
-				GreenGimmickFlg = false;
-			}
+			else GreenGimmickFlg = false;
+
 			return true;
 		}
 	}
