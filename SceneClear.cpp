@@ -18,7 +18,16 @@
 
 void SceneClear::Initialize()
 {
+	Framework& framework = Framework::Instance();
+	ID3D11Device* device = framework.GetDevice();
+
 	img = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data/Clear.png");
+	FadeBlack = std::make_unique<Transition>();
+	FadeBlack->init(device, L"Data/unnamed.png", { 0,0 }, { 1920,1080 }, { 0,0 }, { 1920,1080 }, { 1.0f,1.0f,1.0f,1.0f });
+
+	state = 0;
+	timer = 0;
+
 	//ƒtƒ@ƒCƒ‹“Ç‚ÝŽæ‚è
 	std::string Filename = "Text/score.txt";
 	std::ifstream ReadingFile(Filename, std::ios::in);
@@ -37,12 +46,31 @@ void SceneClear::Update(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	if (KeyInput::KeyTrigger() & KEY_START || gamePad.GetButtonDown() & GamePad::BTN_B)
+	timer++;
+	switch (state)
 	{
+	case 0:
+		FadeBlack->fadeIn(0.03f);
+		if (FadeBlack->GetAlpha() <= 0.1f) state++;
+		break;
+	case 1:
+		FadeBlack->fadeIn(0.03f);
+		if (KeyInput::KeyRelease() & KEY_START || gamePad.GetButtonDown() & GamePad::BTN_B)
+		{
+			state++;
+		}
+		break;
+	case 2:
+		FadeBlack->fadeOut(0.04f);
+		if (FadeBlack->GetAlpha() >= 1.0f)
+		{
+			state++;
+		}
+		break;
+	case 3:
 		SceneManager::Instance().ChangeScene(new SceneTitle());
 		return;
 	}
-
 }
 //--------------------------------------------------------
 //		•`‰æ
@@ -93,4 +121,6 @@ void SceneClear::Render()
 	const char* NowResult = "NowResult:";
 	Font->TextOut(context, NowResult, 0, 0, 32, 32);
 	Font->TextOut(context, thisResult, 340, 0, 32, 32);
+
+	FadeBlack->render(context);
 }

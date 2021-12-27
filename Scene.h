@@ -225,7 +225,7 @@ class SceneOver :public Scene
 {
 private:
 	std::unique_ptr<Sprite> img;
-
+	std::unique_ptr<Transition> FadeBlack;
 public:
 	SceneOver() {}
 	virtual ~SceneOver() {}

@@ -15,7 +15,15 @@
 
 void SceneOver::Initialize()
 {
+	Framework& framework = Framework::Instance();
+	ID3D11Device* device = framework.GetDevice();
+
 	img = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data/Over.png");
+	FadeBlack = std::make_unique<Transition>();
+	FadeBlack->init(device, L"Data/unnamed.png", { 0,0 }, { 1920,1080 }, { 0,0 }, { 1920,1080 }, { 1.0f,1.0f,1.0f,1.0f });
+
+	state = 0;
+	timer = 0;
 }
 
 //--------------------------------------------------------
@@ -26,8 +34,28 @@ void SceneOver::Update(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	if (KeyInput::KeyTrigger() & KEY_START || gamePad.GetButtonDown() & GamePad::BTN_B)
+	timer++;
+	switch (state)
 	{
+	case 0:
+		FadeBlack->fadeIn(0.03f);
+		if (FadeBlack->GetAlpha() <= 0.1f) state++;
+		break;
+	case 1:
+		FadeBlack->fadeIn(0.03f);
+		if (KeyInput::KeyRelease() & KEY_START || gamePad.GetButtonDown() & GamePad::BTN_B)
+		{
+			state++;
+		}
+		break;
+	case 2:
+		FadeBlack->fadeOut(0.04f);
+		if (FadeBlack->GetAlpha() >= 1.0f)
+		{
+			state++;
+		}
+		break;
+	case 3:
 		SceneManager::Instance().ChangeScene(new SceneClear());
 		return;
 	}
@@ -66,4 +94,5 @@ void SceneOver::Render()
 	context->OMSetBlendState(bs, nullptr, 0xFFFFFFFF);
 
 	img->Render(context, 0, 0, 1280, 720, 0, 0, 640, 480);
+	FadeBlack->render(context);
 }
