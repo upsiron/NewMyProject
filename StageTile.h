@@ -258,15 +258,15 @@ public:
 			},
 			//03
 			{
-			 OB1,  OB2,  NONE,
-			 NONE, NONE, NONE,
+			 NONE, NONE,  NONE,
+			 NONE, RED,  NONE,
 			 NONE, NONE, NONE
 			},
 			//04
 			{
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE,
-			 NONE, RED,  NONE
+			 OB1,  OB2,  NONE
 			},
 			//05
 			{
