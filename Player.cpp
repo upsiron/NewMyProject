@@ -33,6 +33,7 @@ Player::Player()
 		"Data/Banana/KnockedOut.fbx",
 		"Data/Banana/KnockOutRight.fbx",
 		"Data/Banana/KnockOutLeft.fbx",
+		"Data/Banana/KnockOutFront.fbx",
 	}; 
 	//初期化
 	playerMesh = std::make_shared<SkinnedMesh>(device, "Data/Banana/banana.fbx", Animationfilenames, true);
@@ -72,8 +73,16 @@ void Player::Update(float elapsedTime)
 	if(debugflg)position.z += scrollSpeed;
 
 	//スクロール加速処理
-	if (RedGimmickFlg)scrollSpeed = oldScrollSpeed + 0.05f;
-	else oldScrollSpeed = scrollSpeed;
+	if (RedGimmickFlg)
+	{
+		scrollSpeed = oldScrollSpeed + 0.05f;
+		//gravity = oldGravity - 0.05f;
+	}
+	else
+	{
+		oldScrollSpeed = scrollSpeed;
+		oldGravity = gravity;
+	}
 
 	if (GreenGimmickFlg)
 	{
@@ -82,7 +91,7 @@ void Player::Update(float elapsedTime)
 			//ジャンプアニメーションセット
 			playerObj->SetMotion(JUMP, 0, 0.08f);
 			jumpCount++;
-			Jump(30.0f);
+			Jump(28.5f);
 		}
 	}
 	
@@ -90,10 +99,10 @@ void Player::Update(float elapsedTime)
 	UpdateVelocity(elapsedTime);
 	
 	// 移動入力
-	InputMove(elapsedTime);
+	if(!GameOverFlg)InputMove(elapsedTime);
 
 	// ジャンプ入力
-	InputJump();
+	if (!GameOverFlg)InputJump();
 
 	// プレイヤーと敵との衝突判定
 	CollisionPlayerVsEnemis();
@@ -156,6 +165,7 @@ void Player::DrawDebugGUI()
 			if (ImGui::Button("NoDebug"))debugflg = false;
 			ImGui::SliderFloat("scroll", &scrollSpeed, 0.0f, 1.0f);
 			ImGui::SliderFloat("jump", &jumpSpeed, 0.0f, 100.0f);
+			ImGui::SliderFloat("gravity", &gravity, -100.0f, 0.0f);
 		}
 	}
 	ImGui::End();
@@ -271,9 +281,13 @@ void Player::CollisionPlayerVsEnemis()
 		if (!obstacle->GetExistFlg())continue;
 
 		// 衝突処理
-		//side　当たり判定
+		/////////////////////
+		//LeftSide　当たり判定
+		/////////////////////
 		//プレイヤーが障害物より右にいるなら左壁の当たり判定処理
-		if (position.x > obstacle->GetPosition().x && position.z > obstacle->GetPosition().z - obstacle->GetScale().z)
+		if (position.x > obstacle->GetPosition().x + obstacle->GetScale().x &&
+			position.z > obstacle->GetPosition().z - obstacle->GetScale().z && 
+			position.y <= obstacle->GetPosition().y + obstacle->GetScale().y)
 		{
 			//左壁に当たってるかチェック
 			if (Collision::SideLeftWallVsPlayer(
@@ -291,12 +305,18 @@ void Player::CollisionPlayerVsEnemis()
 					scrollSpeed = 0.0f;
 					//左倒れアニメーションセット
 					playerObj->SetMotion(KNOCKLEFT, 0, 0.0f);
-					//playerObj->SetAnime(KNOCKLEFT);
+					//ゲームオーバーフラグを立てる
+					GameOverFlg = true;
 				}
 			}
 		}
+		///////////////////////
+		//RightSide　当たり判定
+		///////////////////////
 		//プレイヤーが障害物より右にいないなら障害物より左にいるので右壁当たり判定
-		else if (position.x < obstacle->GetPosition().x && position.z > obstacle->GetPosition().z - obstacle->GetScale().z)
+		else if (position.x < obstacle->GetPosition().x - obstacle->GetScale().x &&
+				 position.z > obstacle->GetPosition().z - obstacle->GetScale().z && 
+				 position.y <= obstacle->GetPosition().y + obstacle->GetScale().y)
 		{
 			//右壁に当たってるかチェック
 			if (Collision::SideRightWallVsPlayer(
@@ -314,14 +334,19 @@ void Player::CollisionPlayerVsEnemis()
 					scrollSpeed = 0.0f;
 					//右倒れアニメーションセット
 					playerObj->SetMotion(KNOCKRIGHT, 0, 0.0f);
-					//playerObj->SetAnime(KNOCKRIGHT);
+					//ゲームオーバーフラグを立てる
+					GameOverFlg = true;
 				}
 			}
 		}
+		///////////////////
 		//front　当たり判定
-		if (position.z < obstacle->GetPosition().z- obstacle->GetScale().z)
+		///////////////////
+		//プレイヤーが障害物全面より前にいるかどうか
+		else if (position.z < obstacle->GetPosition().z- obstacle->GetScale().z && 
+				 position.y <= obstacle->GetPosition().y + obstacle->GetScale().y)
 		{
-			if (Collision::VerticalFrontWallVsPlayer(
+			if (Collision::FrontWallVsPlayer(
 				obstacle->ObstacleUpLeftBottom,
 				obstacle->ObstacleUpRightBottom,
 				obstacle->ObstacleDownLeftBottom,
@@ -330,15 +355,50 @@ void Player::CollisionPlayerVsEnemis()
 				)
 			{
 				position.z = savePos.z;
+				position.x = savePos.x;
 				if (position.z < obstacle->GetPosition().z)
 				{
 					//後ろ倒れアニメーションセット
 					playerObj->SetMotion(KNOCK, 0, 0.0f);
+					//ゲームオーバーフラグを立てる
 					GameOverFlg = true;
-					//playerObj->SetAnime(KNOCK);
+					//スクロールストップ
+					scrollSpeed = 0.0f;
 				}
 			}
 		}
+		/*else if (position.y > (obstacle->GetPosition().y + obstacle->GetScale().y) &&
+			position.z > (obstacle->GetPosition().z - obstacle->GetScale().z) &&
+			position.x < (obstacle->GetPosition().x + obstacle->GetScale().x) &&
+			position.x > (obstacle->GetPosition().x - obstacle->GetScale().x) &&
+			position.z < (obstacle->GetPosition().z + obstacle->GetScale().z))*/
+		{
+			/////////////////////
+			//ブロック上 当たり判定
+			/////////////////////
+			if (Collision::FloorVsPlayer(
+				obstacle->ObstacleUpLeftTop,
+				obstacle->ObstacleUpRightTop,
+				obstacle->ObstacleUpLeftBottom,
+				obstacle->ObstacleUpRightBottom,
+				position)
+				)
+			{	
+				//当たる直前に保持していた位置を代入	
+				position = savePos;
+				SetVelocity({ 0,0,0 });
+				if (position.y >= obstacle->GetPosition().y)
+				{
+					//前倒れアニメーションセット
+					playerObj->SetMotion(KNOCKFRONT, 0, 0.0f);
+					//ゲームオーバーフラグを立てる
+					GameOverFlg = true;
+					//スクロールストップ
+					scrollSpeed = 0.0f;
+				}
+			}
+		}
+
 	}
 }
 
@@ -412,7 +472,7 @@ void Player::OnLanding()
 {
 	//scrollSpeed = saveScrollSpeed;
 	//走りアニメーションセット
-	playerObj->SetMotion(RUN, 0, 0.0f);
+	if (!GameOverFlg)playerObj->SetMotion(RUN, 0, 0.0f);
 	//playerObj->SetAnime(RUN);
 	jumpCount = 0;
 }
