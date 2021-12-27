@@ -81,7 +81,8 @@ private:
 		JUMP,
 		KNOCK,
 		KNOCKRIGHT,
-		KNOCKLEFT
+		KNOCKLEFT,
+		KNOCKFRONT
 	};
 
 };
