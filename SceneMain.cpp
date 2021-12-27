@@ -65,8 +65,8 @@ void SceneMain::Initialize()
 		1000.0f
 	);
 
-	skyMesh = std::make_shared<SkinnedMesh>(device, "Data/Sky/sky.obj",true);
 
+	skyMesh = std::make_shared<SkinnedMesh>(device, "Data/Sky/sky.obj",true);
 	skyObj = std::make_unique<SkinnedObject>(skyMesh);
 	skyObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	skyObj->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 7.0f));
@@ -390,7 +390,6 @@ void SceneMain::Update(float elapsedTime)
 		//ステージ更新
 		StageManager::Instance().Update(elapsedTime);
 		StageTileManager::Instance().Update(elapsedTime);
-
 		//ゲームオーバー処理
 		if (player->GetGameOverFlg())
 		{
@@ -405,8 +404,7 @@ void SceneMain::Update(float elapsedTime)
 		{
 			ResultMeter();
 			Finalize();
-			SceneManager::Instance().ChangeScene(
-				new SceneLoad(new SceneOver()));
+			SceneManager::Instance().ChangeScene((new SceneOver()));
 			return;
 		}
 	}
@@ -555,7 +553,7 @@ void SceneMain::Render()
 	std::string pMeter = to_string((int)player->GetPosition().z);
 	pMeter += name;
 	//font->TextOut(context, name, 0, 0, 32, 32);
-	Font->TextOut(context, pMeter, 0, 0, 32, 32);
+	Font->TextOut(context, pMeter, framework.GetScreenWidth()/2 - 100, 0, 64, 64);
 
 	FadeBlack->render(context);
 
