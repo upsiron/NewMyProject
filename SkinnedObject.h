@@ -45,7 +45,6 @@ public:
 	void SetAngle(const DirectX::XMFLOAT3& a) { angle = a; }
 	void SetWorld(const DirectX::XMFLOAT4X4& m) { world = m; }
 	void SetAnime(const int animationState) { AnimationState = animationState; }
-	void SetBlueFlg(const bool blueGimmickFlg) { BlueGimmickFlg = blueGimmickFlg; }
 	// getter
 	const DirectX::XMFLOAT3& GetPosition() const { return position; }
 	const DirectX::XMFLOAT3& GetScale() const { return scale; }
