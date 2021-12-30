@@ -30,6 +30,7 @@ public:
 		//// スケール設定
 		//void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
 	
+	//Velocityセット関数
 	void SetVelocity(const DirectX::XMFLOAT3& velocity) { this->velocity = velocity; }
 
 	// 半径取得
@@ -133,6 +134,8 @@ protected:
 	float	jumpSpeed = 20.0f;
 	float   scrollSpeed = 0.15f;
 	float   oldScrollSpeed = 0.0f;
+	int     flgCount = 0;
+	int     oldFlgCount = 0;
 private:
 
 	// 垂直速力処理更新
