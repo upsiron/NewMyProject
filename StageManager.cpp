@@ -9,6 +9,7 @@ void StageManager::Update(float elapsedTime)
 	{
 		if (stages.at(i)->GetPosition().z + 10.0f < Player::Instance().GetPosition().z)
 		{
+			//毎回ランダムのほう
 			if (Player::Instance().GetPosition().z > 500.0f &&
 				(i == 1 || i == 3))
 			{
@@ -23,14 +24,17 @@ void StageManager::Update(float elapsedTime)
 			//ステージ更新時に新しいパターンをランダムで決定
 			stages.at(i)->Rand = rand() % 5;
 			//イージーモードステージ更新時にランダムで決定されたパターンを更新
-			stages.at(i)->EasyRand = r;
+			stages.at(i)->EasyRand = /*r*/2;
 			//ステージを一番前のポジションに持っていく
 			stages.at(i)->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, (stages.at(i)->GetPosition().z + 10.0f * StageMax)));
 		}
 	}
 
 	//次に描画されるイージーモードステージのパターンをランダムで決定
-	if (stages.at(0)->GetPosition().z < Player::Instance().GetPosition().z)r = rand() % 2;
+	if (stages.at(0)->GetPosition().z < Player::Instance().GetPosition().z)r = rand() % 3;
+
+	//パターンの最後の位置よりplayerの位置が大きくなったらblueflgをfalseにする
+	//if (stages.at(8)->GetPosition().z < Player::Instance().GetPosition().z)Player::Instance().SetBlueFlg(false);
 
 	//更新
 	for (StageBase* stageBase : stages)
