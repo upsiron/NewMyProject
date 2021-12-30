@@ -312,6 +312,7 @@ bool Character::FloorCheck()
 {
 	StageTileManager& stageTileManager = StageTileManager::Instance();
 	int stageCount = stageTileManager.GetStageCount();
+
 	for (int i = 0; i < stageCount; i++)
 	{
 		StageTile* stageTile = stageTileManager.GetStageTile(i);
@@ -324,13 +325,36 @@ bool Character::FloorCheck()
 			playerObj->GetPosition()))
 		{
 			//プレイヤーが乗っている床のいろが赤なら赤のフラグture
-			if (stageTile->GetTileColor() == 5) RedGimmickFlg = true;
+			if (stageTile->GetTileColor() == 8) RedGimmickFlg = true;
 			else RedGimmickFlg = false;
 
 			//プレイヤーが乗っている床のいろが緑なら緑のフラグture
-			if (stageTile->GetTileColor() == 6) GreenGimmickFlg = true;
+			if (stageTile->GetTileColor() == 9) GreenGimmickFlg = true;
 			//色がないなら各フラグfalse
 			else GreenGimmickFlg = false;
+
+			//プレイヤーが乗っている床のいろが青なら青のフラグture
+			if (stageTile->GetTileColor() == 10)
+			{
+				flgCount = oldFlgCount + 1;
+				switch (flgCount)
+				{
+				case 0:
+					flgCount++;
+					break;
+				case 1:
+					BlueGimmickFlg = true;
+					break;
+				case 2:
+					BlueGimmickFlg = false;
+					flgCount = 0;
+					break;
+				}
+			}
+			else
+			{
+				oldFlgCount = flgCount;
+			}
 
 			return true;
 		}
