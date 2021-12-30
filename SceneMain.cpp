@@ -192,6 +192,8 @@ void SceneMain::Initialize()
 	timer = 0;
 	fadeInFlg = true;
 	fadeOutFlg = false;
+	ObstacleMove[0] = 0;
+	ObstacleMove[1] = 0;
 
 	//音楽初期化
 	BGM = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/stage.wav");
@@ -281,7 +283,6 @@ void SceneMain::Update(float elapsedTime)
 		//自機更新
 		player->Update(elapsedTime);
 
-		
 		//ステージタイルをランダムで選ばれたパターンごとに配置
 		for (int j = 0; j < StageMax; j++)
 		{
@@ -301,6 +302,8 @@ void SceneMain::Update(float elapsedTime)
 					//------------
 					//今見ているステージタイルとランダムで決まった障害物配置の番号が一緒なら配置
 					//if (i == stageBase[j]->SquareRand[0] && stageBase[j]->Rand != 5)
+					
+					//動かない
 					//障害物１
 					//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB1)
 					if (stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i] == 2)
@@ -308,9 +311,9 @@ void SceneMain::Update(float elapsedTime)
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][0]->SetPosition(DirectX::XMFLOAT3(
 							stageBase[j]->squea.SpritPosition[i].x,
-							1.5f, 
+							1.5f,
 							stageBase[j]->squea.SpritPosition[i].z));
-						//生存
+						//生存 後で無敵とかで使うかも
 						obstacle[j][0]->SetExistFlg(true);
 					}
 					//障害物２
@@ -336,6 +339,82 @@ void SceneMain::Update(float elapsedTime)
 							stageBase[j]->squea.SpritPosition[i].z));
 						//生存
 						obstacle[j][2]->SetExistFlg(true);
+					}
+
+					//動く
+					//障害物4
+					if (stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i] == 5)
+					{
+						if (stageBase[j]->EasyRand == 2)
+						{
+							if (player->GetBlueFlg() == true && ObstacleMove[0] > -3.5f) ObstacleMove[0] -= 0.05f;
+							else if (player->GetBlueFlg() == false && ObstacleMove[0] < 0.0f) ObstacleMove[0] += 0.05f;
+							//エネミーをステージを9等分して指定した位置にセット
+							obstacle[j][3]->SetPosition(DirectX::XMFLOAT3(
+								stageBase[j]->squea.SpritPosition[i].x,
+								1.5f + ObstacleMove[0],
+								stageBase[j]->squea.SpritPosition[i].z));
+						}
+						else
+						{
+							//エネミーをステージを9等分して指定した位置にセット
+							obstacle[j][3]->SetPosition(DirectX::XMFLOAT3(
+								stageBase[j]->squea.SpritPosition[i].x,
+								1.5f,
+								stageBase[j]->squea.SpritPosition[i].z));
+						}
+						//生存
+						obstacle[j][3]->SetExistFlg(true);
+					}
+
+					//障害物5
+					if (stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i] == 6)
+					{
+						if (stageBase[j]->EasyRand == 2)
+						{
+							/*if (player->GetBlueFlg() == false && ObstacleMove[1] > -3.5f) ObstacleMove[0] -= 0.05f;
+							else if (player->GetBlueFlg() == true && ObstacleMove[1] < 0.0f) ObstacleMove[0] += 0.05f;*/
+							//エネミーをステージを9等分して指定した位置にセット
+							obstacle[j][4]->SetPosition(DirectX::XMFLOAT3(
+								stageBase[j]->squea.SpritPosition[i].x,
+								1.5f + ObstacleMove[0],
+								stageBase[j]->squea.SpritPosition[i].z));
+						}
+						else
+						{
+							//エネミーをステージを9等分して指定した位置にセット
+							obstacle[j][4]->SetPosition(DirectX::XMFLOAT3(
+								stageBase[j]->squea.SpritPosition[i].x,
+								1.5f,
+								stageBase[j]->squea.SpritPosition[i].z));
+						}
+						//生存
+						obstacle[j][4]->SetExistFlg(true);
+					}
+
+					//障害物6
+					if (stageTile[j][i]->stageTileMapEasy[stageBase[j]->EasyRand][j][i] == 7)
+					{
+						if (stageBase[j]->EasyRand == 2)
+						{
+							if (player->GetBlueFlg() == false && ObstacleMove[1] > -3.5f) ObstacleMove[1] -= 0.05f;
+							else if (player->GetBlueFlg() == true && ObstacleMove[1] < 0.0f) ObstacleMove[1] += 0.05f;
+							//エネミーをステージを9等分して指定した位置にセット
+							obstacle[j][5]->SetPosition(DirectX::XMFLOAT3(
+								stageBase[j]->squea.SpritPosition[i].x,
+								1.5f + ObstacleMove[1],
+								stageBase[j]->squea.SpritPosition[i].z));
+						}
+						else
+						{
+							//エネミーをステージを9等分して指定した位置にセット
+							obstacle[j][5]->SetPosition(DirectX::XMFLOAT3(
+								stageBase[j]->squea.SpritPosition[i].x,
+								1.5f,
+								stageBase[j]->squea.SpritPosition[i].z));
+						}
+						//生存
+						obstacle[j][5]->SetExistFlg(true);
 					}
 
 					//-------------------
@@ -439,6 +518,7 @@ void SceneMain::imGuiUpdate()
 		{
 			ImGui::InputInt("Rand", &stageBase[i]->EasyRand);
 		}
+		ImGui::Text("true(1)/false(0):%d", player->GetBlueFlg());
 		//ImGui::TextColored(ImVec4(1, 1, 0, 1), u8"---------半球ライト---------");
 		//ImGui::ColorEdit3(u8"SkyColor", (float*)&SkyColor); // Edit 3 floats representing a color
 		//ImGui::ColorEdit3(u8"GroundColor", (float*)&GroundColor); // Edit 3 floats representing a color
@@ -531,7 +611,7 @@ void SceneMain::Render()
 	// エネミー描画
 	//EnemyManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
 
-	//skyObj->Render(context, view, projection, lightDirection, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, false);
+	skyObj->Render(context, view, projection, lightDirection, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, false);
 
 	// ワールド座標からスクリーン座標へ
 	DirectX::XMFLOAT3 worldPosition = player->GetPosition();
