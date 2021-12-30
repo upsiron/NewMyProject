@@ -13,8 +13,8 @@ protected:
 	DirectX::XMFLOAT3 angle = { 0, 0, 0 };
 	DirectX::XMFLOAT4X4 world = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 	std::shared_ptr<SkinnedMesh>	mesh;
-	float current_time = 0;
-	size_t current_animation = 0;
+	/*float current_time = 0;
+	size_t current_animation = 0;*/
 	//ギミック用フラグ
 	bool RedGimmickFlg = false;
 	bool GreenGimmickFlg = false;
@@ -45,11 +45,13 @@ public:
 	void SetAngle(const DirectX::XMFLOAT3& a) { angle = a; }
 	void SetWorld(const DirectX::XMFLOAT4X4& m) { world = m; }
 	void SetAnime(const int animationState) { AnimationState = animationState; }
+	void SetBlueFlg(const bool blueGimmickFlg) { BlueGimmickFlg = blueGimmickFlg; }
 	// getter
 	const DirectX::XMFLOAT3& GetPosition() const { return position; }
 	const DirectX::XMFLOAT3& GetScale() const { return scale; }
 	const DirectX::XMFLOAT3& GetAngle() const { return angle; }
 	const DirectX::XMFLOAT4X4& GetWorld() const { return world; }
+	const bool& GetBlueFlg() const { return BlueGimmickFlg; }
 
 	void Update();
 
@@ -74,7 +76,7 @@ public:
 		);
 
 
-	bool SetMotion(size_t m)
+	/*bool SetMotion(size_t m)
 	{
 		if (current_animation != m)
 		{
@@ -82,14 +84,14 @@ public:
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 	void SetMotion(int NextMotion, int TargetFrame, float Interval = 1.0f);
 
-	void AnimeUpdate(float time)
-	{
-		current_time = time;
-	}
+	//void AnimeUpdate(float time)
+	//{
+	//	current_time = time;
+	//}
 
 	// TECK.05
 	int RayPick(
