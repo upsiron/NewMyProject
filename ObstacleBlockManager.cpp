@@ -42,7 +42,7 @@ void ObstacleBlockManager::Render(ID3D11DeviceContext* immediateContext,
 	for (Obstacle* obstacle : obstacles)
 	{
 		//áŠQ•¨‚ÌYÀ•W‚ª0‚æ‚è‘å‚«‚¢‚È‚ç•`‰æ
-		if (obstacle->GetPosition().y >= 0)
+		if (obstacle->GetPosition().y >= -1.0f)
 		{
 			obstacle->Render(immediateContext, view, projection, light, materialColor, wireframe);
 		}
