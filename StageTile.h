@@ -41,6 +41,9 @@ public:
 		OB1,
 		OB2,
 		OB3,
+		MOB1,
+		MOB2,
+		MOB3,
 		RED,
 		GREEN,
 		BLUE,
@@ -258,7 +261,7 @@ public:
 			},
 			//03
 			{
-			 NONE, NONE,  NONE,
+			 NONE, NONE, NONE,
 			 NONE, RED,  NONE,
 			 NONE, NONE, NONE
 			},
@@ -304,62 +307,62 @@ public:
 		{
 			//00
 			{
-			 OB1,  OB2,  NONE,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//01
 			{
 			 NONE, NONE, NONE,
-			 HOLE, HOLE, HOLE,
+			 NONE, BLUE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//02
 			{
-			 OB1,  NONE, OB2,
+			 MOB1, MOB2,  OB1,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			},
 			//03
 			{
 			 NONE, NONE, NONE,
-			 NONE, HOLE, HOLE,
+			 BLUE, HOLE, RED,
 			 NONE, NONE, NONE
 			},
 			//04
 			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
+			 MOB2, MOB3, MOB1,
+			 NONE, NONE, HOLE,
 			 NONE, NONE, NONE
 			},
 			//05
 			{
-			 NONE, NONE, NONE,
+			 NONE, NONE, BLUE,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			},
 			//06
 			{
-			 NONE, NONE, RED,
+			 MOB3, OB2,  MOB1,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//07
 			{
-			 OB1,  HOLE, NONE,
-			 NONE, HOLE, NONE,
-			 NONE, NONE, NONE
+			 NONE, OB1, HOLE,
+			 HOLE, OB2, NONE,
+			 NONE, OB3, BLUE
 			 },
 			//08
 			{
-			 NONE, RED,  NONE,
-			 HOLE, HOLE, HOLE,
-			 NONE, NONE, NONE
+			 NONE, OB1, MOB3,
+			 RED,  OB2, NONE,
+			 NONE, OB3, NONE
 			},
 			//09
 			{
 			 NONE, NONE, NONE,
-			 HOLE, HOLE, NONE,
+			 HOLE, HOLE, HOLE,
 			 NONE, NONE, NONE
 			},
 		},
@@ -374,7 +377,10 @@ private:
 
 	int ColorNum = 0;
 
-	DirectX::XMFLOAT4 TileColor[8] = {
+	DirectX::XMFLOAT4 TileColor[11] = {
+		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
+		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
+		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
