@@ -1,16 +1,17 @@
 #include "stageManager.h"
-#include "scene.h"
+//#include "scene.h"
+#include "Player.h"
 
 // 更新処理
 void StageManager::Update(float elapsedTime)
 {
 	//ステージ無限処理
-	for (int i = 0; i < StageMax; i++)
+	for (int i = 0; i < stageMax; i++)
 	{
 		if (stages.at(i)->GetPosition().z + 10.0f < Player::Instance().GetPosition().z)
 		{
 			//毎回ランダムのほう
-			if (Player::Instance().GetPosition().z > 500.0f &&
+			/*if (Player::Instance().GetPosition().z > 500.0f &&
 				(i == 1 || i == 3))
 			{
 				stages.at(i)->Pattern = 1;
@@ -19,14 +20,22 @@ void StageManager::Update(float elapsedTime)
 				(i == 2 || i == 4))
 			{
 				stages.at(i)->Pattern = 2;
+			}*/
+			if (Player::Instance().GetPosition().z >= 100.0f && Player::Instance().GetPosition().z <= 1000.0f)
+			{
+				Player::Instance().SetScrollSpeed(0.3f);
+			}
+			if (Player::Instance().GetPosition().z >= 1000.0f && Player::Instance().GetPosition().z <= 3000.0f)
+			{
+				Player::Instance().SetScrollSpeed(0.4f);
 			}
 
 			//ステージ更新時に新しいパターンをランダムで決定
 			stages.at(i)->Rand = rand() % 5;
 			//イージーモードステージ更新時にランダムで決定されたパターンを更新
-			stages.at(i)->EasyRand = /*r*/2;
+			stages.at(i)->EasyRand = r/*2*/;
 			//ステージを一番前のポジションに持っていく
-			stages.at(i)->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, (stages.at(i)->GetPosition().z + 10.0f * StageMax)));
+			stages.at(i)->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, (stages.at(i)->GetPosition().z + 10.0f * stageMax)));
 		}
 	}
 
@@ -93,8 +102,10 @@ void StageManager::Clear()
 	for (StageBase* stageBase : stages)
 	{
 		delete stageBase;
+		stageBase = nullptr;
 	}
 	stages.clear();
+	stages.shrink_to_fit();
 }
 
 void StageManager::DrawDebugGUI()

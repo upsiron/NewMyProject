@@ -8,11 +8,11 @@ EnemyBlueSlime::EnemyBlueSlime()
 	Framework& framework = Framework::Instance();
 	ID3D11Device* device = framework.GetDevice();
 
-	//slimeMesh = std::make_shared<SkinnedMesh>(device, "Data/Slime/slime.fbx",true);
-	slimeMesh = std::make_shared<SkinnedMesh>(device, "Data/001_cube.fbx", true);
+	slimeMesh = std::make_shared<SkinnedMesh>(device, "Data/Jummo/Jummo.fbx",true);
+	//slimeMesh = std::make_shared<SkinnedMesh>(device, "Data/OrangeBot/orenge.fbx", true);
 	slimeObj = std::make_unique<SkinnedObject>(slimeMesh);
-	slimeObj->SetPosition(DirectX::XMFLOAT3(2.0f, 0.0f, 0.0f));
-	slimeObj->SetScale(DirectX::XMFLOAT3(1.5f, 1.5f, 1.5f));
+	slimeObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	slimeObj->SetScale(DirectX::XMFLOAT3(0.01f, 0.01f, 0.01f));
 	slimeObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	// モデルが大きいのでスケーリング
@@ -35,9 +35,11 @@ void EnemyBlueSlime::Update(float elapsedTime)
 	//UpdateVelocity(elapsedTime);
 
 	slimeObj->SetPosition(position);
+
+	angle.y += moveAngle;
 	slimeObj->SetAngle(angle);
 
-	slimeObj->Update();
+	slimeObj->Update(elapsedTime);
 
 
 	// 無敵時間更新
@@ -62,7 +64,7 @@ void EnemyBlueSlime::Render(ID3D11DeviceContext* immediateContext,
 	bool wireframe)
 {
 	//slimeObj->Render(immediateContext, view, projection, light, materialColor, false);
-	slimeObj->Render(immediateContext, view, projection, light, materialColor, 0.0f, false);
+	slimeObj->Render(immediateContext, view, projection, light, materialColor,nullptr,false);
 
 }
 

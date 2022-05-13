@@ -8,9 +8,9 @@ static Stage* instance = nullptr;
 StageBase::StageBase()
 {
 	//ステージベース初期化
-	stageBaseObj = std::make_unique<SkinnedObject>(stageBaseMesh);
-	stageBaseObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	stageBaseObj->SetScale(DirectX::XMFLOAT3(5.0f, 5.0f, 5.0f));
+	stageBaseObj = std::make_unique<SkinnedObject>(stageBaseMesh2);
+	stageBaseObj->SetPosition(DirectX::XMFLOAT3(0.0f, -1.5f, 0.0f));
+	stageBaseObj->SetScale(DirectX::XMFLOAT3(5.0f, 0.1f, 5.0f));
 	stageBaseObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	//ステージパターン初期化
 	Rand = rand() % 5;
@@ -18,15 +18,14 @@ StageBase::StageBase()
 
 StageBase::~StageBase()
 {
-	// ステージモデルを破棄
-	//delete model;
+	delete instance;
 }
 
 // 更新処理
 void StageBase::Update(float elapsedTime)
 {
 	//test
-	stageBaseObj->SetPosition(position);
+	stageBaseObj->SetPosition({ position.x,-0.1f,position.z });
 
 	//左上
 	squea.SpritPosition[0] = DirectX::XMFLOAT3
@@ -101,7 +100,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//更新処理
-	stageBaseObj->Update();
+	stageBaseObj->Update(elapsedTime);
 }
 
 //描画処理
@@ -112,7 +111,7 @@ void StageBase::Render(ID3D11DeviceContext* immediateContext,
 	const DirectX::XMFLOAT4& materialColor,
 	bool wireframe)
 {
-	stageBaseObj->Render(immediateContext, view, projection, light, materialColor, 0.0f, false);
+	stageBaseObj->Render(immediateContext, view, projection, light, {1.0f,0.0f,0.0f,1.0f}/*materialColor*/, false);
 }
 
 void StageBase::DrawDebugGUI()

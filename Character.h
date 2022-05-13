@@ -16,22 +16,11 @@ public:
 	SkinnedObject(mesh) {};
 	virtual ~Character() {};
 
-	//いらないけどとりあえずコメントアウト
-		//// 位置取得
-		//const DirectX::XMFLOAT3& GetPosition() const { return position; }
-		//// 位置設定
-		//void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
-		//// 回転取得
-		//const DirectX::XMFLOAT3& GetAngle()const { return angle; }
-		//// 回転設定
-		//void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
-		//// スケール取得
-		//const DirectX::XMFLOAT3& GetScale()const { return scale; }
-		//// スケール設定
-		//void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
-	
 	//Velocityセット関数
 	void SetVelocity(const DirectX::XMFLOAT3& velocity) { this->velocity = velocity; }
+
+	//スクロールスピードセット関数
+	void SetScrollSpeed(float scrollSpeed) { this->oldScrollSpeed = scrollSpeed; }
 
 	// 半径取得
 	float GetRadius() const { return radius; }
@@ -68,12 +57,9 @@ public:
 	std::shared_ptr<SkinnedMesh> obstacleMesh;
 	std::unique_ptr<SkinnedObject> obstacleObj;
 
-	// ダメージを与える
-	//bool ApplyDamage(int damage, float invincibleTime);
-
-	// 衝撃を与える
-	//void AddImpulse(const DirectX::XMFLOAT3& impluse);
-
+	//コイン
+	std::shared_ptr<SkinnedMesh> coinMesh;
+	std::unique_ptr<SkinnedObject> coinObj;
 protected:
 	// 移動処理
 	void Move(float vx, float vz, float speed);
@@ -93,18 +79,10 @@ protected:
 	// 速力処理更新
 	void UpdateVelocity(float elapsedTime);
 
-	// 無敵時間更新
-	//void UpdateInvincibleTimer(float elapsedTime);
-
 	// 着地した時に呼ばれる
 	virtual void OnLanding() {}
 
 protected:
-
-	/*DirectX::XMFLOAT3	position = { 0,0,0 };
-	DirectX::XMFLOAT3	angle = { 0,0,0, };
-	DirectX::XMFLOAT3	scale = { 1,1,1 };*/
-
 	DirectX::XMFLOAT4X4	transform = {
 		1,0,0,0,
 		0,1,0,0,
@@ -131,11 +109,12 @@ protected:
 	float	airControl = 0.3f;	
 	float	invincibleTimer = 1.0f;
 	float	stepOffset = 1.0f;
-	float	jumpSpeed = 20.0f;
+	float	jumpSpeed = 17.0f;
 	float   scrollSpeed = 0.15f;
 	float   oldScrollSpeed = 0.0f;
 	int     flgCount = 0;
 	int     oldFlgCount = 0;
+
 private:
 
 	// 垂直速力処理更新
@@ -150,7 +129,6 @@ private:
 	// 水平移動更新処理
 	void UpdateHorizontalMove(float elapsedTime);
 
+	//床に当たってるかチェック
 	bool FloorCheck();
-
-	//bool onSquare;
 };

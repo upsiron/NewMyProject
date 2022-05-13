@@ -4,6 +4,8 @@
 #include <wrl.h>
 #include <directxmath.h>
 #include <string>
+#include "texture.h"
+#include <memory>
 
 class Sprite
 {
@@ -22,6 +24,8 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 
+	std::shared_ptr<Texture> texture = nullptr;
+
 public:
 	struct Vertex
 	{
@@ -29,12 +33,15 @@ public:
 		DirectX::XMFLOAT4 color;
 		DirectX::XMFLOAT2 texcoord;
 	};
-
-	Sprite(ID3D11Device *device, const wchar_t *filename);
+	Sprite(ID3D11Device* device, const wchar_t* filename);
+	Sprite(ID3D11Device *device, const wchar_t *filename, const char* shaderfilename);
 	virtual ~Sprite()
 	{
 
 	}
+
+	
+	void Render(ID3D11DeviceContext* immediateContext, Texture* tex, float dx, float dy, float dw, float dh, float sx, float sy, float sw, float sh, float angle = 0/*degree*/, float r = 1, float g = 1, float b = 1, float a = 1) const;
 
 	void Render(ID3D11DeviceContext *immediateContext, float dx, float dy, float dw, float dh, float sx, float sy, float sw, float sh, float angle = 0/*degree*/, float r = 1, float g = 1, float b = 1, float a = 1) const;
 	
@@ -78,6 +85,11 @@ public:
 	void Begin(ID3D11DeviceContext *immediate_context);
 	void Render(ID3D11DeviceContext *immediate_context, float dx, float dy, float dw, float dh, float sx, float sy, float sw, float sh, float angle/*degree*/, float r, float g, float b, float a);
 	void End(ID3D11DeviceContext *immediate_context);
+	~SpriteBatch()
+	{
+		delete instances;
+		instances = nullptr;
+	}
 
 private:
 	D3D11_VIEWPORT viewport;

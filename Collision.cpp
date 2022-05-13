@@ -192,7 +192,7 @@ bool Collision::FrontWallVsPlayer(
 	if (
 		PlayerPos.x > LeftTop.x &&
 		PlayerPos.x < RightTop.x &&
-		PlayerPos.y + 1.0f < LeftTop.y &&
+		PlayerPos.y + 1.0f < LeftTop.y+1.0f &&
 		PlayerPos.y + 1.0f > RightBottom.y)
 	{
 		if (PlayerPos.z > RightBottom.z)

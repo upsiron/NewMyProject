@@ -6,6 +6,29 @@ Framework* Framework::inst = nullptr;
 
 Framework::~Framework()
 {
+	/*GetDevice()->Release();
+	GetImmediateContext()->Release();
+	GetRenderTargetView()->Release();
+	GetDepthStencilView()->Release();
+	GetRasterizerState0()->Release();
+	GetRasterizerState1()->Release();
+	GetSamplerState()->Release();*/
+
+	//device->Release();
+	//immediateContext->Release();
+	//swapChain->Release();
+	//renderTargetView->Release();
+	//depthStencilView->Release();
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	rasterizerStates[i]->Release();
+	//}
+	//depthStencilState->Release();
+	//noneDepthStencilState->Release();
+	//samplerState->Release();
+	//samplerCrampState->Release();
+
+
 	SceneManager::Instance().Finalize();
 }
 
@@ -147,6 +170,7 @@ bool Framework::Initialize()
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 		depthStencilDesc.DepthEnable = TRUE;
 		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		//depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 		depthStencilDesc.StencilEnable = FALSE;
 		depthStencilDesc.StencilReadMask = 0xFF;
@@ -161,26 +185,66 @@ bool Framework::Initialize()
 		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 		hr = device->CreateDepthStencilState(&depthStencilDesc, depthStencilState.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+		
 	}
-	// create sampler state
-	D3D11_SAMPLER_DESC samplerDesc = {};
-	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.MipLODBias = 0;
-	samplerDesc.MaxAnisotropy = 16;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	memcpy(samplerDesc.BorderColor, &DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), sizeof(DirectX::XMFLOAT4));
-	samplerDesc.MinLOD = 0;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = device->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
-	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
+	// create none depth stencil state
+	{
+		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+		depthStencilDesc.DepthEnable = FALSE;
+		//depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		depthStencilDesc.StencilEnable = FALSE;
+		depthStencilDesc.StencilReadMask = 0xFF;
+		depthStencilDesc.StencilWriteMask = 0xFF;
+		depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+		depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		hr = device->CreateDepthStencilState(&depthStencilDesc, noneDepthStencilState.GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	}
+	{
+		// create sampler state
+		D3D11_SAMPLER_DESC samplerDesc = {};
+		samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0;
+		samplerDesc.MaxAnisotropy = 16;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		memcpy(samplerDesc.BorderColor, &DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), sizeof(DirectX::XMFLOAT4));
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		hr = device->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	}
+	{
+		// create sampler cramp state
+		D3D11_SAMPLER_DESC samplerDescCramp = {};
+		samplerDescCramp.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDescCramp.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDescCramp.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDescCramp.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDescCramp.MipLODBias = 0;
+		samplerDescCramp.MaxAnisotropy = 16;
+		samplerDescCramp.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		memcpy(samplerDescCramp.BorderColor, &DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), sizeof(DirectX::XMFLOAT4));
+		samplerDescCramp.MinLOD = 0;
+		samplerDescCramp.MaxLOD = D3D11_FLOAT32_MAX;
+		hr = device->CreateSamplerState(&samplerDescCramp, samplerCrampState.GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	}
 	// Create Depth Stencil View
 	D3D11_TEXTURE2D_DESC depthStencilBufferDesc = backBufferDesc;
+	//Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
+	ID3D11Texture2D* depthStencilBuffer{};
 	{
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
 		depthStencilBufferDesc.MipLevels = 1;
 		depthStencilBufferDesc.ArraySize = 1;
 		depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;	//DXGI_FORMAT_D32_FLOAT
@@ -188,7 +252,7 @@ bool Framework::Initialize()
 		depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		depthStencilBufferDesc.CPUAccessFlags = 0;
 		depthStencilBufferDesc.MiscFlags = 0;
-		hr = device->CreateTexture2D(&depthStencilBufferDesc, NULL, depthStencilBuffer.GetAddressOf());
+		hr = device->CreateTexture2D(&depthStencilBufferDesc, NULL, &depthStencilBuffer);
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -196,7 +260,7 @@ bool Framework::Initialize()
 		depthStencilViewDesc.ViewDimension = enable_4x_msaa ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Flags = 0;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
-		hr = device->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, depthStencilView.GetAddressOf());
+		hr = device->CreateDepthStencilView(depthStencilBuffer, &depthStencilViewDesc, depthStencilView.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 
@@ -213,8 +277,10 @@ bool Framework::Initialize()
 	blend = std::make_unique<Blender>(device.Get());
 
 	// タイトルシーンへ
+	//SceneManager::Instance().ChangeScene(new SceneTitle());
 	SceneManager::Instance().ChangeScene(new SceneTitle());
 
+	depthStencilBuffer->Release();
 	return true;
 }
 void Framework::Update(float elapsedTime/*Elapsed seconds from last frame*/)
@@ -231,13 +297,44 @@ void Framework::Update(float elapsedTime/*Elapsed seconds from last frame*/)
 }
 void Framework::Render(float elapsedTime/*Elapsed seconds from last frame*/)
 {
-	immediateContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
+	//immediateContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
 	immediateContext->RSSetState(rasterizerStates[0].Get());
-	immediateContext->PSSetSamplers(0, 1, samplerState.GetAddressOf());
+	//immediateContext->PSSetSamplers(0, 1, samplerState.GetAddressOf());
 	// シーン描画
 	SceneManager::Instance().Render();
 
 	// 画面のフリップ
 	swapChain->Present(1, 0);
+}
+
+void Framework::SetViewPort(float width, float height)
+{
+	D3D11_VIEWPORT vp;
+	vp.Width = (FLOAT)width;
+	vp.Height = (FLOAT)height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	immediateContext->RSSetViewports(1, &vp);
+}
+
+void Framework::SetSampler(int slot)
+{
+	immediateContext->PSSetSamplers(slot, 1, samplerState.GetAddressOf());
+}
+
+void Framework::SetSamplerCramp(int slot)
+{
+	immediateContext->PSSetSamplers(slot, 1, samplerCrampState.GetAddressOf());
+}
+
+void Framework::Clear(float color[4])
+{
+	immediateContext->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), depthStencilView.Get());
+
+	immediateContext->ClearRenderTargetView(renderTargetView.Get(), color);
+	immediateContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	immediateContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
 }
 

@@ -170,7 +170,7 @@ bool Texture::Create(ID3D11Device* device, u_int width, u_int height, DXGI_FORMA
 	texture2d_desc.SampleDesc.Count = 1;
 	texture2d_desc.Usage = D3D11_USAGE_DEFAULT;
 	texture2d_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//	texture2d_desc.CPUAccessFlags = 0;
+	//texture2d_desc.CPUAccessFlags = 0;
 	texture2d_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 	hr = device->CreateTexture2D(&texture2d_desc, NULL, Texture2D.GetAddressOf());

@@ -40,17 +40,22 @@ public:
 	// ジャンプ入力処理
 	void InputJump();
 
-	// デバッグプリミティブ描画
-	void DrawDebugPrimitive();
+	// プレイヤーとコインとの衝突判定
+	void CollisionPlayerVsCoin();
 
-	// プレイヤーとエネミーとの衝突判定
-	void CollisionPlayerVsEnemis();
-
-	void InputShot();
+	// プレイヤーと障害物との衝突判定
+	void CollisionPlayerVsObstacle();
 
 	int GetJumpCount() { return jumpCount; }
 
 	bool GetGameOverFlg() { return GameOverFlg; }
+
+	bool GetDebugFlg() { return debugflg; }
+
+
+	
+	//ギミック更新処理
+	void GimmickUpdate();
 
 protected:
 	//着地した時に呼ばれる
@@ -61,28 +66,46 @@ private:
 	float				moveSpeed = 6.0f;
 	float				turnSpeed = DirectX::XMConvertToRadians(720);
 
-	float               StageSideEndPos = 1.4f * 3.0f; //ステージの端っこの当たり判定用
+	float               StageSideEndPos = 1.4f * 3.0f;	 //ステージの端っこの当たり判定用
 
-	int					jumpCount = 0;           //ジャンプした回数カウント用
-	int					jumpLimit = 1;           //ジャンプの回数制限用
+	int					jumpCount = 0;					//ジャンプした回数カウント用
+	int					jumpLimit = 1;					//ジャンプの回数制限用
 
-	int					shot_timer = 0;
+	float               SaveElapsedTime = 0.0f;			//アニメーションに使うelapsedTime用
 
-	float               SaveElapsedTime = 0.0f;  //アニメーションに使うelapsedTime用
+	bool                GameOverFlg = false;           //ゲームオーバーフラグ
 
-	bool                GameOverFlg = false;
+	bool                debugflg = false;              //デバッグフラグ
 
-	bool                debugflg;
+	float               GimmickTime = 0;			   //ギミック用タイム
 
-	int                 AnimationState = 0;
+	int                 AnimationState = 0;            //アニメーション状態
+
+	int                 CoinState = 0;                 //コイン状態
+	float				CoinAngle = 0.1f;              //コイン回転量
+
+	//アニメーション用タグ
 	enum CurrentAnime
 	{
 		RUN = 0,
 		JUMP,
+		FLIP,
 		KNOCK,
 		KNOCKRIGHT,
 		KNOCKLEFT,
 		KNOCKFRONT
 	};
+
+	//プレイヤーの色変更用変数
+	DirectX::XMFLOAT4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	enum ColorChange
+	{
+		RedMinus = 0,
+		RedPuls
+	};
+	int ColorState = 0;
+	float R = 1.0f;
+	float G = 1.0f;
+	float B = 1.0f;
 
 };

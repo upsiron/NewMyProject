@@ -13,8 +13,8 @@ void CameraController::Update(float elapsedTime)
 	float speed = rollSpeed * elapsedTime;
 
 	// スティックの入力に合わせてX軸とY軸を回転
-	angle.x += ay * speed;
-	angle.y += ax * speed;
+	/*angle.x += ay * speed;
+	angle.y += ax * speed;*/
 
 	// X軸のカメラの回転を制御
 	if (angle.x > maxAngleX)

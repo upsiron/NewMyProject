@@ -2,8 +2,9 @@
 
 #include <vector>
 #include "Obstacle.h"
+#include "Object.h"
 
-// エネミーマネージャー
+// 障害物マネージャー
 class ObstacleBlockManager
 {
 private:
@@ -30,36 +31,28 @@ public:
 		const DirectX::XMFLOAT4& materialColor,
 		bool wireframe);
 
-	// エネミー登録
-	void Register(Obstacle* obstacle);
+	// 障害物登録
+	void Register(Object* obstacle);
 
 	// 初期化
 	void Clear();
 
-	// デバッグプリミティブ描画
-	void DrawDebugPrimitive();
-
 	// // デバッグ情報表示
 	void DrawDebugGUI();
 
-	// エネミー数取得
+	// 障害物数取得
 	int GetObstacleCount()const { return static_cast<int>(obstacles.size()); }
 
-	// エネミー取得
-	Obstacle* GetObstacle(int index) { return obstacles.at(index); }
+	// 障害物取得
+	Object* GetObstacle(int index) { return obstacles.at(index); }
 
-	// エネミー削除
-	void Remove(Obstacle* obstacle);
+	// 障害物削除
+	void Remove(Object* obstacle);
 
-	// 付与したIDからエネミーを取得
-	Obstacle* GetObstacleFromId(int id);
+	// 付与したIDから障害物を取得
+	Object* GetObstacleFromId(int id);
 
 private:
-	std::vector<Obstacle*> obstacles;
-	std::vector<Obstacle*> removes;
-
-	// エネミー同士の衝突処理
-	//void CollisionEnemyVsEnemies();
-public:
-	int identity = 0;	// 付与するIDの値(この値にMetaAI::Identity::Enemyを加算して付与する)
+	std::vector<Object*> obstacles;
+	std::vector<Object*> removes;
 };

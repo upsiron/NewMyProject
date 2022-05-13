@@ -47,6 +47,7 @@ public:
 		RED,
 		GREEN,
 		BLUE,
+		COIN,
 	};
 
 	int stageTileMap[3][6][9] =
@@ -173,13 +174,13 @@ public:
 	};
 
 	//easy
-	int stageTileMapEasy[3][10][9] =
+	int StageTileMap[3][10][9] =
 	{
 		//0
 		{
 			//00
 			{
-			 NONE, NONE, NONE,
+			 COIN, NONE, NONE,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
@@ -368,16 +369,16 @@ public:
 		},
 	};
 
-	int RayCast(const DirectX::XMFLOAT3& startPosition, const DirectX::XMFLOAT3& endPosition, DirectX::XMFLOAT3* outPosition, DirectX::XMFLOAT3* outNormal, float* outLength);
-
 	//カラー getter/setter
 	void SetTileColor(int c) { ColorNum = c; }
 	int GetTileColor() { return ColorNum; }
+
 private:
 
+	//カラー番号
 	int ColorNum = 0;
 
-	DirectX::XMFLOAT4 TileColor[11] = {
+	DirectX::XMFLOAT4 TileColor[12] = {
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
@@ -389,5 +390,9 @@ private:
 		{1.0f, 0.0f, 0.0f, 1.0f},//RED
 		{0.0f, 1.0f, 0.0f, 1.0f},//GREEN
 		{0.0f, 0.0f, 1.0f, 1.0f},//BLUE
+		{1.0f, 1.0f, 1.0f, 1.0f},//COIN
 	};
+
+	//ステージの隙間埋め合わせスケール
+	float StageScaleGap = 0.7f;
 };

@@ -6,16 +6,11 @@ ObstacleBlock::ObstacleBlock()
 	Framework& framework = Framework::Instance();
 	ID3D11Device* device = framework.GetDevice();
 
-	//slimeMesh = std::make_shared<SkinnedMesh>(device, "Data/Slime/slime.fbx",true);
-	obstacleMesh = std::make_shared<SkinnedMesh>(device, "Data/001_cube.fbx", true);
+	//obstacleMesh = std::make_shared<SkinnedMesh>(device, "Data/Stage/block2.fbx", true);
 	obstacleObj = std::make_unique<SkinnedObject>(obstacleMesh);
-	obstacleObj->SetPosition(DirectX::XMFLOAT3(2.0f, 0.0f, 0.0f));
+	obstacleObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	obstacleObj->SetScale(DirectX::XMFLOAT3(1.4f, 1.4f, 1.4f));
-	//obstacleObj->SetScale(DirectX::XMFLOAT3(4.2f, 1.4f, 1.4f));
 	obstacleObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-
-	// モデルが大きいのでスケーリング
-	//scale.x = scale.y = scale.z = 0.01f;
 
 	radius = 0.5f;
 	height = 1.0f;
@@ -24,7 +19,7 @@ ObstacleBlock::ObstacleBlock()
 // デストラクタ
 ObstacleBlock::~ObstacleBlock()
 {
-
+	//obstacleMesh = nullptr;
 }
 
 //更新処理
@@ -69,7 +64,7 @@ void ObstacleBlock::Update(float elapsedTime)
 		obstacleObj->GetPosition().y - obstacleObj->GetScale().y,
 		obstacleObj->GetPosition().z - obstacleObj->GetScale().z);
 
-	obstacleObj->Update();
+	obstacleObj->Update(elapsedTime);
 }
 
 //描画処理
@@ -80,7 +75,7 @@ void ObstacleBlock::Render(ID3D11DeviceContext* immediateContext,
 	const DirectX::XMFLOAT4& materialColor,
 	bool wireframe)
 {
-	obstacleObj->Render(immediateContext, view, projection, light, materialColor, 0.0f, false);
+	obstacleObj->Render(immediateContext, view, projection, light, ObstacleColor[ColorNum], false);
 }
 
 // デバッグ 障害物情報表示

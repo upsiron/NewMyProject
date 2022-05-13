@@ -13,6 +13,7 @@ protected:
 	DirectX::XMFLOAT3 angle = { 0, 0, 0 };
 	DirectX::XMFLOAT4X4 world = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 	std::shared_ptr<SkinnedMesh>	mesh;
+	Animation::KeyFrame keyframe;
 	/*float current_time = 0;
 	size_t current_animation = 0;*/
 	//ギミック用フラグ
@@ -50,9 +51,12 @@ public:
 	const DirectX::XMFLOAT3& GetScale() const { return scale; }
 	const DirectX::XMFLOAT3& GetAngle() const { return angle; }
 	const DirectX::XMFLOAT4X4& GetWorld() const { return world; }
+	const bool& GetRedFlg() const { return RedGimmickFlg; }
 	const bool& GetBlueFlg() const { return BlueGimmickFlg; }
 
-	void Update();
+	void Update(float elapsedTime);
+
+	void Animate(float elapsedTime);
 
 	void Render(
 		ID3D11DeviceContext* immediateContext,
@@ -70,7 +74,6 @@ public:
 		const DirectX::XMFLOAT4X4& projection,
 		const DirectX::XMFLOAT4& light,
 		const DirectX::XMFLOAT4& materialColor,
-		float ElapsedTime,
 		bool wireframe = false
 		);
 

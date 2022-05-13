@@ -77,7 +77,6 @@ public:
 
 	// 死亡フラグ取得
 	bool GetDeathFlag() { return deathFlag; }
-
 protected:
 	// ダメージを受けた時に呼ばれる
 	void OnDamaged() override;

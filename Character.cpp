@@ -118,8 +118,17 @@ void Character::UpdateVerticalMove(float elapsedTime)
 		else
 		{
 			// ‹ó’†‚É•‚‚¢‚Ä‚¢‚é
-			isGround = false;
-			position.y += my;
+			if (position.y < -0.1f)
+			{
+				scrollSpeed = 0.0f;
+				isGround = false;
+				position.y += my;
+			}
+			else
+			{
+				isGround = false;
+				position.y += my;
+			}
 		}
 
 		//StageTileManager& stageTileManager = StageTileManager::Instance();

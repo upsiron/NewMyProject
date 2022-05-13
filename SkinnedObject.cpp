@@ -1,6 +1,7 @@
 // TECK.01
 #include "SkinnedObject.h"
 #include "stage.h"
+#include "player.h"
 
 SkinnedObject::SkinnedObject(std::shared_ptr<SkinnedMesh>& mesh)
 {
@@ -11,7 +12,7 @@ SkinnedObject::~SkinnedObject()
 {
 }
 
-void SkinnedObject::Update()
+void SkinnedObject::Update(float elapsedTime)
 {
 	// ワールド行列作成
 	DirectX::XMMATRIX s = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
@@ -26,6 +27,61 @@ void SkinnedObject::Update()
 
 	DirectX::XMStoreFloat4x4(&world, s * r * t);
 	//DirectX::XMStoreFloat4x4(&world,  s * r * t);
+
+	//if (Player::Instance().GetDebugFlg())
+	{
+		if (mesh->AnimationClips.size() > 0)Animate(elapsedTime);
+	}
+}
+
+void SkinnedObject::Animate(float elapsedTime)
+{
+	//アニメーション補間
+	switch (StatusStep) 
+	{
+		case 0:
+		{
+			const float blend = Interval > 0 ? AnimationTick / Interval : AnimationTick;
+			AnimationTick += elapsedTime;
+
+			if (AnimationTick > Interval) {
+				StatusStep = 1;
+				NowMotion = NextMotion;
+				NowFrame = TargetFrame;
+				Animation& animation{ mesh->AnimationClips.at(NextMotion) };
+				AnimationTick = TargetFrame / animation.SamplingRate;
+			}
+
+			const Animation::KeyFrame* keyframes[2]{
+				&mesh->AnimationClips.at(NowMotion).Sequence.at(NowFrame),
+				&mesh->AnimationClips.at(NextMotion).Sequence.at(TargetFrame)
+			};
+			mesh->BlendAnimation(keyframes, blend, keyframe);
+
+			mesh->UpdateAnimation(keyframe);
+
+			break;
+		}
+		case 1:
+		{
+
+			Animation& animation{ mesh->AnimationClips.at(NowMotion) };
+			NowFrame = static_cast<int>(AnimationTick * animation.SamplingRate);
+			if (NowFrame > animation.Sequence.size() - 1)
+			{
+				NowFrame = 0;
+				AnimationTick = 0;
+			}
+			else
+			{
+				AnimationTick += elapsedTime * MotionSpeed;
+			}
+			keyframe = animation.Sequence.at(NowFrame);
+			mesh->UpdateAnimation(keyframe);
+
+			break;
+		}
+	}
 }
 
 void SkinnedObject::Render(
@@ -59,7 +115,6 @@ void SkinnedObject::Render(
 	const DirectX::XMFLOAT4X4& projection,
 	const DirectX::XMFLOAT4& light,
 	const DirectX::XMFLOAT4& materialColor,
-	float ElapsedTime,
 	bool wireframe)
 {
 	// ワールドビュープロジェクション行列作成
@@ -77,76 +132,7 @@ void SkinnedObject::Render(
 
 	if (mesh->AnimationClips.size() > 0)
 	{
-		Animation::KeyFrame keyframe;
-
-		//補間なしアニメーション
-		/*int clip_index = { AnimationState };
-		int frame_index{ 0 };
-		static float animation_tick{ 0 };
-		Animation& animation{ mesh->AnimationClips.at(clip_index) };
-
-		frame_index = static_cast<int>(animation_tick * animation.SamplingRate);
-		if (frame_index > animation.Sequence.size() - 1)
-		{
-			frame_index = 0;
-			animation_tick = 0;
-		}
-		else
-		{
-			animation_tick += ElapsedTime;
-		}
-		keyframe = animation.Sequence[frame_index];*/
-
-		//アニメーション補間
-		switch (StatusStep) {
-		case 0:
-		{
-			const float blend = Interval > 0 ? AnimationTick / Interval : AnimationTick;
-			AnimationTick += ElapsedTime;
-
-			if (AnimationTick > Interval) {
-				StatusStep = 1;
-				NowMotion = NextMotion;
-				NowFrame = TargetFrame;
-				Animation& animation{ mesh->AnimationClips.at(NextMotion) };
-				AnimationTick = TargetFrame / animation.SamplingRate;
-			}
-
-			const Animation::KeyFrame* keyframes[2]{
-				&mesh->AnimationClips.at(NowMotion).Sequence.at(NowFrame),
-				&mesh->AnimationClips.at(NextMotion).Sequence.at(TargetFrame)
-			};
-			mesh->BlendAnimation(keyframes, blend, keyframe);
-
-			mesh->UpdateAnimation(keyframe);
-
-			break;
-		}
-		case 1:
-		{
-
-			Animation& animation{ mesh->AnimationClips.at(NowMotion) };
-			NowFrame = static_cast<int>(AnimationTick * animation.SamplingRate);
-			if (NowFrame > animation.Sequence.size() - 1)
-			{
-				NowFrame = 0;
-				AnimationTick = 0;
-			}
-			else
-			{
-				AnimationTick += ElapsedTime * MotionSpeed;
-			}
-			keyframe = animation.Sequence.at(NowFrame);
-			mesh->UpdateAnimation(keyframe);
-
-
-			break;
-		}
-		}
-
-
 		mesh->Render(immediateContext, worldViewProjection, world, light, materialColor, &keyframe);
-
 	}
 	else
 	{

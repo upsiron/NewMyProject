@@ -1,7 +1,5 @@
 #pragma once
 #include "Character.h"
-//#include "Telegram.h"
-//#include "DebugRenderer.h"
 
 
 // エネミー
@@ -48,6 +46,10 @@ public:
 	// 攻撃範囲取得
 	float GetAttackRange() { return attackRange; }
 
+	float moveAngle = 0.1f;
+	void SetMoveAngle(float angle) { moveAngle = angle; }
+
+
 	// デバッグレンダラ取得
 	//DebugRenderer* GetDebugRenderer() const { return debugRenderer.get(); }
 	
@@ -57,7 +59,6 @@ protected:
 	int id = 0;
 	float searchRange = 0.0f;
 	float attackRange = 0.0f;
-
 private:
 	//std::unique_ptr<DebugRenderer>					debugRenderer;
 };

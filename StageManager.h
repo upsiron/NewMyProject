@@ -51,4 +51,5 @@ private:
 	std::vector<StageBase*> removes;
 
 	int r = 0;
+	const int stageMax = 10;
 };

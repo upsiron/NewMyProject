@@ -75,8 +75,10 @@ void EnemyManager::Clear()
 	for (Enemy* enemy : enemies)
 	{
 		delete enemy;
+		enemy = nullptr;
 	}
 	enemies.clear();
+	enemies.shrink_to_fit();
 }
 
 void EnemyManager::DrawDebugPrimitive()

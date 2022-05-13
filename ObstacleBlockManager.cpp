@@ -6,7 +6,7 @@
 // 更新処理
 void ObstacleBlockManager::Update(float elapsedTime)
 {
-	for (Obstacle* obstacle : obstacles)
+	for (Object* obstacle : obstacles)
 	{
 		//if (enemy->GetPosition().y >= 0)
 		{
@@ -14,12 +14,12 @@ void ObstacleBlockManager::Update(float elapsedTime)
 		}
 	}
 
-	// ※enemiesの範囲for文の中でerase()すると不具合が発生してしまうため、
+	// ※obstaclesの範囲for文の中でerase()すると不具合が発生してしまうため、
 	// 更新処理が終わった後に破棄リストに積まれたオブジェクトを削除する。
-	for (Obstacle* obstacle : removes)
+	for (Object* obstacle : removes)
 	{
 		// std::vectorから要素を削除する場合はイテレーターで削除しなければならない
-		std::vector<Obstacle*>::iterator it = std::find(obstacles.begin(), obstacles.end(), obstacle);
+		std::vector<Object*>::iterator it = std::find(obstacles.begin(), obstacles.end(), obstacle);
 		if (it != obstacles.end())
 		{
 			obstacles.erase(it);
@@ -32,6 +32,7 @@ void ObstacleBlockManager::Update(float elapsedTime)
 	removes.clear();
 }
 
+//描画処理
 void ObstacleBlockManager::Render(ID3D11DeviceContext* immediateContext,
 	const DirectX::XMFLOAT4X4& view,
 	const DirectX::XMFLOAT4X4& projection,
@@ -39,7 +40,7 @@ void ObstacleBlockManager::Render(ID3D11DeviceContext* immediateContext,
 	const DirectX::XMFLOAT4& materialColor,
 	bool wireframe)
 {
-	for (Obstacle* obstacle : obstacles)
+	for (Object* obstacle : obstacles)
 	{
 		//障害物のY座標が0より大きいなら描画
 		if (obstacle->GetPosition().y >= -1.0f)
@@ -49,39 +50,27 @@ void ObstacleBlockManager::Render(ID3D11DeviceContext* immediateContext,
 	}
 }
 
-// エネミー登録
-void ObstacleBlockManager::Register(Obstacle* enemy)
+// 障害物登録
+void ObstacleBlockManager::Register(Object* enemy)
 {
-	//メタAI用なのでわからない
-	// IDを設定
-	//enemy->SetId(identity + static_cast<int>(Meta::Identity::Enemy));
-	//identity++;//設定したらインクリメントする
-
-
 	// 登録
 	obstacles.emplace_back(enemy);
 }
-// エネミー削除
-void ObstacleBlockManager::Remove(Obstacle* enemy)
+// 障害物削除
+void ObstacleBlockManager::Remove(Object* obstacle)
 {
 	// 破棄リストに追加
-	removes.emplace_back(enemy);
+	removes.emplace_back(obstacle);
 }
 void ObstacleBlockManager::Clear()
 {
-	for (Obstacle* obstacle : obstacles)
+	for (Object* obstacle : obstacles)
 	{
 		delete obstacle;
+		obstacle = nullptr;
 	}
 	obstacles.clear();
-}
-
-void ObstacleBlockManager::DrawDebugPrimitive()
-{
-	for (Obstacle* obstacle : obstacles) {
-		// 衝突判定用デバッグ球を描画
-		//enemy->DrawDebugPrimitive();
-	}
+	obstacles.shrink_to_fit();
 }
 
 void ObstacleBlockManager::DrawDebugGUI()
@@ -90,18 +79,18 @@ void ObstacleBlockManager::DrawDebugGUI()
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 	if (ImGui::Begin("Obstacle", nullptr, ImGuiWindowFlags_None))
 	{
-		for (Obstacle* obstacle : obstacles) {
-			// エネミー情報表示
+		for (Object* obstacle : obstacles) {
+			// 障害物情報表示
 			obstacle->DrawDebugGUI();
 		}
 	}
 	ImGui::End();
 }
 
-// IDからエネミーを取得する
-Obstacle* ObstacleBlockManager::GetObstacleFromId(int id)
+// IDから障害物を取得する
+Object* ObstacleBlockManager::GetObstacleFromId(int id)
 {
-	for (Obstacle* obstacle : obstacles)
+	for (Object* obstacle : obstacles)
 	{
 		if (obstacle->GetId() == id)
 			return obstacle;

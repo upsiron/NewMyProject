@@ -77,12 +77,6 @@
     <Filter Include="Sources\System\Camera">
       <UniqueIdentifier>{efad24df-a49e-4013-ab62-76f4d4b8afa4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Stage\Obstacle">
-      <UniqueIdentifier>{10a5a90b-9974-4c82-b117-4ae81f184e51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Stage\Obstacle">
-      <UniqueIdentifier>{ba65ab60-57e4-403a-b1f5-d5aed1eba594}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headers\System\Camera">
       <UniqueIdentifier>{09d6ede3-3bfb-4c20-a650-4c69d05eba19}</UniqueIdentifier>
     </Filter>
@@ -91,6 +85,33 @@
     </Filter>
     <Filter Include="Headers\Charcter\Enemy">
       <UniqueIdentifier>{bdfed960-b2aa-4c27-91d3-0574c7d260e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Bokeh">
+      <UniqueIdentifier>{396dcf27-0640-4a81-a8cd-5b7508919a48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Bright">
+      <UniqueIdentifier>{ccd5ab9c-d8a6-49ed-b90b-b6c75f4c7f88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PointSprite">
+      <UniqueIdentifier>{0269f03f-705e-4fec-ba96-0b67548fc77c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\NoLight">
+      <UniqueIdentifier>{69fccbc1-f10b-47ff-a9db-f1383838b88c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\System\Bloom">
+      <UniqueIdentifier>{b56fcd4a-e174-4ce3-93e4-75f825a2bdab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\System\Bloom">
+      <UniqueIdentifier>{38af4365-a6ea-40d9-81fd-ab29c79fcde7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\FullScreenQuad">
+      <UniqueIdentifier>{9bf8cb78-0fbe-4b77-8613-66a68e69fe81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Stage\Object">
+      <UniqueIdentifier>{10a5a90b-9974-4c82-b117-4ae81f184e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Stage\Object">
+      <UniqueIdentifier>{ba65ab60-57e4-403a-b1f5-d5aed1eba594}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -212,10 +233,10 @@
       <Filter>Sources\Stage</Filter>
     </ClCompile>
     <ClCompile Include="ObstacleBlock.cpp">
-      <Filter>Sources\Stage\Obstacle</Filter>
+      <Filter>Sources\Stage\Object</Filter>
     </ClCompile>
     <ClCompile Include="ObstacleBlockManager.cpp">
-      <Filter>Sources\Stage\Obstacle</Filter>
+      <Filter>Sources\Stage\Object</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Sources\Charcter</Filter>
@@ -228,6 +249,27 @@
     </ClCompile>
     <ClCompile Include="shot.cpp">
       <Filter>Sources\System</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Sources\System</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>Sources\System</Filter>
+    </ClCompile>
+    <ClCompile Include="FullScreenQuad.cpp">
+      <Filter>Sources\System\Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Sources\System\Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Sources\Stage\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>Sources\Stage\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="CoinManager.cpp">
+      <Filter>Sources\Stage\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,13 +388,13 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Obstacle.h">
-      <Filter>Headers\Stage\Obstacle</Filter>
+      <Filter>Headers\Stage\Object</Filter>
     </ClInclude>
     <ClInclude Include="ObstacleBlock.h">
-      <Filter>Headers\Stage\Obstacle</Filter>
+      <Filter>Headers\Stage\Object</Filter>
     </ClInclude>
     <ClInclude Include="ObstacleBlockManager.h">
-      <Filter>Headers\Stage\Obstacle</Filter>
+      <Filter>Headers\Stage\Object</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
       <Filter>Headers\Charcter</Filter>
@@ -365,6 +407,27 @@
     </ClInclude>
     <ClInclude Include="shot.h">
       <Filter>Headers\System</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Headers\System</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>Headers\System</Filter>
+    </ClInclude>
+    <ClInclude Include="FullScreenQuad.h">
+      <Filter>Headers\System\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Headers\System\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Headers\Stage\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Coin.h">
+      <Filter>Headers\Stage\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="CoinManager.h">
+      <Filter>Headers\Stage\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -404,6 +467,42 @@
     <FxCompile Include="Shaders\skinned_mesh_vs.hlsl">
       <Filter>Shaders\skinned_mesh</Filter>
     </FxCompile>
+    <FxCompile Include="bokeh_vs.hlsl">
+      <Filter>Shaders\Bokeh</Filter>
+    </FxCompile>
+    <FxCompile Include="bokeh_ps.hlsl">
+      <Filter>Shaders\Bokeh</Filter>
+    </FxCompile>
+    <FxCompile Include="bright_vs.hlsl">
+      <Filter>Shaders\Bright</Filter>
+    </FxCompile>
+    <FxCompile Include="bright_ps.hlsl">
+      <Filter>Shaders\Bright</Filter>
+    </FxCompile>
+    <FxCompile Include="PointSprite_vs.hlsl">
+      <Filter>Shaders\PointSprite</Filter>
+    </FxCompile>
+    <FxCompile Include="PointSprite_gs.hlsl">
+      <Filter>Shaders\PointSprite</Filter>
+    </FxCompile>
+    <FxCompile Include="PointSprite_ps.hlsl">
+      <Filter>Shaders\PointSprite</Filter>
+    </FxCompile>
+    <FxCompile Include="NoLight_vs.hlsl">
+      <Filter>Shaders\NoLight</Filter>
+    </FxCompile>
+    <FxCompile Include="NoLight_ps.hlsl">
+      <Filter>Shaders\NoLight</Filter>
+    </FxCompile>
+    <FxCompile Include="PointSprite_cs.hlsl">
+      <Filter>Shaders\PointSprite</Filter>
+    </FxCompile>
+    <FxCompile Include="FullScreenQuad_ps.hlsl">
+      <Filter>Shaders\FullScreenQuad</Filter>
+    </FxCompile>
+    <FxCompile Include="FullScreenQuad_vs.hlsl">
+      <Filter>Shaders\FullScreenQuad</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\geometric_primitive.hlsli">
@@ -424,6 +523,21 @@
     </None>
     <None Include="Shaders\skinned_mesh.hlsli">
       <Filter>Shaders\skinned_mesh</Filter>
+    </None>
+    <None Include="bokeh.hlsli">
+      <Filter>Shaders\Bokeh</Filter>
+    </None>
+    <None Include="bright.hlsli">
+      <Filter>Shaders\Bright</Filter>
+    </None>
+    <None Include="PointSprite.hlsli">
+      <Filter>Shaders\PointSprite</Filter>
+    </None>
+    <None Include="NoLight.hlsli">
+      <Filter>Shaders\NoLight</Filter>
+    </None>
+    <None Include="FullScreenQuad.hlsli">
+      <Filter>Shaders\FullScreenQuad</Filter>
     </None>
   </ItemGroup>
 </Project>

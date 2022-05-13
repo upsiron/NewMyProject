@@ -3,9 +3,10 @@
 #include "Input/Input.h"
 #include "Camera.h"
 #include "ObstacleBlockManager.h"
+#include "CoinManager.h"
+#include "EnemyManager.h"
 #include "collision.h"
 #include "KeyInput.h"
-#include "Scene.h"
 
 
 static Player* instance = nullptr;
@@ -28,15 +29,27 @@ Player::Player()
 
 	//アニメーション初期化
 	std::vector<std::string> Animationfilenames{
-		"Data/Banana/runAnime.fbx",
-		"Data/Banana/RunningForwardFlip.fbx",
-		"Data/Banana/KnockedOut.fbx",
-		"Data/Banana/KnockOutRight.fbx",
-		"Data/Banana/KnockOutLeft.fbx",
-		"Data/Banana/KnockOutFront.fbx",
+		"Data/Banana/Animations/runAnime.fbx",
+		"Data/Banana/Animations/Jump.fbx",
+		"Data/Banana/Animations/RunningForwardFlip.fbx",
+		"Data/Banana/Animations/KnockedOut.fbx",
+		"Data/Banana/Animations/KnockOutRight.fbx",
+		"Data/Banana/Animations/KnockOutLeft.fbx",
+		"Data/Banana/Animations/KnockOutFront.fbx",
 	}; 
+	/*std::vector<std::string> Animationfilenames{
+		"Data/Jummo/Running.fbx",
+		"Data/Jummo/Jump.fbx",
+		"Data/Jummo/ForwardFlip.fbx",
+		"Data/Jummo/KnockOut.fbx",
+		"Data/Jummo/KnockOutRight.fbx",
+		"Data/Jummo/KnockOutLeft.fbx",
+		"Data/Jummo/Running.fbx",
+	};*/
+
 	//初期化
 	playerMesh = std::make_shared<SkinnedMesh>(device, "Data/Banana/banana.fbx", Animationfilenames, true);
+	//playerMesh = std::make_shared<SkinnedMesh>(device, "Data/Jummo/Jummo.fbx", Animationfilenames, true);
 
 	playerObj = std::make_unique<SkinnedObject>(playerMesh);
 	SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -45,11 +58,10 @@ Player::Player()
 
 	//スクロールスピード初期化
 	scrollSpeed = 0.2f;
+	oldScrollSpeed = 0.2f;
 
-	playerObj->SetMotion(RUN, 0, 0.08f);
-
-	// モデルが大きいのでスケーリング
-	//scale.x = scale.y = scale.z = 0.01f;
+	//ゲームオーバーフラグ初期化
+	GameOverFlg = false;
 }
 
 // デストラクタ
@@ -61,6 +73,10 @@ Player::~Player()
 // プレイヤー更新処理
 void Player::Update(float elapsedTime)
 {
+	//リリース用
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	if (gamePad.GetButtonDown() & GamePad::BTN_Y || KeyInput::KeyRelease() & KEY_START)debugflg = !debugflg;
+
 	//現在のelapsedTime保持
 	SaveElapsedTime = elapsedTime;
 
@@ -72,28 +88,8 @@ void Player::Update(float elapsedTime)
 	//自動スクロール
 	if(debugflg)position.z += scrollSpeed;
 
-	//スクロール加速処理
-	if (RedGimmickFlg)
-	{
-		scrollSpeed = oldScrollSpeed + 0.05f;
-		//gravity = oldGravity - 0.05f;
-	}
-	else
-	{
-		oldScrollSpeed = scrollSpeed;
-		oldGravity = gravity;
-	}
-
-	if (GreenGimmickFlg)
-	{
-		if (jumpCount < jumpLimit)
-		{
-			//ジャンプアニメーションセット
-			playerObj->SetMotion(JUMP, 0, 0.08f);
-			jumpCount++;
-			Jump(28.5f);
-		}
-	}
+	//ギミック更新処理
+	GimmickUpdate();
 	
 	// 速力更新処理
 	UpdateVelocity(elapsedTime);
@@ -104,11 +100,22 @@ void Player::Update(float elapsedTime)
 	// ジャンプ入力
 	if (!GameOverFlg)InputJump();
 
-	// プレイヤーと敵との衝突判定
-	CollisionPlayerVsEnemis();
+	// プレイヤーと障害物との衝突判定
+	CollisionPlayerVsObstacle();
+
+	// プレイヤーとコインとの衝突判定
+	CollisionPlayerVsCoin();
+	if (CoinState == 1 && CoinAngle > 0)
+	{
+		CoinAngle += 0.05f;
+	}
+	else if (CoinState == 0)
+	{
+		if(CoinAngle > 0.1f)CoinAngle -= 0.01f;
+	}
 
 	//プレイヤーの更新
-	playerObj->Update();
+	playerObj->Update(elapsedTime);
 
 	//落下ゲームオーバー
 	if (position.y < -1.5f)
@@ -130,7 +137,7 @@ void Player::Render(ID3D11DeviceContext* immediateContext,
 {
 	//プレイヤーの描画
 	//playerObj->Render(immediateContext, view, projection, light, materialColor, &keyframe, wireframe);
-	playerObj->Render(immediateContext, view, projection, light, materialColor, SaveElapsedTime, wireframe);
+	playerObj->Render(immediateContext, view, projection, light, Color, wireframe);
 }
 
 //デバック用GUI
@@ -171,6 +178,78 @@ void Player::DrawDebugGUI()
 	ImGui::End();
 }
 
+//プレイヤー関係ギミック更新処理
+void Player::GimmickUpdate()
+{
+	//////////////////
+	//赤パネル
+	//////////////////
+	//スクロール加速処理
+	if (RedGimmickFlg)
+	{
+		GimmickTime = 300.0f;
+	}
+
+	//ギミックタイムの時間だけスクロールスピードを上げる
+	if (GimmickTime >= 0.0f)
+	{
+		GimmickTime--;
+		scrollSpeed = oldScrollSpeed + 0.15f;
+	}
+	else
+	{
+		scrollSpeed = oldScrollSpeed;
+	}
+
+	//playerのカラーを変える
+	Color = { R,G,B,1.0f };
+	if (GimmickTime > 0)
+	{
+		switch (ColorState)
+		{
+		case RedMinus:
+			G -= 0.05f;
+			B -= 0.05f;
+			if (G < 0.0f)
+			{
+				ColorState = RedPuls;
+			}
+			break;
+		case RedPuls:
+			G += 0.05f;
+			B += 0.05f;
+			if (G > 1.0f)
+			{
+				ColorState = RedMinus;
+			}
+			break;
+		}
+	}
+	else
+	{
+		if (G < 1.0f)
+		{
+			G += 0.01f;
+			B += 0.01f;
+		}
+	}
+
+	///////////////
+	//緑パネル
+	///////////////
+	//大ジャンプ処理
+	if (GreenGimmickFlg)
+	{
+		if (jumpCount < jumpLimit)
+		{
+			//ジャンプアニメーションセット
+			playerObj->SetMotion(FLIP, 0, 0.02f);
+			jumpCount++;
+			Jump(28.5f);
+		}
+	}
+}
+
 // スティック入力値から移動ベクトルを取得
 DirectX::XMFLOAT3 Player::GetMoveVec()const
 {
@@ -178,6 +257,7 @@ DirectX::XMFLOAT3 Player::GetMoveVec()const
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	float ax = gamePad.GetAxisLX();
 	float ay = gamePad.GetAxisLY();
+	//float ay = 0.0f;
 
 	// カメラ方向とスティックの入力値によって進行方向を計算する
 	Camera& camera = Camera::Instance();
@@ -221,6 +301,7 @@ DirectX::XMFLOAT3 Player::GetMoveVec()const
 	}
 	else
 	{
+		//vec.z = 0.0f;
 		vec.z = ay;
 	}
 	// Y軸方向には移動しない
@@ -266,8 +347,28 @@ void Player::InputMove(float elapsedTime)
 	}
 }
 
-// プレイヤーと敵の衝突判定
-void Player::CollisionPlayerVsEnemis()
+void Player::CollisionPlayerVsCoin()
+{
+	CoinManager& coinManager = CoinManager::Instance();
+	int coinCount = coinManager.GetCoinCount();
+	for (int i = 0; i < coinCount; i++)
+	{
+		Object* object = coinManager.GetCoin(0);
+		if (Collision::HitSphere(position, 0.5f, { object->GetPosition().x, 0.0f, object->GetPosition().z }, 1.0f))
+		{
+			CoinState = 1;
+		}
+		else
+		{
+			CoinState = 0;
+		}
+
+		object->SetMoveAngle(CoinAngle);
+	}
+}
+
+// プレイヤーと障害物の衝突判定
+void Player::CollisionPlayerVsObstacle()
 {
 	ObstacleBlockManager& obstacleBlockManager = ObstacleBlockManager::Instance();
 
@@ -275,7 +376,7 @@ void Player::CollisionPlayerVsEnemis()
 	int obstacleCount = obstacleBlockManager.GetObstacleCount();
 	for (int i = 0; i < obstacleCount; ++i)
 	{
-		Obstacle* obstacle = obstacleBlockManager.GetObstacle(i);
+		Object* obstacle = obstacleBlockManager.GetObstacle(i);
 
 		//描画されてないなら衝突処理を飛ばす
 		if (!obstacle->GetExistFlg())continue;
@@ -303,6 +404,7 @@ void Player::CollisionPlayerVsEnemis()
 				{
 					//スクロールストップ
 					scrollSpeed = 0.0f;
+					oldScrollSpeed = 0.0f;
 					//左倒れアニメーションセット
 					playerObj->SetMotion(KNOCKLEFT, 0, 0.0f);
 					//ゲームオーバーフラグを立てる
@@ -332,6 +434,7 @@ void Player::CollisionPlayerVsEnemis()
 				{
 					//スクロールストップ
 					scrollSpeed = 0.0f;
+					oldScrollSpeed = 0.0f;
 					//右倒れアニメーションセット
 					playerObj->SetMotion(KNOCKRIGHT, 0, 0.0f);
 					//ゲームオーバーフラグを立てる
@@ -364,6 +467,7 @@ void Player::CollisionPlayerVsEnemis()
 					GameOverFlg = true;
 					//スクロールストップ
 					scrollSpeed = 0.0f;
+					oldScrollSpeed = 0.0f;
 				}
 			}
 		}
@@ -395,44 +499,11 @@ void Player::CollisionPlayerVsEnemis()
 					GameOverFlg = true;
 					//スクロールストップ
 					scrollSpeed = 0.0f;
+					oldScrollSpeed = 0.0f;
 				}
 			}
 		}
 
-	}
-}
-
-void Player::InputShot()
-{
-	if (KeyInput::KeyTrigger() & KEY_C)
-	{
-		shot_timer = 0;
-		//通常弾
-		for (auto& s : shotObj)
-		{
-			if (s->Exist)continue;	//存在していれば別を検索
-			s->Set(DirectX::XMFLOAT3(position.x, position.y, position.z), angle, SHOT::LOOP);
-			break;
-		}
-	}
-	//ショットタイマーで射程
-	if (shot_timer > 20)
-	{
-		for (auto& s : shotObj) {
-			s->Exist = false;
-		}
-	}
-
-	for (auto& s : shotObj) {
-		if (!s->Exist)continue;		//存在しなければ別を検索
-		switch (s->ShotNum)
-		{
-		case SHOT::NONE:
-			break;
-		case SHOT::LOOP:
-			s->Loop_Move();
-			break;
-		}
 	}
 }
 
@@ -447,7 +518,7 @@ void Player::InputJump()
 		{
 			//scrollSpeed = scrollSpeed - (saveScrollSpeed - 0.15f);
 			//ジャンプアニメーションセット
-			playerObj->SetMotion(JUMP, 0, 0.08f);
+			playerObj->SetMotion(JUMP, 0, 0.03f);
 			//playerObj->SetAnime(JUMP);
 			jumpCount++;
 			Jump(jumpSpeed);

@@ -74,7 +74,7 @@ dcl_temps 8
 //   v4.x <- input.Tex.x; v4.y <- input.Tex.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 32 "C:\Users\2190060\Desktop\個人製作_1214\Shaders\Phong_ps.hlsl"
+#line 32 "D:\個人製作_0427 - test\Shaders\Phong_ps.hlsl"
 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v4.xyxx, t0.xyzw, s0  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z; r0.w <- color.w
 
 #line 33

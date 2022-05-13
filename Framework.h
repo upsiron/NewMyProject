@@ -44,7 +44,9 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerStates[2];
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> noneDepthStencilState;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerCrampState;
 
 	UINT screenWidth;
 	UINT screenHeight;
@@ -68,10 +70,16 @@ public:
 	ID3D11RasterizerState* GetRasterizerState0() const { return rasterizerStates[0].Get(); }
 	ID3D11RasterizerState* GetRasterizerState1() const { return rasterizerStates[0].Get(); }
 	ID3D11DepthStencilState* GetDepthStencilState() const { return depthStencilState.Get(); }
+	ID3D11DepthStencilState* GetNoneDepthStencilState() const { return noneDepthStencilState.Get(); }
 	ID3D11SamplerState* GetSamplerState() const { return samplerState.Get(); }
 
 	SoundManager* GetSoundManager()const { return soundManager.get(); }
 
+	void SetViewPort(float width, float height);
+	void SetSampler(int slot);
+	void SetSamplerCramp(int slot);
+
+	void Clear(float color[4] = { 0 });
 
 public:
 	static Framework& Instance() { return *inst; }
@@ -106,7 +114,7 @@ public:
 		}
 		ImGui_ImplDX11_Shutdown();
 		ImGui_ImplWin32_Shutdown();
-		ImGui::DestroyContext();
+		//ImGui::DestroyContext();
 		return static_cast<int>(msg.wParam);
 	}
 
@@ -150,7 +158,6 @@ private:
 	bool Initialize();
 	void Update(float elapsedTime/*Elapsed seconds from last frame*/);
 	void Render(float elapsedTime/*Elapsed seconds from last frame*/);
-
 private:
 	HighResolutionTimer timer;
 	void calculate_frame_stats()

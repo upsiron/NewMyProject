@@ -579,6 +579,7 @@ void SkinnedMesh::FetchMeshes(FbxScene* FBXScene,
 							static_cast<float>(Tangent->GetDirectArray().GetAt(VertexIndex)[3])
 						};
 					}
+					int test = ms.Vertices.capacity();
 
 					ms.Vertices.at(VertexIndex) = move(vertex);
 					//ms.Indices.at(VertexIndex) = VertexIndex;
@@ -594,7 +595,6 @@ void SkinnedMesh::FetchMeshes(FbxScene* FBXScene,
 
 			}
 			faces.push_back(f);
-
 		}
 		for (const Vertex& v : ms.Vertices)
 		{

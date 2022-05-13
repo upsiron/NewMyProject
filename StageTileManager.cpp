@@ -1,5 +1,5 @@
 #include "stageTileManager.h"
-#include "scene.h"
+//#include "scene.h"
 
 // XVˆ—
 void StageTileManager::Update(float elapsedTime)
@@ -60,8 +60,10 @@ void StageTileManager::Clear()
 	for (StageTile* stageTile : stageTiles)
 	{
 		delete stageTile;
+		stageTile = nullptr;
 	}
 	stageTiles.clear();
+	stageTiles.shrink_to_fit();
 }
 
 void StageTileManager::DrawDebugGUI()
