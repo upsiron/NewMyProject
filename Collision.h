@@ -7,32 +7,12 @@ class Collision
 private:  
 	static std::shared_ptr<StaticObject> terrain; 
 public:  
-	// 地形の登録と解除  
-	static void RegisterTerrain( std::shared_ptr<StaticObject>& obj);  
-	static void UnregisterTerrain();   
-
-	// 登録されている地形にたいしてのレイピック 
-	static int RayPick(   const DirectX::XMFLOAT3& startPosition,   
-		                        const DirectX::XMFLOAT3& endPosition,   
-								DirectX::XMFLOAT3* outPosition,   
-								DirectX::XMFLOAT3* outNormal);   
-	// 登録されている地形に対しての反射  
-	static int Reflect(  const DirectX::XMFLOAT3& startPosition,   
-							 const DirectX::XMFLOAT3& endPosition,   
-		                     float rate,   
-							 DirectX::XMFLOAT3* outPosition,  
-							 DirectX::XMFLOAT3* outReflect); 
-
 	//球同士の当たり判定
 	static bool	HitSphere(	const DirectX::XMFLOAT3& p1, 
 									float r1, 
 									const DirectX::XMFLOAT3& p2, 
 									float r2);
 
-
-	static int MoveCheck(const DirectX::XMFLOAT3& startPosition,
-							      const DirectX::XMFLOAT3& endPosition,
-								  DirectX::XMFLOAT3* outPosition);
 	//床当たり判定
 	static bool FloorVsPlayer(
 		const DirectX::XMFLOAT3& LeftTop,
@@ -80,9 +60,4 @@ public:
 		float radiusB,
 		DirectX::XMFLOAT3& outPositionB
 	);
-
-
-
-
-
 }; 

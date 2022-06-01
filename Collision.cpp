@@ -1,55 +1,5 @@
 #include "collision.h" 
 
-std::shared_ptr<StaticObject> Collision::terrain;
-
-void Collision::RegisterTerrain(std::shared_ptr<StaticObject>& obj) { terrain = obj; }
-
-void Collision::UnregisterTerrain() { terrain.reset(); }
-
-//今使えない
-int Collision::RayPick(const DirectX::XMFLOAT3& startPosition, 
-							  const DirectX::XMFLOAT3& endPosition, 
-						      DirectX::XMFLOAT3* outPosition, 
-							  DirectX::XMFLOAT3* outNormal) 
-{ 
-	return terrain->RayPick(startPosition, endPosition, outPosition, outNormal); 
-}
-
-int Collision::Reflect(const DirectX::XMFLOAT3& startPosition, const DirectX::XMFLOAT3& endPosition, float rate, DirectX::XMFLOAT3* outPosition, DirectX::XMFLOAT3* outReflect)
-{
-	// レイピック  
-	DirectX::XMFLOAT3 hitPosition, hitNormal;  
-	int materialIndex = RayPick(startPosition, endPosition, &hitPosition, &hitNormal);  
-	if (materialIndex == -1)  {   return materialIndex;  } 
-
-     // 壁までのベクトル  
-	DirectX::XMVECTOR hit = DirectX::XMLoadFloat3(&hitPosition);  
-	DirectX::XMVECTOR start = DirectX::XMLoadFloat3(&startPosition);  
-	DirectX::XMVECTOR end = DirectX::XMLoadFloat3(&endPosition);  
-	DirectX::XMVECTOR vec = DirectX::XMVectorSubtract(end, start); 
-
-	// 壁の法線  
-	DirectX::XMVECTOR normal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&hitNormal));
-
-	// 入射ベクトルを法線に射影  
-	DirectX::XMVECTOR Vec_Inversion = DirectX::XMVectorNegate(vec);
-	DirectX::XMVECTOR dot = DirectX::XMVector3Dot(Vec_Inversion, normal);
-
-	// 反射位置の計算  
-	// out = vec + normal * (dot * 2);  
-	DirectX::XMVECTOR reflect = DirectX::XMVectorAdd(vec, DirectX::XMVectorMultiply(normal , DirectX::XMVectorScale(dot, 2.0f))) ;
-
-	// 反射率の補正   
-	reflect = DirectX::XMVectorScale(reflect, rate);
-
-	// 反射位置(hit予定位置)  
-    DirectX::XMVECTOR position = hit;  
-	DirectX::XMStoreFloat3(outPosition, position); 
-	DirectX::XMStoreFloat3(outReflect, reflect); 
-
-	return materialIndex;
-}
-
 bool Collision::HitSphere(const DirectX::XMFLOAT3& p1, float r1, const DirectX::XMFLOAT3& p2, float r2)
 {
 	//	半径の合算の2乗
@@ -63,46 +13,9 @@ bool Collision::HitSphere(const DirectX::XMFLOAT3& p1, float r1, const DirectX::
 	float L2 = vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
 
 	//	衝突判定
-	if (L2 < R2)	return	true;
+	if (L2 < R2) return	true;
 
 	return false;
-}
-
-int Collision::MoveCheck(const DirectX::XMFLOAT3& startPosition, const DirectX::XMFLOAT3& endPosition, DirectX::XMFLOAT3* outPosition)
-{
-	DirectX::XMFLOAT3 hitPosition, hitNormal;
-	int materialIndex = RayPick(startPosition, endPosition, &hitPosition, &hitNormal);
-	if (materialIndex == -1)
-	{ // ヒットしなかったら移動後の位置は終点   
-		*outPosition = endPosition;
-		return materialIndex;
-	}
-
-	// 壁をつきぬけたベクトル  
-	DirectX::XMVECTOR start = DirectX::XMLoadFloat3(&hitPosition);
-	DirectX::XMVECTOR end = DirectX::XMLoadFloat3(&endPosition);
-	DirectX::XMVECTOR vec = DirectX::XMVectorSubtract(end, start);
-
-	// 壁の法線ベクトルを単位化  
-	DirectX::XMVECTOR normal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&hitNormal));
-
-	// 入射ベクトルを法線に射影  
-	DirectX::XMVECTOR Vec_Inversion = DirectX::XMVectorNegate(vec);
-	DirectX::XMVECTOR dot = DirectX::XMVector3Dot(Vec_Inversion, normal);
-
-	// 補正位置の計算  
-	DirectX::XMVECTOR position = DirectX::XMVectorAdd(DirectX::XMVectorMultiply(normal, dot), end);
-	DirectX::XMStoreFloat3(outPosition, position);
-
-	// 補正後の位置が壁にめり込んでいた場合は移動しないようにする 
-	if (-1 != RayPick(hitPosition, *outPosition, &hitPosition, &hitNormal))
-	{
-		*outPosition = startPosition;
-	}
-
-
-
-	return materialIndex;
 }
 
 bool Collision::FloorVsPlayer(
