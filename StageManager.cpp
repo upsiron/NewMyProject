@@ -33,7 +33,7 @@ void StageManager::Update(float elapsedTime)
 			//ステージ更新時に新しいパターンをランダムで決定
 			stages.at(i)->Rand = rand() % 5;
 			//イージーモードステージ更新時にランダムで決定されたパターンを更新
-			stages.at(i)->EasyRand = r/*2*/;
+			stages.at(i)->StageRand = r/*2*/;
 			//ステージを一番前のポジションに持っていく
 			stages.at(i)->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, (stages.at(i)->GetPosition().z + 10.0f * stageMax)));
 		}
