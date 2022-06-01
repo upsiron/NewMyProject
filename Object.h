@@ -42,6 +42,10 @@ public:
 	DirectX::XMFLOAT3 ObstacleDownLeftBottom = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 ObstacleDownRightBottom = { 0.0f,0.0f,0.0f };
 
+	//コイン上昇用
+	float movePosition = 0.0f;
+	void SetMovePosition(float position) { movePosition = position; }
+	//コイン回転用
 	float moveAngle = 0.1f;
 	void SetMoveAngle(float angle) { moveAngle = angle; }
 
