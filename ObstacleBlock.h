@@ -28,7 +28,7 @@ public:
 	int GetObstacleColor() { return ColorNum; }
 private:
 	int ColorNum = 0;
-	DirectX::XMFLOAT4 ObstacleColor[12] = {
+	DirectX::XMFLOAT4 ObstacleColor[14] = {
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
@@ -37,6 +37,8 @@ private:
 		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
 		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
 		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
+		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
+		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
