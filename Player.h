@@ -81,8 +81,12 @@ private:
 
 	int                 AnimationState = 0;            //アニメーション状態
 
-	int                 CoinState = 0;                 //コイン状態
-	float				CoinAngle = 0.1f;              //コイン回転量
+	int                 CoinState[3] = { 0 };          //コイン状態
+	float				CoinAngle[3] = { 0.1f };       //コイン回転量
+	float				CoinPositionY[3] = { 0.0f };   //コイン移動量
+    int                 PlayerCoinCount = 0;           //コイン取得数
+	int                 OldPlayerCoinCount = 0;        //コイン取得数
+	bool                CoinFlg = false;                //コインのフラグ
 
 	//アニメーション用タグ
 	enum CurrentAnime

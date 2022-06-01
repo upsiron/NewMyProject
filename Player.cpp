@@ -5,12 +5,12 @@
 #include "ObstacleBlockManager.h"
 #include "CoinManager.h"
 #include "EnemyManager.h"
-#include "collision.h"
+#include "Collision.h"
 #include "KeyInput.h"
 
 
 static Player* instance = nullptr;
-static DirectX::XMFLOAT3 savePos;
+static DirectX::XMFLOAT3 SavePos;
 
 // インスタンス取得
 Player& Player::Instance()
@@ -37,20 +37,9 @@ Player::Player()
 		"Data/Banana/Animations/KnockOutLeft.fbx",
 		"Data/Banana/Animations/KnockOutFront.fbx",
 	}; 
-	/*std::vector<std::string> Animationfilenames{
-		"Data/Jummo/Running.fbx",
-		"Data/Jummo/Jump.fbx",
-		"Data/Jummo/ForwardFlip.fbx",
-		"Data/Jummo/KnockOut.fbx",
-		"Data/Jummo/KnockOutRight.fbx",
-		"Data/Jummo/KnockOutLeft.fbx",
-		"Data/Jummo/Running.fbx",
-	};*/
 
-	//初期化
+	//プレイヤー初期化
 	playerMesh = std::make_shared<SkinnedMesh>(device, "Data/Banana/banana.fbx", Animationfilenames, true);
-	//playerMesh = std::make_shared<SkinnedMesh>(device, "Data/Jummo/Jummo.fbx", Animationfilenames, true);
-
 	playerObj = std::make_unique<SkinnedObject>(playerMesh);
 	SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	SetScale(DirectX::XMFLOAT3(0.013f, 0.013f, 0.013f));
@@ -59,6 +48,14 @@ Player::Player()
 	//スクロールスピード初期化
 	scrollSpeed = 0.2f;
 	oldScrollSpeed = 0.2f;
+
+	//コイン初期化
+	for (int i = 0; i < 3; i++)
+	{
+		CoinState[i] = 0;
+		CoinAngle[i] = 0.1f;
+		CoinPositionY[i] = 0.0f;
+	}
 
 	//ゲームオーバーフラグ初期化
 	GameOverFlg = false;
@@ -105,14 +102,6 @@ void Player::Update(float elapsedTime)
 
 	// プレイヤーとコインとの衝突判定
 	CollisionPlayerVsCoin();
-	if (CoinState == 1 && CoinAngle > 0)
-	{
-		CoinAngle += 0.05f;
-	}
-	else if (CoinState == 0)
-	{
-		if(CoinAngle > 0.1f)CoinAngle -= 0.01f;
-	}
 
 	//プレイヤーの更新
 	playerObj->Update(elapsedTime);
@@ -125,7 +114,7 @@ void Player::Update(float elapsedTime)
 	}
 
 	//現在のプレイヤーのポジションを保持
-	savePos = position;
+	SavePos = position;
 }
 
 void Player::Render(ID3D11DeviceContext* immediateContext,
@@ -136,7 +125,6 @@ void Player::Render(ID3D11DeviceContext* immediateContext,
 	bool wireframe)
 {
 	//プレイヤーの描画
-	//playerObj->Render(immediateContext, view, projection, light, materialColor, &keyframe, wireframe);
 	playerObj->Render(immediateContext, view, projection, light, Color, wireframe);
 }
 
@@ -173,6 +161,7 @@ void Player::DrawDebugGUI()
 			ImGui::SliderFloat("scroll", &scrollSpeed, 0.0f, 1.0f);
 			ImGui::SliderFloat("jump", &jumpSpeed, 0.0f, 100.0f);
 			ImGui::SliderFloat("gravity", &gravity, -100.0f, 0.0f);
+			ImGui::InputInt("PlayerCoinCount", &PlayerCoinCount, 0.0f, 100.0f);
 		}
 	}
 	ImGui::End();
@@ -314,8 +303,8 @@ DirectX::XMFLOAT3 Player::GetMoveVec()const
 void Player::InputMove(float elapsedTime)
 {
 	//左右の移動制限
-	if (position.x > StageSideEndPos)position.x = savePos.x;
-	if (position.x < -1.0f * StageSideEndPos)position.x = savePos.x;
+	if (position.x > StageSideEndPos)position.x = SavePos.x;
+	if (position.x < -1.0f * StageSideEndPos)position.x = SavePos.x;
 
 	// 進行ベクトルを取得
 	DirectX::XMFLOAT3 moveVec = GetMoveVec();
@@ -353,17 +342,45 @@ void Player::CollisionPlayerVsCoin()
 	int coinCount = coinManager.GetCoinCount();
 	for (int i = 0; i < coinCount; i++)
 	{
-		Object* object = coinManager.GetCoin(0);
-		if (Collision::HitSphere(position, 0.5f, { object->GetPosition().x, 0.0f, object->GetPosition().z }, 1.0f))
+		Object* object = coinManager.GetCoin(i);
+		if (!object->GetExistFlg())continue;
+
+		//コインが当たっている時といない時で状態を変える
+		if (debugflg && Collision::HitSphere(position, 0.4f, { object->GetPosition().x,  object->GetPosition().y - 1.5f, object->GetPosition().z }, 0.4f))
 		{
-			CoinState = 1;
+			CoinState[i] = 1;
 		}
 		else
 		{
-			CoinState = 0;
+			CoinState[i] = 0;
 		}
 
-		object->SetMoveAngle(CoinAngle);
+		//コインの回転量を設定
+		if (CoinState[i] == 1 && CoinAngle[i] > 0.0f)
+		{
+			CoinAngle[i] += 0.05f;
+			CoinPositionY[i] += 3.0f;
+		}
+		else
+		{
+			if (CoinAngle[i] > 0.1f)CoinAngle[i] -= 0.01f;
+			if (CoinPositionY[i] > 0.1f)CoinPositionY[i] -= 0.1f;
+		}
+
+		//コイン数をカウント
+		if (CoinPositionY[i] > 0 && CoinState[i] == 1)
+		{
+			PlayerCoinCount = OldPlayerCoinCount + 1;
+		}
+		else
+		{
+			OldPlayerCoinCount = PlayerCoinCount;
+		}
+
+		//移動量セット
+		object->SetMovePosition(CoinPositionY[i]);
+		//回転量セット
+		object->SetMoveAngle(CoinAngle[i]);
 	}
 }
 
@@ -399,7 +416,7 @@ void Player::CollisionPlayerVsObstacle()
 				position)
 				)
 			{
-				position.x = savePos.x;
+				position.x = SavePos.x;
 				if (position.x > obstacle->GetPosition().x)
 				{
 					//スクロールストップ
@@ -429,7 +446,7 @@ void Player::CollisionPlayerVsObstacle()
 				position)
 				)
 			{
-				position.x = savePos.x;
+				position.x = SavePos.x;
 				if (position.x < obstacle->GetPosition().x)
 				{
 					//スクロールストップ
@@ -457,8 +474,8 @@ void Player::CollisionPlayerVsObstacle()
 				position)
 				)
 			{
-				position.z = savePos.z;
-				position.x = savePos.x;
+				position.z = SavePos.z;
+				position.x = SavePos.x;
 				if (position.z < obstacle->GetPosition().z)
 				{
 					//後ろ倒れアニメーションセット
@@ -489,7 +506,7 @@ void Player::CollisionPlayerVsObstacle()
 				)
 			{	
 				//当たる直前に保持していた位置を代入	
-				position = savePos;
+				position = SavePos;
 				SetVelocity({ 0,0,0 });
 				if (position.y >= obstacle->GetPosition().y)
 				{
@@ -516,35 +533,19 @@ void Player::InputJump()
 		// ジャンプ回数制限
 		if (jumpCount < jumpLimit)
 		{
-			//scrollSpeed = scrollSpeed - (saveScrollSpeed - 0.15f);
 			//ジャンプアニメーションセット
 			playerObj->SetMotion(JUMP, 0, 0.03f);
-			//playerObj->SetAnime(JUMP);
 			jumpCount++;
 			Jump(jumpSpeed);
 		}
 	}
 }
 
-// デバッグプリミティブ描画
-//void Player::DrawDebugPrimitive()
-//{
-//	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
-//
-//	// 衝突判定用デバッグ球を描画
-//	debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
-//
-//	// 弾丸デバッグプリミティブ描画処理
-//	//projectileManager.DrawDebugPrimitive();
-//}
-
 //着地している時にする処理
 void Player::OnLanding()
 {
-	//scrollSpeed = saveScrollSpeed;
 	//走りアニメーションセット
 	if (!GameOverFlg)playerObj->SetMotion(RUN, 0, 0.0f);
-	//playerObj->SetAnime(RUN);
 	jumpCount = 0;
 }
 
