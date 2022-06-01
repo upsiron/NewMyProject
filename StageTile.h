@@ -47,7 +47,9 @@ public:
 		RED,
 		GREEN,
 		BLUE,
-		COIN,
+		COIN1,
+		COIN2,
+		COIN3,
 	};
 
 	int stageTileMap[3][6][9] =
@@ -180,13 +182,13 @@ public:
 		{
 			//00
 			{
-			 COIN, NONE, NONE,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//01
 			{
-			 OB1,  OB2,  NONE,
+			 OB1,  OB2,  COIN1,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
@@ -210,7 +212,7 @@ public:
 			},
 			//05
 			{
-			 NONE, NONE, NONE,
+			 COIN2, NONE, NONE,
 			 RED,  HOLE, RED,
 			 NONE, NONE, NONE
 			},
@@ -224,7 +226,7 @@ public:
 			{
 			 NONE, NONE, NONE,
 			 HOLE, NONE, NONE,
-			 NONE, NONE, NONE
+			 NONE, NONE, COIN3
 			 },
 			//08
 			{
@@ -245,7 +247,7 @@ public:
 			//00
 			{
 			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
+			 NONE, COIN1, NONE,
 			 NONE, NONE, NONE
 			 },
 			//01
@@ -378,7 +380,7 @@ private:
 	//ÉJÉâÅ[î‘çÜ
 	int ColorNum = 0;
 
-	DirectX::XMFLOAT4 TileColor[12] = {
+	DirectX::XMFLOAT4 TileColor[14] = {
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
@@ -390,6 +392,8 @@ private:
 		{1.0f, 0.0f, 0.0f, 1.0f},//RED
 		{0.0f, 1.0f, 0.0f, 1.0f},//GREEN
 		{0.0f, 0.0f, 1.0f, 1.0f},//BLUE
+		{1.0f, 1.0f, 1.0f, 1.0f},//COIN
+		{1.0f, 1.0f, 1.0f, 1.0f},//COIN
 		{1.0f, 1.0f, 1.0f, 1.0f},//COIN
 	};
 
