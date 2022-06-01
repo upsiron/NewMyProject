@@ -83,7 +83,7 @@ dcl_temps 9
 //   v7.x <- input.VZ.x; v7.y <- input.VZ.y; v7.z <- input.VZ.z; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 36 "D:\個人製作_0427 - test\Shaders\BumpShader_ps.hlsl"
+#line 36 "D:\個人製作\Shaders\BumpShader_ps.hlsl"
 mov r0.xyz, cb2[1].xyzx  // r0.x <- A.x; r0.y <- A.y; r0.z <- A.z
 
 #line 39

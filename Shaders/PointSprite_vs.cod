@@ -49,7 +49,7 @@ dcl_output o4.xyzw
 //   o1.x <- <main return value>.Normal.x; o1.y <- <main return value>.Normal.y; o1.z <- <main return value>.Normal.z; 
 //   o0.x <- <main return value>.Position.x; o0.y <- <main return value>.Position.y; o0.z <- <main return value>.Position.z
 //
-#line 8 "D:\個人製作_0427 - test\PointSprite_vs.hlsl"
+#line 8 "D:\個人製作\PointSprite_vs.hlsl"
 mov o3.xyzw, v3.xyzw
 mov o4.xyzw, v4.xyzw
 mov o0.xyz, v0.xyzx

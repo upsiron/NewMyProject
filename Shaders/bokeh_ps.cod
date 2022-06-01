@@ -39,7 +39,7 @@ dcl_indexableTemp x0[9], 4
 //   v1.x <- pin.texcoord.x; v1.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 4 "D:\個人製作_0427 - test\bokeh_ps.hlsl"
+#line 4 "D:\個人製作\bokeh_ps.hlsl"
 mov x0[0].x, l(0.062500)
 mov x0[1].x, l(0.125000)
 mov x0[2].x, l(0.062500)
@@ -50,28 +50,28 @@ mov x0[6].x, l(0.062500)
 mov x0[7].x, l(0.125000)
 mov x0[8].x, l(0.062500)
 
-#line 56
+#line 21
 sample_indexable(texture2d)(float,float,float,float) r0.x, v1.xyxx, t0.wxyz, s3
 mov r0.x, r0.x  // r0.x <- color.w
 
-#line 62
+#line 27
 resinfo_indexable(texture2d)(float,float,float,float)_uint r0.yz, l(0), t0.zxyw
 mov r0.y, r0.y  // r0.y <- width
 mov r0.z, r0.z  // r0.z <- height
 
-#line 64
+#line 29
 utof r0.y, r0.y
 div r0.y, l(1.000000), r0.y  // r0.y <- texcel.x
 utof r0.z, r0.z
 div r0.z, l(1.000000), r0.z  // r0.z <- texcel.y
 
-#line 66
+#line 31
 itof r1.xyz, l(0, 0, 0, 0)  // r1.x <- work.x; r1.y <- work.y; r1.z <- work.z
 
-#line 67
+#line 32
 mov r0.w, l(0)  // r0.w <- n
 
-#line 68
+#line 33
 mov r1.w, l(-1)  // r1.w <- y
 mov r2.xyz, r1.xyzx  // r2.x <- work.x; r2.y <- work.y; r2.z <- work.z
 mov r2.w, r0.w  // r2.w <- n
@@ -80,7 +80,7 @@ loop
   ige r3.y, l(1), r3.x
   breakc_z r3.y
 
-#line 70
+#line 35
   mov r3.y, l(-1)  // r3.y <- x
   mov r4.xyz, r2.xyzx  // r4.x <- work.x; r4.y <- work.y; r4.z <- work.z
   mov r3.z, r2.w  // r3.z <- n
@@ -89,7 +89,7 @@ loop
     ige r4.w, l(1), r3.w
     breakc_z r4.w
 
-#line 72
+#line 37
     itof r4.w, r3.w
     mul r5.x, r0.y, r4.w
     itof r4.w, r3.x
@@ -100,23 +100,23 @@ loop
     mul r5.xyz, r4.wwww, r5.xyzx
     add r4.xyz, r4.xyzx, r5.xyzx
 
-#line 73
+#line 38
     iadd r3.z, r3.z, l(1)
 
-#line 74
+#line 39
     iadd r3.w, r3.w, l(1)
   endloop 
   mov r2.xyz, r4.xyzx  // r2.x <- work.x; r2.y <- work.y; r2.z <- work.z
   mov r2.w, r3.z  // r2.w <- n
 
-#line 75
+#line 40
   iadd r3.x, r3.x, l(1)
 endloop 
 
-#line 76
+#line 41
 mov r2.xyz, r2.xyzx  // r2.x <- color.x; r2.y <- color.y; r2.z <- color.z
 
-#line 80
+#line 45
 mov o0.xyz, r2.xyzx
 mov o0.w, r0.x
 ret 

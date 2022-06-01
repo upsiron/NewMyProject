@@ -8,41 +8,6 @@ static const float waight[] =
     { 1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0 },
 };
 
-//static const float waight[] = {
-//	{1.0 / 9.0,	1.0 / 9.0,	1.0 / 9.0},
-//	{1.0 / 9.0,	1.0 / 9.0,	1.0 / 9.0},
-//	{1.0 / 9.0,	1.0 / 9.0,	1.0 / 9.0},
-//};
-
-//--------------------------------------------
-//	ピクセルシェーダー
-//--------------------------------------------
-
-//float4 main(PSInput input) : SV_TARGET0
-//{
-//    float4 color = DiffuseTexture.Sample(DecalSampler, input.Tex) * input.Color;
-
-//	//テクスチャサイズ取得
-//    uint width, height;
-//    DiffuseTexture.GetDimensions(width, height);
-//	//テクセルサイズ取得
-//    const float2 texcel = float2(1.0f / (float) width, 1.0f / (float) height);
-
-//    float3 work = (float3) 0;
-//    uint n = 0;
-//    for (int y = -1; y <= 1; y++)
-//    {
-//        for (int x = -1; x <= 1; x++)
-//        {
-//            work += DiffuseTexture.Sample(DecalSampler, input.Tex + float2(texcel.x * x, texcel.y * y)).rgb * waight[n];
-//            n++;
-//        }
-//    }
-//    color.rgb = work;
-
-//    return color;
-//}
-
 
 #define POINT 0
 #define LINEAR 1

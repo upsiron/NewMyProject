@@ -101,7 +101,7 @@ dcl_thread_group 100, 1, 1
 //   vThreadIDInGroupFlattened.x <- input.groupIndex; 
 //   vThreadID.x <- input.dispatch.x; vThreadID.y <- input.dispatch.y; vThreadID.z <- input.dispatch.z
 //
-#line 44 "D:\個人製作_0427 - test\PointSprite_cs.hlsl"
+#line 44 "D:\個人製作\PointSprite_cs.hlsl"
 mov r0.x, vThreadID.x  // r0.x <- i
 
 #line 56
