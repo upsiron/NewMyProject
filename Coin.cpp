@@ -5,7 +5,7 @@ Coin::Coin()
 {
 	coinObj = std::make_unique<SkinnedObject>(coinMesh);
 	coinObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	coinObj->SetScale(DirectX::XMFLOAT3(0.7f, 0.7f, 0.2f));
+	coinObj->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.2f));
 	coinObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	radius = 0.5f;
@@ -21,6 +21,7 @@ Coin::~Coin()
 //更新処理
 void Coin::Update(float elapsedTime)
 {
+	position.y += movePosition;
 	coinObj->SetPosition(position);
 	angle.y += moveAngle;
 	angle.z = DirectX::XMConvertToRadians(45);
@@ -63,6 +64,8 @@ void Coin::DrawDebugGUI()
 		angle.z = DirectX::XMConvertToRadians(a.z);
 		// スケール
 		ImGui::InputFloat3("Scale", &scale.x);
+
+		ImGui::Text("true(1)/false(0):%d", GetExistFlg());
 
 		ImGui::Text(u8"Behavior　%s", str.c_str());
 	}

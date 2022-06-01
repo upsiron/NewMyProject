@@ -22,23 +22,4 @@ public:
 
 	// デバッグエネミー情報表示
 	void DrawDebugGUI();
-
-	//カラー getter/setter
-	void SetObstacleColor(int c) { ColorNum = c; }
-	int GetObstacleColor() { return ColorNum; }
-private:
-	int ColorNum = 0;
-	DirectX::XMFLOAT4 ObstacleColor[11] = {
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
-		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
-		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-	};
 };

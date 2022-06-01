@@ -77,7 +77,7 @@ void CoinManager::DrawDebugGUI()
 {
 	ImGui::SetNextWindowPos(ImVec2(980, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Obstacle", nullptr, ImGuiWindowFlags_None))
+	if (ImGui::Begin("Coin", nullptr, ImGuiWindowFlags_None))
 	{
 		for (Object* coin : coins) {
 			// エネミー情報表示
