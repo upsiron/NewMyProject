@@ -190,7 +190,7 @@ private:
 	Player* player = nullptr;
 	EnemyBlueSlime* enemy = {nullptr};
 	ObstacleBlock* obstacle[StageMax][ObstacleMax] = { nullptr };
-	Coin* coin[StageMax][CoinMax] = { nullptr };
+	Coin* coin[CoinMax] = { nullptr };
 	StageBase* stageBase[StageMax] = { nullptr };
 	StageTile* stageTile[StageMax][StageTileMax] = { nullptr };
 	CameraController* cameraController = nullptr;
