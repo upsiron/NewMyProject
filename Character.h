@@ -20,7 +20,10 @@ public:
 	void SetVelocity(const DirectX::XMFLOAT3& velocity) { this->velocity = velocity; }
 
 	//スクロールスピードセット関数
-	void SetScrollSpeed(float scrollSpeed) { this->oldScrollSpeed = scrollSpeed; }
+	void SetPlayerSpeed(float playerSpeed) { this->oldPlayerSpeed = playerSpeed; }
+
+	//スクロールスピードダウン関数
+	void PlayerSpeedDown(float playerSpeedDown) { this->oldPlayerSpeed = this->oldPlayerSpeed - playerSpeedDown; }
 
 	// 半径取得
 	float GetRadius() const { return radius; }
@@ -110,8 +113,8 @@ protected:
 	float	invincibleTimer = 1.0f;
 	float	stepOffset = 1.0f;
 	float	jumpSpeed = 17.0f;
-	float   scrollSpeed = 0.15f;
-	float   oldScrollSpeed = 0.0f;
+	float   playerSpeed = 0.15f;
+	float   oldPlayerSpeed = 0.0f;
 	int     flgCount = 0;
 	int     oldFlgCount = 0;
 

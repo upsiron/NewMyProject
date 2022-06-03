@@ -46,8 +46,8 @@ Player::Player()
 	SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	//スクロールスピード初期化
-	scrollSpeed = 0.2f;
-	oldScrollSpeed = 0.2f;
+	playerSpeed = 0.2f;
+	oldPlayerSpeed = 0.2f;
 
 	//コイン初期化
 	for (int i = 0; i < 3; i++)
@@ -83,7 +83,7 @@ void Player::Update(float elapsedTime)
 	playerObj->SetScale(scale);
 
 	//自動スクロール
-	if(debugflg)position.z += scrollSpeed;
+	if(debugflg)position.z += playerSpeed;
 
 	//ギミック更新処理
 	GimmickUpdate();
@@ -103,13 +103,19 @@ void Player::Update(float elapsedTime)
 	// プレイヤーとコインとの衝突判定
 	CollisionPlayerVsCoin();
 
+	if (PlayerCoinCount == 3 && playerSpeed > 0.2f)
+	{
+		PlayerSpeedDown(0.1f);
+		PlayerCoinCount = 0;
+	}
+
 	//プレイヤーの更新
 	playerObj->Update(elapsedTime);
 
 	//落下ゲームオーバー
 	if (position.y < -1.5f)
 	{
-		scrollSpeed = 0.0f;
+		playerSpeed = 0.0f;
 		GameOverFlg = true;
 	}
 
@@ -158,7 +164,7 @@ void Player::DrawDebugGUI()
 			if (gamePad.GetButtonDown() & GamePad::BTN_Y)debugflg = !debugflg;
 			if (ImGui::Button("Debug"))debugflg = true;
 			if (ImGui::Button("NoDebug"))debugflg = false;
-			ImGui::SliderFloat("scroll", &scrollSpeed, 0.0f, 1.0f);
+			ImGui::SliderFloat("scroll", &playerSpeed, 0.0f, 1.0f);
 			ImGui::SliderFloat("jump", &jumpSpeed, 0.0f, 100.0f);
 			ImGui::SliderFloat("gravity", &gravity, -100.0f, 0.0f);
 			ImGui::InputInt("PlayerCoinCount", &PlayerCoinCount, 0.0f, 100.0f);
@@ -183,11 +189,11 @@ void Player::GimmickUpdate()
 	if (GimmickTime >= 0.0f)
 	{
 		GimmickTime--;
-		scrollSpeed = oldScrollSpeed + 0.15f;
+		playerSpeed = oldPlayerSpeed + 0.15f;
 	}
 	else
 	{
-		scrollSpeed = oldScrollSpeed;
+		playerSpeed = oldPlayerSpeed;
 	}
 
 	//playerのカラーを変える
@@ -336,6 +342,7 @@ void Player::InputMove(float elapsedTime)
 	}
 }
 
+//プレイヤーとコインの当たり判定
 void Player::CollisionPlayerVsCoin()
 {
 	CoinManager& coinManager = CoinManager::Instance();
@@ -420,8 +427,8 @@ void Player::CollisionPlayerVsObstacle()
 				if (position.x > obstacle->GetPosition().x)
 				{
 					//スクロールストップ
-					scrollSpeed = 0.0f;
-					oldScrollSpeed = 0.0f;
+					playerSpeed = 0.0f;
+					oldPlayerSpeed = 0.0f;
 					//左倒れアニメーションセット
 					playerObj->SetMotion(KNOCKLEFT, 0, 0.0f);
 					//ゲームオーバーフラグを立てる
@@ -450,8 +457,8 @@ void Player::CollisionPlayerVsObstacle()
 				if (position.x < obstacle->GetPosition().x)
 				{
 					//スクロールストップ
-					scrollSpeed = 0.0f;
-					oldScrollSpeed = 0.0f;
+					playerSpeed = 0.0f;
+					oldPlayerSpeed = 0.0f;
 					//右倒れアニメーションセット
 					playerObj->SetMotion(KNOCKRIGHT, 0, 0.0f);
 					//ゲームオーバーフラグを立てる
@@ -483,8 +490,8 @@ void Player::CollisionPlayerVsObstacle()
 					//ゲームオーバーフラグを立てる
 					GameOverFlg = true;
 					//スクロールストップ
-					scrollSpeed = 0.0f;
-					oldScrollSpeed = 0.0f;
+					playerSpeed = 0.0f;
+					oldPlayerSpeed = 0.0f;
 				}
 			}
 		}
@@ -515,8 +522,8 @@ void Player::CollisionPlayerVsObstacle()
 					//ゲームオーバーフラグを立てる
 					GameOverFlg = true;
 					//スクロールストップ
-					scrollSpeed = 0.0f;
-					oldScrollSpeed = 0.0f;
+					playerSpeed = 0.0f;
+					oldPlayerSpeed = 0.0f;
 				}
 			}
 		}

@@ -120,7 +120,7 @@ void Character::UpdateVerticalMove(float elapsedTime)
 			// ‹ó’†‚É•‚‚¢‚Ä‚¢‚é
 			if (position.y < -0.1f)
 			{
-				scrollSpeed = 0.0f;
+				playerSpeed = 0.0f;
 				isGround = false;
 				position.y += my;
 			}
