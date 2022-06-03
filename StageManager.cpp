@@ -10,40 +10,25 @@ void StageManager::Update(float elapsedTime)
 	{
 		if (stages.at(i)->GetPosition().z + 10.0f < Player::Instance().GetPosition().z)
 		{
-			//毎回ランダムのほう
-			/*if (Player::Instance().GetPosition().z > 500.0f &&
-				(i == 1 || i == 3))
+
+			if (Player::Instance().GetPosition().z >= 100.0f && Player::Instance().GetPosition().z <= 101.0f)
 			{
-				stages.at(i)->Pattern = 1;
-			}
-			else if(Player::Instance().GetPosition().z > 1000.0f &&
-				(i == 2 || i == 4))
-			{
-				stages.at(i)->Pattern = 2;
-			}*/
-			if (Player::Instance().GetPosition().z >= 100.0f && Player::Instance().GetPosition().z <= 1000.0f)
-			{
-				Player::Instance().SetScrollSpeed(0.3f);
+				Player::Instance().SetPlayerSpeed(0.3f);
 			}
 			if (Player::Instance().GetPosition().z >= 1000.0f && Player::Instance().GetPosition().z <= 3000.0f)
 			{
-				Player::Instance().SetScrollSpeed(0.4f);
+				Player::Instance().SetPlayerSpeed(0.4f);
 			}
 
-			//ステージ更新時に新しいパターンをランダムで決定
-			stages.at(i)->Rand = rand() % 5;
-			//イージーモードステージ更新時にランダムで決定されたパターンを更新
-			stages.at(i)->StageRand = r/*2*/;
+			//ステージ更新時にランダムで決定されたパターンを更新
+			stages.at(i)->StageRand = r;
 			//ステージを一番前のポジションに持っていく
 			stages.at(i)->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, (stages.at(i)->GetPosition().z + 10.0f * stageMax)));
 		}
 	}
 
-	//次に描画されるイージーモードステージのパターンをランダムで決定
+	//次に描画されるステージのパターンをランダムで決定
 	if (stages.at(0)->GetPosition().z < Player::Instance().GetPosition().z)r = rand() % 3;
-
-	//パターンの最後の位置よりplayerの位置が大きくなったらblueflgをfalseにする
-	//if (stages.at(8)->GetPosition().z < Player::Instance().GetPosition().z)Player::Instance().SetBlueFlg(false);
 
 	//更新
 	for (StageBase* stageBase : stages)
