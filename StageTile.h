@@ -9,9 +9,6 @@ public:
 	StageTile(std::shared_ptr<SkinnedMesh>& mesh) :Stage(mesh) {};
 	~StageTile();
 
-	// インスタンス取得
-	//static StageTile& Instance();
-
 	static Stage* GetInstance()
 	{
 		static Stage Instance;
@@ -52,130 +49,130 @@ public:
 		COIN3,
 	};
 
-	int stageTileMap[3][6][9] =
-	{
-		//0
-		{
-			//00
-			{
-			 OB1,  OB2,  NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//01
-			{
-			 NONE, NONE, NONE,
-			 HOLE, HOLE, HOLE,
-			 NONE, NONE, NONE
-			 },
-			//02
-			{
-			 OB1,  NONE, OB2,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//03
-			{
-			 NONE, NONE, NONE,
-			 NONE, HOLE, HOLE,
-			 NONE, NONE, NONE
-			},
-			//04
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//05
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-		},
+	//int stageTileMap[3][6][9] =
+	//{
+	//	//0
+	//	{
+	//		//00
+	//		{
+	//		 OB1,  OB2,  NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//01
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 HOLE, HOLE, HOLE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//02
+	//		{
+	//		 OB1,  NONE, OB2,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//03
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, HOLE, HOLE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//04
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//05
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//	},
 
-		//1
-		{
-			//00
-			{
-			 NONE, NONE, RED,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//01
-			{
-			 OB1,  HOLE, NONE,
-			 NONE, HOLE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//02
-			{
-			 NONE, RED,  NONE,
-			 HOLE, HOLE, HOLE,
-			 NONE, NONE, NONE
-			},
-			//03
-			{
-			 NONE, NONE, NONE,
-			 HOLE, HOLE, NONE,
-			 NONE, NONE, NONE
-			},
-			//04
-			{
-			 RED,  NONE, OB1,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//05
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-		},
+	//	//1
+	//	{
+	//		//00
+	//		{
+	//		 NONE, NONE, RED,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//01
+	//		{
+	//		 OB1,  HOLE, NONE,
+	//		 NONE, HOLE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//02
+	//		{
+	//		 NONE, RED,  NONE,
+	//		 HOLE, HOLE, HOLE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//03
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 HOLE, HOLE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//04
+	//		{
+	//		 RED,  NONE, OB1,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//05
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//	},
 
-		//2
-		{
-			//2_0
-			{
-			 NONE, NONE, GREEN,
-			 NONE, HOLE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//2_1
-			{
-			 NONE, HOLE, OB1,
-			 NONE, HOLE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//2_2
-			{
-			 NONE, GREEN, NONE,
-			 HOLE, HOLE, HOLE,
-			 NONE, NONE, NONE
-			},
-			//2_3
-			{
-			 OB1, NONE, NONE,
-			 NONE, HOLE, HOLE,
-			 NONE, NONE, NONE
-			},
-			//2_4
-			{
-			 GREEN, NONE, NONE,
-			 HOLE, HOLE, NONE,
-			 NONE, NONE, NONE
-			},
-			//2_5
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-		},
-	};
+	//	//2
+	//	{
+	//		//2_0
+	//		{
+	//		 NONE, NONE, GREEN,
+	//		 NONE, HOLE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//2_1
+	//		{
+	//		 NONE, HOLE, OB1,
+	//		 NONE, HOLE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//2_2
+	//		{
+	//		 NONE, GREEN, NONE,
+	//		 HOLE, HOLE, HOLE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//2_3
+	//		{
+	//		 OB1, NONE, NONE,
+	//		 NONE, HOLE, HOLE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//2_4
+	//		{
+	//		 GREEN, NONE, NONE,
+	//		 HOLE, HOLE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//2_5
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//	},
+	//};
 
-	//easy
+	//ステージマップ
 	int StageTileMap[3][10][9] =
 	{
 		//0

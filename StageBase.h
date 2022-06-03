@@ -19,9 +19,6 @@ public:
 	StageBase(std::shared_ptr<SkinnedMesh>& mesh) :Stage(mesh) {};
 	~StageBase();
 
-	// インスタンス取得
-	//static StageBase& Instance();
-
 	// 更新処理
 	void Update(float elapsedTime);
 
@@ -37,13 +34,5 @@ public:
 	void DrawDebugGUI();
 
 	//ステージパターンランダム配置用変数
-	//ステージ用
-	int Rand = 0;
 	int StageRand = 0;
-	int Pattern = 0;
-	// レイキャスト
-	//bool RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit);
-
-private:
-	//Model* model = nullptr;
 };

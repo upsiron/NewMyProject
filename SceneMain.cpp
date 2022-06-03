@@ -128,9 +128,6 @@ void SceneMain::Initialize()
 		//座標指定
 		stageBase[i]->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f * i));
 
-		//初期位置だけ穴がないパターン適用
-		stageBase[0]->Rand = 5;
-
 		//ステージマネージャーに追加
 		stageManager.Register(stageBase[i]);
 	}
