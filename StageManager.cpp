@@ -13,15 +13,15 @@ void StageManager::Update(float elapsedTime)
 
 			if (Player::Instance().GetPosition().z >= 100.0f && Player::Instance().GetPosition().z <= 101.0f)
 			{
-				Player::Instance().SetPlayerSpeed(0.3f);
+				Player::Instance().PlayerSpeedUp(0.1f);
 			}
-			if (Player::Instance().GetPosition().z >= 1000.0f && Player::Instance().GetPosition().z <= 3000.0f)
+			if (Player::Instance().GetPosition().z >= 200.0f && Player::Instance().GetPosition().z <= 201.0f)
 			{
-				Player::Instance().SetPlayerSpeed(0.4f);
+				Player::Instance().PlayerSpeedUp(0.1f);
 			}
 
 			//ステージ更新時にランダムで決定されたパターンを更新
-			stages.at(i)->StageRand = r;
+			stages.at(i)->stageRand = r;
 			//ステージを一番前のポジションに持っていく
 			stages.at(i)->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, (stages.at(i)->GetPosition().z + 10.0f * stageMax)));
 		}
