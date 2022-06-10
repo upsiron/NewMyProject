@@ -8,7 +8,7 @@ class Player : public Character
 {
 public:
 	// コンストラクタ
-	Player(std::shared_ptr<SkinnedMesh>& mesh) :Character(mesh) { SaveElapsedTime = 0.0f;};
+	Player(std::shared_ptr<SkinnedMesh>& mesh) :Character(mesh) { saveElapsedTime = 0.0f;};
 
 	Player();
 
@@ -46,13 +46,17 @@ public:
 	// プレイヤーと障害物との衝突判定
 	void CollisionPlayerVsObstacle();
 
+	//ジャンプカウント取得
 	int GetJumpCount() { return jumpCount; }
 
-	bool GetGameOverFlg() { return GameOverFlg; }
+	//ゲームオーバーフラグ取得
+	bool GetGameOverFlg() { return gameOverFlg; }
 
-	bool GetDebugFlg() { return debugflg; }
+	//デバッグフラグ取得
+	bool GetDebugFlg() { return debugFlg; }
 
-
+	//コインカウント取得
+	int GetCoinCount() { return playerCoinCount; }
 	
 	//ギミック更新処理
 	void GimmickUpdate();
@@ -66,27 +70,24 @@ private:
 	float				moveSpeed = 6.0f;
 	float				turnSpeed = DirectX::XMConvertToRadians(720);
 
-	float               StageSideEndPos = 1.4f * 3.0f;	 //ステージの端っこの当たり判定用
+	float               stageSideEndPos = 1.4f * 3.0f;	 //ステージの端っこの当たり判定用
 
 	int					jumpCount = 0;					//ジャンプした回数カウント用
 	int					jumpLimit = 1;					//ジャンプの回数制限用
 
-	float               SaveElapsedTime = 0.0f;			//アニメーションに使うelapsedTime用
+	float               saveElapsedTime = 0.0f;			//アニメーションに使うelapsedTime用
 
-	bool                GameOverFlg = false;           //ゲームオーバーフラグ
+	bool                gameOverFlg = false;           //ゲームオーバーフラグ
 
-	bool                debugflg = false;              //デバッグフラグ
+	bool                debugFlg = false;              //デバッグフラグ
 
-	float               GimmickTime = 0;			   //ギミック用タイム
-
-	int                 AnimationState = 0;            //アニメーション状態
-
-	int                 CoinState[3] = { 0 };          //コイン状態
-	float				CoinAngle[3] = { 0.1f };       //コイン回転量
-	float				CoinPositionY[3] = { 0.0f };   //コイン移動量
-    int                 PlayerCoinCount = 0;           //コイン取得数
-	int                 OldPlayerCoinCount = 0;        //コイン取得数
-	bool                CoinFlg = false;                //コインのフラグ
+	float               gimmickTime = 0;			   //ギミック用タイム
+	int                 coinState[3] = { 0 };          //コイン状態
+	float				coinAngle[3] = { 0.1f };       //コイン回転量
+	float				coinPositionY[3] = { 0.0f };   //コイン移動量
+    int                 playerCoinCount = 0;           //コイン取得数
+	int                 oldPlayerCoinCount = 0;        //コイン取得数
+	bool                coinFlg = false;                //コインのフラグ
 
 	//アニメーション用タグ
 	enum CurrentAnime
@@ -104,10 +105,10 @@ private:
 	DirectX::XMFLOAT4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	enum ColorChange
 	{
-		RedMinus = 0,
-		RedPuls
+		REDMINUS = 0,
+		REDPULS
 	};
-	int ColorState = 0;
+	int colorState = 0;
 	float R = 1.0f;
 	float G = 1.0f;
 	float B = 1.0f;

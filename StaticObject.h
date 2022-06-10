@@ -44,7 +44,7 @@ public:
     //ステージベース分割用構造体
     struct Squea
     {
-        DirectX::XMFLOAT3 SpritPosition[9] = { { 0.0f, 0.0f, 0.0f } };
+        DirectX::XMFLOAT3 spritPosition[9] = { { 0.0f, 0.0f, 0.0f } };
     };
     Squea squea;
 };

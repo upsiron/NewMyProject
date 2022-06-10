@@ -41,10 +41,10 @@ public:
 	void DrawDebugGUI();
 
 	//É^ÉCÉãÇÃ4ì_ÇéÊÇÈïœêî
-	DirectX::XMFLOAT3 TileLeftTop;
-	DirectX::XMFLOAT3 TileRightTop;
-	DirectX::XMFLOAT3 TileLeftBottom;
-	DirectX::XMFLOAT3 TileRightBottom;
+	DirectX::XMFLOAT3 tileLeftTop;
+	DirectX::XMFLOAT3 tileRightTop;
+	DirectX::XMFLOAT3 tileLeftBottom;
+	DirectX::XMFLOAT3 tileRightBottom;
 
 private:
 	//Model* model = nullptr;

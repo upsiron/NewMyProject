@@ -26,7 +26,7 @@ void StageBase::Update(float elapsedTime)
 	stageBaseObj->SetPosition({ position.x,-0.1f,position.z });
 
 	//左上
-	squea.SpritPosition[0] = DirectX::XMFLOAT3
+	squea.spritPosition[0] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x - (stageBaseObj->GetScale().x * 2.0f) / 3.0f,
 		0.0f,
@@ -34,7 +34,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//上
-	squea.SpritPosition[1] = DirectX::XMFLOAT3
+	squea.spritPosition[1] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x,
 		0.0f,
@@ -42,7 +42,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//右上
-	squea.SpritPosition[2] = DirectX::XMFLOAT3
+	squea.spritPosition[2] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x + (stageBaseObj->GetScale().x * 2.0f) / 3.0f,
 		0.0f,
@@ -50,7 +50,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//左
-	squea.SpritPosition[3] = DirectX::XMFLOAT3
+	squea.spritPosition[3] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x - (stageBaseObj->GetScale().x * 2.0f) / 3.0f,
 		0.0f,
@@ -58,7 +58,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//真ん中
-	squea.SpritPosition[4] = DirectX::XMFLOAT3
+	squea.spritPosition[4] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x,
 		0.0f,
@@ -66,7 +66,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//右
-	squea.SpritPosition[5] = DirectX::XMFLOAT3
+	squea.spritPosition[5] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x + (stageBaseObj->GetScale().x * 2.0f) / 3.0f,
 		0.0f,
@@ -74,7 +74,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//左下
-	squea.SpritPosition[6] = DirectX::XMFLOAT3
+	squea.spritPosition[6] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x - (stageBaseObj->GetScale().x * 2.0f) / 3.0f,
 		0.0f,
@@ -82,7 +82,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//下
-	squea.SpritPosition[7] = DirectX::XMFLOAT3
+	squea.spritPosition[7] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x,
 		0.0f,
@@ -90,7 +90,7 @@ void StageBase::Update(float elapsedTime)
 	);
 
 	//右下
-	squea.SpritPosition[8] = DirectX::XMFLOAT3
+	squea.spritPosition[8] = DirectX::XMFLOAT3
 	(
 		stageBaseObj->GetPosition().x + (stageBaseObj->GetScale().x * 2.0f) / 3.0f,
 		0.0f,

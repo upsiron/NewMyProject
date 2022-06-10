@@ -10,8 +10,8 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, int num)
 	v = new VERTEX[num];
 	ZeroMemory(v, sizeof(VERTEX) * num);
 
-	NumParticles = num;
-	for (int i = 0; i < NumParticles; i++) { data[i].type = -1; }
+	numParticles = num;
+	for (int i = 0; i < numParticles; i++) { data[i].type = -1; }
 	//パーティクル作成と画像ロード
 	//texture = std::make_unique<Texture>();
 	//texture->Load(L"Assets/particle1.png");
@@ -24,7 +24,7 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, int num)
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	//頂点数分のバッファ
-	bd.ByteWidth = sizeof(VERTEX) * NumParticles;
+	bd.ByteWidth = sizeof(VERTEX) * numParticles;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
@@ -53,8 +53,8 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, std::shared_ptr<Texture> te
 	v = new VERTEX[num];
 	ZeroMemory(v, sizeof(VERTEX) * num);
 
-	NumParticles = num;
-	for (int i = 0; i < NumParticles; i++) { data[i].type = -1; }
+	numParticles = num;
+	for (int i = 0; i < numParticles; i++) { data[i].type = -1; }
 	//パーティクル作成と画像設定
 	this->texture = texture;
 
@@ -65,7 +65,7 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, std::shared_ptr<Texture> te
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	//頂点数分のバッファ
-	bd.ByteWidth = sizeof(VERTEX) * NumParticles;
+	bd.ByteWidth = sizeof(VERTEX) * numParticles;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
@@ -88,7 +88,7 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, std::shared_ptr<Texture> te
 void ParticleSystem::Animation(float elapsed_time, float speed)
 {
 	//float time = pSystem->elapsed_time;
-	for (int i = 0; i < NumParticles; i++) {
+	for (int i = 0; i < numParticles; i++) {
 		if (data[i].type < 0) continue;
 
 		data[i].animeTimer += elapsed_time;
@@ -102,7 +102,7 @@ void ParticleSystem::Animation(float elapsed_time, float speed)
 
 void ParticleSystem::Update(float elapsed_time)
 {	
-	for (int i = 0; i < NumParticles; i++)
+	for (int i = 0; i < numParticles; i++)
 	{
 		data[i].elapsedTime = elapsed_time;
 	}
@@ -133,7 +133,7 @@ void ParticleSystem::Render(ID3D11DeviceContext* immediate_context, Shader* shad
 
 
 	int n = 0; //パーティクル発生数
-	for (int i = 0; i < NumParticles; i++)
+	for (int i = 0; i < numParticles; i++)
 	{
 		if (data[i].type < 0) continue;
 		++n;
@@ -154,7 +154,7 @@ void ParticleSystem::Render(ID3D11DeviceContext* immediate_context, Shader* shad
 void ParticleSystem::Set(int type, float timer,
 	DirectX::XMFLOAT3 p, DirectX::XMFLOAT3 v, DirectX::XMFLOAT3 f, DirectX::XMFLOAT2 size)
 {
-	for (int i = 0; i < NumParticles; i++) {
+	for (int i = 0; i < numParticles; i++) {
 		if (data[i].type >= 0) continue;
 		data[i].type = type;
 		data[i].pos.x = p.x;
@@ -268,8 +268,8 @@ void ParticleSystem::Smoke(DirectX::XMFLOAT3 pos, int max)
 		data[i].pos.x = pos.x + (rand() % 20001 - 5000) * 0.01f;
 		data[i].pos.y = pos.y + (rand() % 20001 - 5000) * 0.01f;
 		data[i].pos.z = pos.z + (rand() % 20001 - 5000) * 0.01f;
-		data[i].posV.x = sinf(ParticleAngle);
-		data[i].posV.y = cosf(ParticleAngle);
+		data[i].posV.x = sinf(particleAngle);
+		data[i].posV.y = cosf(particleAngle);
 		data[i].posV.z = 0;
 		data[i].posA.x = 0;
 		data[i].posA.y = 0;
@@ -306,24 +306,24 @@ void ParticleSystem::Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int
 	}
 }
 
-void ParticleSystem::Hanabi(DirectX::XMFLOAT3 pos, int max)
+void ParticleSystem::hanabi(DirectX::XMFLOAT3 pos, int max)
 {
-	HanabiX = (rand() % 10001 - 6001) * 0.01f;
-	HanabiY = (rand() % 10001 - 6001) * 0.01f;
-	HanabiZ = float(rand() % 50 + 30);
-	HanabiRand = rand() % 7;
+	hanabiX = (rand() % 10001 - 6001) * 0.01f;
+	hanabiY = (rand() % 10001 - 6001) * 0.01f;
+	hanabiZ = float(rand() % 50 + 30);
+	hanabiRand = rand() % 7;
 	for (int i = 0; i < max; i++) {
 		if (data[i].timer <= 0)
 		{
-			ForceRand = (rand() % 5001) * 0.002f - 0.01f;
-			AngleRand = DirectX::XMConvertToRadians(rand() % 360);
+			forceRand = (rand() % 5001) * 0.002f - 0.01f;
+			angleRand = DirectX::XMConvertToRadians(rand() % 360);
 			Set(2,                                                                 //type
 				i,                                                                 //index
 				float(rand() % 5),                                                 //timer
-				{ HanabiX,HanabiY,HanabiZ },                                       //position
-				{ cosf(AngleRand) * ForceRand, sinf(AngleRand) * ForceRand, 0.0f },//velocity
+				{ hanabiX,hanabiY,hanabiZ },                                       //position
+				{ cosf(angleRand) * forceRand, sinf(angleRand) * forceRand, 0.0f },//velocity
 				{ 0.0f,-3.2f,0.0f },                                               //force
-				{ HanabiColor[HanabiRand] },                                       //color
+				{ hanabiColor[hanabiRand] },                                       //color
 				{ 0.05f,0.05f });                                                  //size
 		}
 	}
@@ -334,14 +334,14 @@ void ParticleSystem::Sphere(DirectX::XMFLOAT3 pos, int max)
 	for (int i = 0; i < max; i++) {
 		if (data[i].timer <= 0)
 		{
-			AngleRand = DirectX::XMConvertToRadians(rand() % 360);
+			angleRand = DirectX::XMConvertToRadians(rand() % 360);
 			Set(2,													//type
 				i,													//index
 				float(rand() % 7),									//timer
 				pos,												//position
-				{ cosf(AngleRand) * 2, sinf(AngleRand) * 2, 0.0f },	//velocity
+				{ cosf(angleRand) * 2, sinf(angleRand) * 2, 0.0f },	//velocity
 				{ 0.0f,0.0f,0.0f },									//force
-				{ HanabiColor[6] },									//color
+				{ hanabiColor[6] },									//color
 				{ 0.05f,0.05f });									//size
 		}
 	}

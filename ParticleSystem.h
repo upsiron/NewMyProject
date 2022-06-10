@@ -25,7 +25,7 @@ private:
 	VERTEX* v;			//頂点データ
 	
 
-	//int NumParticles;
+	//int numParticles;
 
 	// 頂点データ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> VertexBuffer;
@@ -82,7 +82,7 @@ public:
 	void Fire(DirectX::XMFLOAT3 pos, int max);
 	void Smoke(DirectX::XMFLOAT3 pos, int max);
 	void Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int max);
-	void Hanabi(DirectX::XMFLOAT3 pos, int max);
+	void hanabi(DirectX::XMFLOAT3 pos, int max);
 	void Sphere(DirectX::XMFLOAT3 pos, int max);
 
 	/*struct ParticleData
@@ -114,18 +114,18 @@ public:
 	};
 	ParticleData* data; //パーティクルデータ
 
-	int NumParticles;
+	int numParticles;
 
 	//花火関連変数
-	float ParticleAngle;
-	float HanabiX = 0;
-	float HanabiY = 0;
-	float HanabiZ = 0;
-	float ForceRand = 0;
-	float AngleRand = 0;
+	float particleAngle;
+	float hanabiX = 0;
+	float hanabiY = 0;
+	float hanabiZ = 0;
+	float forceRand = 0;
+	float angleRand = 0;
 	const float dangle = DirectX::XMConvertToRadians(10.0f);
 
-	DirectX::XMFLOAT3 HanabiColor[7]
+	DirectX::XMFLOAT3 hanabiColor[7]
 	{
 		{1.0f,1.0f,1.0f},
 		{1.0f,0.0f,0.0f},//red
@@ -136,5 +136,5 @@ public:
 		{0.0f,1.0f,1.0f}
 	};
 	
-	int HanabiRand;
+	int hanabiRand;
 };

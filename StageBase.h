@@ -34,5 +34,5 @@ public:
 	void DrawDebugGUI();
 
 	//ステージパターンランダム配置用変数
-	int StageRand = 0;
+	int stageRand = 0;
 };

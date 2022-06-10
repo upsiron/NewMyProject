@@ -14,8 +14,7 @@ protected:
 	DirectX::XMFLOAT4X4 world = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 	std::shared_ptr<SkinnedMesh>	mesh;
 	Animation::KeyFrame keyframe;
-	/*float current_time = 0;
-	size_t current_animation = 0;*/
+	
 	//ギミック用フラグ
 	bool RedGimmickFlg = false;
 	bool GreenGimmickFlg = false;
@@ -77,35 +76,13 @@ public:
 		bool wireframe = false
 		);
 
-
-	/*bool SetMotion(size_t m)
-	{
-		if (current_animation != m)
-		{
-			current_animation = m;
-			return true;
-		}
-		return false;
-	}*/
-
 	void SetMotion(int NextMotion, int TargetFrame, float Interval = 1.0f);
 
-	//void AnimeUpdate(float time)
-	//{
-	//	current_time = time;
-	//}
-
-	// TECK.05
-	int RayPick(
-		const DirectX::XMFLOAT3& startPosition,
-		const DirectX::XMFLOAT3& endPosition,
-		DirectX::XMFLOAT3* outPosition,
-		DirectX::XMFLOAT3* outNormal);
 
 	//ステージベース分割用構造体
 	struct Squea
 	{
-		DirectX::XMFLOAT3 SpritPosition[9] = { { 0.0f, 0.0f, 0.0f } };
+		DirectX::XMFLOAT3 spritPosition[9] = { { 0.0f, 0.0f, 0.0f } };
 	};
 	Squea squea;
 };

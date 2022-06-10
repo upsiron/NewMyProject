@@ -142,7 +142,7 @@ void SceneMain::Initialize()
 			stageTile[j][i] = new StageTile();
 
 			//座標指定
-			stageTile[j][i]->SetPosition(stageBase[j]->squea.SpritPosition[i]);
+			stageTile[j][i]->SetPosition(stageBase[j]->squea.spritPosition[i]);
 
 			//ステージタイルマネージャーに追加
 			stageTileManager.Register(stageTile[j][i]);
@@ -181,9 +181,9 @@ void SceneMain::Initialize()
 		{
 			obstacle[j][i] = new ObstacleBlock();
 			obstacle[j][i]->SetPosition(DirectX::XMFLOAT3(
-				stageBase[0]->squea.SpritPosition[0].x,
+				stageBase[0]->squea.spritPosition[0].x,
 				-10.0f,
-				stageBase[0]->squea.SpritPosition[0].z));
+				stageBase[0]->squea.spritPosition[0].z));
 			//エネミーマネージャーに追加
 			obstacleBlockManager.Register(obstacle[j][i]);
 		}
@@ -306,7 +306,7 @@ void SceneMain::Update(float elapsedTime)
 
 		//エネミーマネージャー更新
 		/*EnemyManager::Instance().Update(elapsedTime);
-		EnemyManager::Instance().GetEnemy(0)->SetPosition(DirectX::XMFLOAT3(stageBase[0]->squea.SpritPosition[0].x,0.0f,stageBase[0]->squea.SpritPosition[0].z));*/
+		EnemyManager::Instance().GetEnemy(0)->SetPosition(DirectX::XMFLOAT3(stageBase[0]->squea.spritPosition[0].x,0.0f,stageBase[0]->squea.spritPosition[0].z));*/
 
 		//障害物マネージャー更新
 		ObstacleBlockManager::Instance().Update(elapsedTime);
@@ -360,12 +360,12 @@ void SceneMain::StageUpdate()
 		{
 			//ステージのHOLEの部分以外で配置
 			//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] != HOLE)
-			if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] != stageTile[0][0]->HOLE)
+			if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] != stageTile[0][0]->HOLE)
 			{
 				//------------
 				// タイル配置 
 				//------------
-				stageTile[j][i]->SetPosition(stageBase[j]->squea.SpritPosition[i]);
+				stageTile[j][i]->SetPosition(stageBase[j]->squea.spritPosition[i]);
 
 				//------------
 				// 障害物配置 
@@ -376,109 +376,109 @@ void SceneMain::StageUpdate()
 				//動かない
 				//障害物１
 				//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB1)
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->OB1)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->OB1)
 				{
 					//エネミーをステージを9等分して指定した位置にセット
 					obstacle[j][0]->SetPosition(DirectX::XMFLOAT3(
-						stageBase[j]->squea.SpritPosition[i].x,
+						stageBase[j]->squea.spritPosition[i].x,
 						1.5f,
-						stageBase[j]->squea.SpritPosition[i].z));
+						stageBase[j]->squea.spritPosition[i].z));
 					//生存 後で無敵とかで使うかも
 					obstacle[j][0]->SetExistFlg(true);
 				}
 				//障害物２
 				//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB2)
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->OB2)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->OB2)
 				{
 					//エネミーをステージを9等分して指定した位置にセット
 					obstacle[j][1]->SetPosition(DirectX::XMFLOAT3(
-						stageBase[j]->squea.SpritPosition[i].x,
+						stageBase[j]->squea.spritPosition[i].x,
 						1.5f,
-						stageBase[j]->squea.SpritPosition[i].z));
+						stageBase[j]->squea.spritPosition[i].z));
 					//生存
 					obstacle[j][1]->SetExistFlg(true);
 				}
 				//障害物3
 				//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB3)
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->OB3)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->OB3)
 				{
 					//エネミーをステージを9等分して指定した位置にセット
 					obstacle[j][2]->SetPosition(DirectX::XMFLOAT3(
-						stageBase[j]->squea.SpritPosition[i].x,
+						stageBase[j]->squea.spritPosition[i].x,
 						1.5f,
-						stageBase[j]->squea.SpritPosition[i].z));
+						stageBase[j]->squea.spritPosition[i].z));
 					//生存
 					obstacle[j][2]->SetExistFlg(true);
 				}
 
 				//動く
 				//障害物4
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->MOB1)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->MOB1)
 				{
-					if (stageBase[j]->StageRand == 2)
+					if (stageBase[j]->stageRand == 2)
 					{
-						obstacle[j][3]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i]);
+						obstacle[j][3]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i]);
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][3]->SetPosition(DirectX::XMFLOAT3(
-							stageBase[j]->squea.SpritPosition[i].x,
+							stageBase[j]->squea.spritPosition[i].x,
 							1.5f + ObstacleMove[0],
-							stageBase[j]->squea.SpritPosition[i].z));
+							stageBase[j]->squea.spritPosition[i].z));
 					}
 					else
 					{
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][3]->SetPosition(DirectX::XMFLOAT3(
-							stageBase[j]->squea.SpritPosition[i].x,
+							stageBase[j]->squea.spritPosition[i].x,
 							1.5f,
-							stageBase[j]->squea.SpritPosition[i].z));
+							stageBase[j]->squea.spritPosition[i].z));
 					}
 					//生存
 					obstacle[j][3]->SetExistFlg(true);
 				}
 
 				//障害物5
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->MOB2)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->MOB2)
 				{
-					if (stageBase[j]->StageRand == 2)
+					if (stageBase[j]->stageRand == 2)
 					{
-						obstacle[j][4]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i]);
+						obstacle[j][4]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i]);
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][4]->SetPosition(DirectX::XMFLOAT3(
-							stageBase[j]->squea.SpritPosition[i].x,
+							stageBase[j]->squea.spritPosition[i].x,
 							1.5f + ObstacleMove[0],
-							stageBase[j]->squea.SpritPosition[i].z));
+							stageBase[j]->squea.spritPosition[i].z));
 					}
 					else
 					{
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][4]->SetPosition(DirectX::XMFLOAT3(
-							stageBase[j]->squea.SpritPosition[i].x,
+							stageBase[j]->squea.spritPosition[i].x,
 							1.5f,
-							stageBase[j]->squea.SpritPosition[i].z));
+							stageBase[j]->squea.spritPosition[i].z));
 					}
 					//生存
 					obstacle[j][4]->SetExistFlg(true);
 				}
 
 				//障害物6
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->MOB3)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->MOB3)
 				{
-					if (stageBase[j]->StageRand == 2)
+					if (stageBase[j]->stageRand == 2)
 					{
-						obstacle[j][5]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i]);
+						obstacle[j][5]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i]);
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][5]->SetPosition(DirectX::XMFLOAT3(
-							stageBase[j]->squea.SpritPosition[i].x,
+							stageBase[j]->squea.spritPosition[i].x,
 							1.5f + ObstacleMove[1],
-							stageBase[j]->squea.SpritPosition[i].z));
+							stageBase[j]->squea.spritPosition[i].z));
 					}
 					else
 					{
 						//エネミーをステージを9等分して指定した位置にセット
 						obstacle[j][5]->SetPosition(DirectX::XMFLOAT3(
-							stageBase[j]->squea.SpritPosition[i].x,
+							stageBase[j]->squea.spritPosition[i].x,
 							1.5f,
-							stageBase[j]->squea.SpritPosition[i].z));
+							stageBase[j]->squea.spritPosition[i].z));
 					}
 					//生存
 					obstacle[j][5]->SetExistFlg(true);
@@ -486,12 +486,12 @@ void SceneMain::StageUpdate()
 
 				//コイン配置
 				//コイン１
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->COIN1)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->COIN1)
 				{
 					coin[0]->SetPosition(DirectX::XMFLOAT3(
-						stageBase[j]->squea.SpritPosition[i].x,
+						stageBase[j]->squea.spritPosition[i].x,
 						1.5f,
-						stageBase[j]->squea.SpritPosition[i].z));
+						stageBase[j]->squea.spritPosition[i].z));
 
 					coin[0]->SetExistFlg(true);
 				}
@@ -501,12 +501,12 @@ void SceneMain::StageUpdate()
 				}
 
 				//コイン２
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->COIN2)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->COIN2)
 				{
 					coin[1]->SetPosition(DirectX::XMFLOAT3(
-						stageBase[j]->squea.SpritPosition[i].x,
+						stageBase[j]->squea.spritPosition[i].x,
 						1.5f,
-						stageBase[j]->squea.SpritPosition[i].z));
+						stageBase[j]->squea.spritPosition[i].z));
 
 					coin[1]->SetExistFlg(true);
 				}
@@ -516,12 +516,12 @@ void SceneMain::StageUpdate()
 				}
 
 				//コイン３
-				if (stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i] == stageTile[0][0]->COIN3)
+				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->COIN3)
 				{
 					coin[2]->SetPosition(DirectX::XMFLOAT3(
-						stageBase[j]->squea.SpritPosition[i].x,
+						stageBase[j]->squea.spritPosition[i].x,
 						1.5f,
-						stageBase[j]->squea.SpritPosition[i].z));
+						stageBase[j]->squea.spritPosition[i].z));
 
 					coin[2]->SetExistFlg(true);
 				}
@@ -534,7 +534,7 @@ void SceneMain::StageUpdate()
 				// タイルカラーセット 
 				//-------------------
 				//今見ているステージタイルをランダムで決まったステージベースのstageTileMap番号をカラーをセット
-				stageTile[j][i]->SetTileColor(stageTile[j][i]->StageTileMap[stageBase[j]->StageRand][j][i]);
+				stageTile[j][i]->SetTileColor(stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i]);
 			}
 			else
 			{
@@ -542,7 +542,7 @@ void SceneMain::StageUpdate()
 				// タイル配置 
 				//------------
 				//穴が開く部分のタイルを重ねて隠す
-				stageTile[j][i]->SetPosition(DirectX::XMFLOAT3(stageBase[j]->squea.SpritPosition[6].x, -20.0f, stageBase[j]->squea.SpritPosition[6].z - 100.0f));
+				stageTile[j][i]->SetPosition(DirectX::XMFLOAT3(stageBase[j]->squea.spritPosition[6].x, -20.0f, stageBase[j]->squea.spritPosition[6].z - 100.0f));
 			}
 		}
 	}
@@ -578,10 +578,10 @@ void SceneMain::imGuiUpdate()
 		ImGui::ColorEdit3(u8"平行光", (float*)&diffuseColor); // Edit 3 floats representing a color
 		/*for (int i = 0; i < StageMax; i++)
 		{
-			ImGui::InputInt("Rand", &stageBase[i]->StageRand);
+			ImGui::InputInt("Rand", &stageBase[i]->stageRand);
 		}*/
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), u8"---------StagePatternNum---------");
-		ImGui::InputInt("Rand", &stageBase[0]->StageRand);
+		ImGui::InputInt("Rand", &stageBase[0]->stageRand);
 		ImGui::Text("true(1)/false(0):%d", player->GetBlueFlg());
 		ImGui::InputFloat("ObstacleMove[0]", &ObstacleMove[0]);
 		ImGui::InputFloat("ObstacleMove[1]", &ObstacleMove[1]);

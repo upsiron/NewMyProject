@@ -137,13 +137,13 @@ void Character::UpdateVerticalMove(float elapsedTime)
 		//{
 		//	StageTile* stageTile = stageTileManager.GetStageTile(i);
 		//	//if (-1 != Stage::Instance().stageTileObj->RayPick(rayStart, rayEnd, &outPosition, &outNormal))
-		//	if (Collision::FloorVsPlayer(stageTile->TileLeftTop, stageTile->TileRightTop, stageTile->TileLeftBottom, stageTile->TileRightBottom, playerObj->GetPosition()))
+		//	if (Collision::FloorVsPlayer(stageTile->tileLeftTop, stageTile->tileRightTop, stageTile->tileLeftBottom, stageTile->tileRightBottom, playerObj->GetPosition()))
 		//	//if(stageTile->Flg)
 		//	{
-		//		static DirectX::XMFLOAT3 CornerLeftTop = stageTile->TileLeftTop;
-		//		static DirectX::XMFLOAT3 CornerLeftBottom = stageTile->TileLeftBottom;
-		//		static DirectX::XMFLOAT3 CornerRightTop = stageTile->TileRightTop;
-		//		static DirectX::XMFLOAT3 CornerRightBottom = stageTile->TileRightBottom;
+		//		static DirectX::XMFLOAT3 CornerLeftTop = stageTile->tileLeftTop;
+		//		static DirectX::XMFLOAT3 CornerLeftBottom = stageTile->tileLeftBottom;
+		//		static DirectX::XMFLOAT3 CornerRightTop = stageTile->tileRightTop;
+		//		static DirectX::XMFLOAT3 CornerRightBottom = stageTile->tileRightBottom;
 		//		//onSquare = true;
 		//		if (Collision::FloorVsPlayer(CornerLeftTop, CornerRightTop, CornerLeftBottom, CornerRightBottom, playerObj->GetPosition()))
 		//		{
@@ -327,10 +327,10 @@ bool Character::FloorCheck()
 		StageTile* stageTile = stageTileManager.GetStageTile(i);
 		//床に当たってたらtrue
 		if (Collision::FloorVsPlayer(
-			stageTile->TileLeftTop,
-			stageTile->TileRightTop,
-			stageTile->TileLeftBottom,
-			stageTile->TileRightBottom,
+			stageTile->tileLeftTop,
+			stageTile->tileRightTop,
+			stageTile->tileLeftBottom,
+			stageTile->tileRightBottom,
 			playerObj->GetPosition()))
 		{
 			//プレイヤーが乗っている床のいろが赤なら赤のフラグture

@@ -22,19 +22,19 @@ void StageTile::Update(float elapsedTime)
 	stageTileObj->SetPosition(position);
 
 	//タイルの4点ポジション取得
-	TileLeftTop = DirectX::XMFLOAT3(
+	tileLeftTop = DirectX::XMFLOAT3(
 		stageTileObj->GetPosition().x - stageTileObj->GetScale().x - StageScaleGap,
 		0.0f,
 		stageTileObj->GetPosition().z + stageTileObj->GetScale().z + StageScaleGap);
-	TileRightTop = DirectX::XMFLOAT3(
+	tileRightTop = DirectX::XMFLOAT3(
 		stageTileObj->GetPosition().x + stageTileObj->GetScale().x + StageScaleGap,
 		0.0f,
 		stageTileObj->GetPosition().z + stageTileObj->GetScale().z + StageScaleGap);
-	TileLeftBottom = DirectX::XMFLOAT3(
+	tileLeftBottom = DirectX::XMFLOAT3(
 		stageTileObj->GetPosition().x - stageTileObj->GetScale().x - StageScaleGap,
 		0.0f,
 		stageTileObj->GetPosition().z - stageTileObj->GetScale().z - StageScaleGap);
-	TileRightBottom = DirectX::XMFLOAT3(
+	tileRightBottom = DirectX::XMFLOAT3(
 		stageTileObj->GetPosition().x + stageTileObj->GetScale().x + StageScaleGap,
 		0.0f,
 		stageTileObj->GetPosition().z - stageTileObj->GetScale().z - StageScaleGap);

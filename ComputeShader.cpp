@@ -46,7 +46,7 @@ void ComputeShader::CreateResource(void)
 
 	D3D11_BUFFER_DESC Desc;
 	ZeroMemory(&Desc, sizeof(Desc));
-	Desc.ByteWidth = sizeof(ParticleSystem::ParticleData) * particleSystem->NumParticles; // バッファ サイズ
+	Desc.ByteWidth = sizeof(ParticleSystem::ParticleData) * particleSystem->numParticles; // バッファ サイズ
 	Desc.Usage = D3D11_USAGE_DEFAULT;//ステージの入出力はOK。GPUの入出力OK。
 	Desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
 	Desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED; // 構造化バッファ
@@ -71,13 +71,13 @@ void ComputeShader::CreateResource(void)
 
 	//D3D11_BUFFER_DESC Desc;
 	ZeroMemory(&Desc, sizeof(Desc));
-	Desc.ByteWidth = sizeof(VERTEX) * particleSystem->NumParticles; // バッファ サイズ
+	Desc.ByteWidth = sizeof(VERTEX) * particleSystem->numParticles; // バッファ サイズ
 	Desc.Usage = D3D11_USAGE_DEFAULT;//ステージの入出力はOK。GPUの入出力OK。
 	Desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
 	Desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED; // 構造化バッファ
 	Desc.StructureByteStride = sizeof(VERTEX);
 
-	struct VERTEX* posVertex = new VERTEX[particleSystem->NumParticles];
+	struct VERTEX* posVertex = new VERTEX[particleSystem->numParticles];
 
 	D3D11_SUBRESOURCE_DATA VerSubResource;//サブリソースの初期化用データを定義
 	VerSubResource.pSysMem = posVertex;//
@@ -95,7 +95,7 @@ void ComputeShader::CreateResource(void)
 	// リードバック用バッファ リソースの作成（CPUからもアクセスできるステージングバッファ）
 	//--------------------------------------------------------
 	ZeroMemory(&Desc, sizeof(Desc));
-	Desc.ByteWidth = sizeof(ParticleSystem::ParticleData) * particleSystem->NumParticles;	// バッファ サイズ
+	Desc.ByteWidth = sizeof(ParticleSystem::ParticleData) * particleSystem->numParticles;	// バッファ サイズ
 
 	Desc.Usage = D3D11_USAGE_STAGING;  // CPUから読み書き可能なリソース
 	Desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ; // CPUから読み込む
@@ -108,7 +108,7 @@ void ComputeShader::CreateResource(void)
 	// 書き込み用バッファ リソースの作成（CPUからもアクセスできるステージングバッファ）
 	//--------------------------------------------------------
 	ZeroMemory(&Desc, sizeof(Desc));
-	Desc.ByteWidth = sizeof(ParticleSystem::ParticleData) * particleSystem->NumParticles;	// バッファ サイズ
+	Desc.ByteWidth = sizeof(ParticleSystem::ParticleData) * particleSystem->numParticles;	// バッファ サイズ
 
 	//Desc.Usage = D3D11_USAGE_STAGING;  // CPUから読み書き可能なリソース
 	Desc.Usage = D3D11_USAGE_DYNAMIC;  // CPUから読み書き可能なリソース
@@ -124,14 +124,14 @@ void ComputeShader::CreateResource(void)
 		// 頂点バッファの定義　（書き込みにも対応）
 		D3D11_BUFFER_DESC vBufferDesc;
 		vBufferDesc.Usage = D3D11_USAGE_DEFAULT;      // デフォルト使用法
-		vBufferDesc.ByteWidth = sizeof(VERTEX) * particleSystem->NumParticles; // PerticleCount = 頂点数
+		vBufferDesc.ByteWidth = sizeof(VERTEX) * particleSystem->numParticles; // PerticleCount = 頂点数
 		vBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER; // 頂点バッファとストリーム出力として使う
 		vBufferDesc.CPUAccessFlags = 0;
 		vBufferDesc.MiscFlags = 0;
 		vBufferDesc.StructureByteStride = 0;
 
 		// 頂点バッファのサブリソースの初期値(頂点座標)
-		struct VERTEX* posVertex = new VERTEX[particleSystem->NumParticles];
+		struct VERTEX* posVertex = new VERTEX[particleSystem->numParticles];
 
 		// 頂点バッファのサブリソースの定義(バッファーリソースでも一つだけ持てる）
 		D3D11_SUBRESOURCE_DATA vSubData;//初期化用データを作成
@@ -158,7 +158,7 @@ void ComputeShader::CreateSRV(void)
 	ZeroMemory(&DescSRV, sizeof(DescSRV));
 	DescSRV.Format = DXGI_FORMAT_UNKNOWN;
 	DescSRV.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-	DescSRV.Buffer.ElementWidth = particleSystem->NumParticles; // データ数
+	DescSRV.Buffer.ElementWidth = particleSystem->numParticles; // データ数
 
 	//Particle Data  シェーダ リソース ビューの作成
 	hr = device->CreateShaderResourceView(pBufferInput.p, &DescSRV, &pSRV.p);
@@ -177,7 +177,7 @@ void ComputeShader::CreateUAV(void)
 	ZeroMemory(&DescUAV, sizeof(DescUAV));
 	DescUAV.Format = DXGI_FORMAT_UNKNOWN;
 	DescUAV.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
-	DescUAV.Buffer.NumElements = particleSystem->NumParticles; // データ数
+	DescUAV.Buffer.NumElements = particleSystem->numParticles; // データ数
 
     // Particle Data アンオーダード・アクセス・ビューの作成
 	hr = device->CreateUnorderedAccessView(pBufferOutput.p, &DescUAV, &pUAV.p);
@@ -199,7 +199,7 @@ void ComputeShader::RunComputeShader(void)
 	D3D11_MAPPED_SUBRESOURCE MappedResource = { 0 };
 	context->Map(pToCpuWriteBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
 	ParticleSystem::ParticleData* pBuf = (ParticleSystem::ParticleData*)MappedResource.pData;
-	memcpy(MappedResource.pData, particleSystem->data, sizeof(ParticleSystem::ParticleData) * particleSystem->NumParticles);
+	memcpy(MappedResource.pData, particleSystem->data, sizeof(ParticleSystem::ParticleData) * particleSystem->numParticles);
 	context->Unmap(pToCpuWriteBuffer, 0);
 
 	context->CopyResource(pBufferInput.p, pToCpuWriteBuffer.p);
@@ -230,7 +230,7 @@ void ComputeShader::RunComputeShader(void)
 	D3D11_MAPPED_SUBRESOURCE MappedResourceResult = { 0 };
 	context->Map(pToCpuReadBackBuffer, 0, D3D11_MAP_READ, 0, &MappedResourceResult);
 	ParticleSystem::ParticleData* pBufRes = (ParticleSystem::ParticleData*)MappedResourceResult.pData;
-	memcpy(particleSystem->data, pBufRes, sizeof(ParticleSystem::ParticleData) * particleSystem->NumParticles);
+	memcpy(particleSystem->data, pBufRes, sizeof(ParticleSystem::ParticleData) * particleSystem->numParticles);
 	context->Unmap(pToCpuReadBackBuffer, 0);
 
 	return;

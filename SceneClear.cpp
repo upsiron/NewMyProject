@@ -138,7 +138,7 @@ void SceneClear::Update(float elapsedTime)
 	//ƒJƒƒ‰XV
 	cameraController->Update(elapsedTime);
 
-	Particles->Hanabi({0.0f,0.0f,0.0f }, 200000);
+	Particles->hanabi({0.0f,0.0f,0.0f }, 200000);
 	Particles->Update(elapsedTime);
 
 	timer++;
