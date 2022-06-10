@@ -22,6 +22,9 @@ public:
 	//スクロールスピードセット関数
 	void SetPlayerSpeed(float playerSpeed) { this->oldPlayerSpeed = playerSpeed; }
 
+	//スクロールスピードアップ関数
+	void PlayerSpeedUp(float playerSpeed) { this->oldPlayerSpeed = this->oldPlayerSpeed + playerSpeed; }
+
 	//スクロールスピードダウン関数
 	void PlayerSpeedDown(float playerSpeedDown) { this->oldPlayerSpeed = this->oldPlayerSpeed - playerSpeedDown; }
 
