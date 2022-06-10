@@ -52,13 +52,13 @@ Player::Player()
 	//コイン初期化
 	for (int i = 0; i < 3; i++)
 	{
-		CoinState[i] = 0;
-		CoinAngle[i] = 0.1f;
-		CoinPositionY[i] = 0.0f;
+		coinState[i] = 0;
+		coinAngle[i] = 0.1f;
+		coinPositionY[i] = 0.0f;
 	}
 
 	//ゲームオーバーフラグ初期化
-	GameOverFlg = false;
+	gameOverFlg = false;
 }
 
 // デストラクタ
@@ -72,10 +72,10 @@ void Player::Update(float elapsedTime)
 {
 	//リリース用
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_Y || KeyInput::KeyRelease() & KEY_START)debugflg = !debugflg;
+	if (gamePad.GetButtonDown() & GamePad::BTN_Y || KeyInput::KeyRelease() & KEY_START)debugFlg = !debugFlg;
 
 	//現在のelapsedTime保持
-	SaveElapsedTime = elapsedTime;
+	saveElapsedTime = elapsedTime;
 
 	//位置をセット
 	playerObj->SetPosition(position);
@@ -83,7 +83,7 @@ void Player::Update(float elapsedTime)
 	playerObj->SetScale(scale);
 
 	//自動スクロール
-	if(debugflg)position.z += playerSpeed;
+	if(debugFlg)position.z += playerSpeed;
 
 	//ギミック更新処理
 	GimmickUpdate();
@@ -92,10 +92,10 @@ void Player::Update(float elapsedTime)
 	UpdateVelocity(elapsedTime);
 	
 	// 移動入力
-	if(!GameOverFlg)InputMove(elapsedTime);
+	if(!gameOverFlg)InputMove(elapsedTime);
 
 	// ジャンプ入力
-	if (!GameOverFlg)InputJump();
+	if (!gameOverFlg)InputJump();
 
 	// プレイヤーと障害物との衝突判定
 	CollisionPlayerVsObstacle();
@@ -103,10 +103,10 @@ void Player::Update(float elapsedTime)
 	// プレイヤーとコインとの衝突判定
 	CollisionPlayerVsCoin();
 
-	if (PlayerCoinCount == 3 && playerSpeed > 0.2f)
+	if (KeyInput::KeyRelease() & KEY_X && playerCoinCount == 3 && playerSpeed > 0.25f)
 	{
 		PlayerSpeedDown(0.1f);
-		PlayerCoinCount = 0;
+		playerCoinCount = 0;
 	}
 
 	//プレイヤーの更新
@@ -116,7 +116,7 @@ void Player::Update(float elapsedTime)
 	if (position.y < -1.5f)
 	{
 		playerSpeed = 0.0f;
-		GameOverFlg = true;
+		gameOverFlg = true;
 	}
 
 	//現在のプレイヤーのポジションを保持
@@ -161,13 +161,13 @@ void Player::DrawDebugGUI()
 			ImGui::Text("true(1)/false(0):%d", IsGround());
 			//デバッグ
 			GamePad& gamePad = Input::Instance().GetGamePad();
-			if (gamePad.GetButtonDown() & GamePad::BTN_Y)debugflg = !debugflg;
-			if (ImGui::Button("Debug"))debugflg = true;
-			if (ImGui::Button("NoDebug"))debugflg = false;
+			if (gamePad.GetButtonDown() & GamePad::BTN_Y)debugFlg = !debugFlg;
+			if (ImGui::Button("Debug"))debugFlg = true;
+			if (ImGui::Button("NoDebug"))debugFlg = false;
 			ImGui::SliderFloat("scroll", &playerSpeed, 0.0f, 1.0f);
 			ImGui::SliderFloat("jump", &jumpSpeed, 0.0f, 100.0f);
 			ImGui::SliderFloat("gravity", &gravity, -100.0f, 0.0f);
-			ImGui::InputInt("PlayerCoinCount", &PlayerCoinCount, 0.0f, 100.0f);
+			ImGui::InputInt("playerCoinCount", &playerCoinCount, 0.0f, 100.0f);
 		}
 	}
 	ImGui::End();
@@ -182,13 +182,13 @@ void Player::GimmickUpdate()
 	//スクロール加速処理
 	if (RedGimmickFlg)
 	{
-		GimmickTime = 300.0f;
+		gimmickTime = 300.0f;
 	}
 
 	//ギミックタイムの時間だけスクロールスピードを上げる
-	if (GimmickTime >= 0.0f)
+	if (gimmickTime >= 0.0f)
 	{
-		GimmickTime--;
+		gimmickTime--;
 		playerSpeed = oldPlayerSpeed + 0.15f;
 	}
 	else
@@ -198,24 +198,24 @@ void Player::GimmickUpdate()
 
 	//playerのカラーを変える
 	Color = { R,G,B,1.0f };
-	if (GimmickTime > 0)
+	if (gimmickTime > 0)
 	{
-		switch (ColorState)
+		switch (colorState)
 		{
-		case RedMinus:
+		case REDMINUS:
 			G -= 0.05f;
 			B -= 0.05f;
 			if (G < 0.0f)
 			{
-				ColorState = RedPuls;
+				colorState = REDPULS;
 			}
 			break;
-		case RedPuls:
+		case REDPULS:
 			G += 0.05f;
 			B += 0.05f;
 			if (G > 1.0f)
 			{
-				ColorState = RedMinus;
+				colorState = REDMINUS;
 			}
 			break;
 		}
@@ -290,7 +290,7 @@ DirectX::XMFLOAT3 Player::GetMoveVec()const
 	//vec.x = (cameraRightX * ax) + (cameraFrontX * ay);
 	vec.x = ax;
 	//vec.z = (cameraRightZ * ax) + (cameraFrontZ * ay);
-	if (debugflg)
+	if (debugFlg)
 	{
 		vec.z = 0.0f;
 	}
@@ -309,8 +309,8 @@ DirectX::XMFLOAT3 Player::GetMoveVec()const
 void Player::InputMove(float elapsedTime)
 {
 	//左右の移動制限
-	if (position.x > StageSideEndPos)position.x = SavePos.x;
-	if (position.x < -1.0f * StageSideEndPos)position.x = SavePos.x;
+	if (position.x > stageSideEndPos)position.x = SavePos.x;
+	if (position.x < -1.0f * stageSideEndPos)position.x = SavePos.x;
 
 	// 進行ベクトルを取得
 	DirectX::XMFLOAT3 moveVec = GetMoveVec();
@@ -353,41 +353,41 @@ void Player::CollisionPlayerVsCoin()
 		if (!object->GetExistFlg())continue;
 
 		//コインが当たっている時といない時で状態を変える
-		if (debugflg && Collision::HitSphere(position, 0.4f, { object->GetPosition().x,  object->GetPosition().y - 1.5f, object->GetPosition().z }, 0.4f))
+		if (debugFlg && Collision::HitSphere(position, 0.4f, { object->GetPosition().x,  object->GetPosition().y - 1.5f, object->GetPosition().z }, 0.4f))
 		{
-			CoinState[i] = 1;
+			coinState[i] = 1;
 		}
 		else
 		{
-			CoinState[i] = 0;
+			coinState[i] = 0;
 		}
 
 		//コインの回転量を設定
-		if (CoinState[i] == 1 && CoinAngle[i] > 0.0f)
+		if (coinState[i] == 1 && coinAngle[i] > 0.0f)
 		{
-			CoinAngle[i] += 0.05f;
-			CoinPositionY[i] += 3.0f;
+			coinAngle[i] += 0.05f;
+			coinPositionY[i] += 3.0f;
 		}
 		else
 		{
-			if (CoinAngle[i] > 0.1f)CoinAngle[i] -= 0.01f;
-			if (CoinPositionY[i] > 0.1f)CoinPositionY[i] -= 0.1f;
+			if (coinAngle[i] > 0.1f)coinAngle[i] -= 0.01f;
+			if (coinPositionY[i] > 0.1f)coinPositionY[i] -= 0.1f;
 		}
 
 		//コイン数をカウント
-		if (CoinPositionY[i] > 0 && CoinState[i] == 1)
+		if (coinPositionY[i] > 0 && coinState[i] == 1)
 		{
-			PlayerCoinCount = OldPlayerCoinCount + 1;
+			playerCoinCount = oldPlayerCoinCount + 1;
 		}
 		else
 		{
-			OldPlayerCoinCount = PlayerCoinCount;
+			oldPlayerCoinCount = playerCoinCount;
 		}
 
 		//移動量セット
-		object->SetMovePosition(CoinPositionY[i]);
+		object->SetMovePosition(coinPositionY[i]);
 		//回転量セット
-		object->SetMoveAngle(CoinAngle[i]);
+		object->SetMoveAngle(coinAngle[i]);
 	}
 }
 
@@ -432,7 +432,7 @@ void Player::CollisionPlayerVsObstacle()
 					//左倒れアニメーションセット
 					playerObj->SetMotion(KNOCKLEFT, 0, 0.0f);
 					//ゲームオーバーフラグを立てる
-					GameOverFlg = true;
+					gameOverFlg = true;
 				}
 			}
 		}
@@ -462,7 +462,7 @@ void Player::CollisionPlayerVsObstacle()
 					//右倒れアニメーションセット
 					playerObj->SetMotion(KNOCKRIGHT, 0, 0.0f);
 					//ゲームオーバーフラグを立てる
-					GameOverFlg = true;
+					gameOverFlg = true;
 				}
 			}
 		}
@@ -488,7 +488,7 @@ void Player::CollisionPlayerVsObstacle()
 					//後ろ倒れアニメーションセット
 					playerObj->SetMotion(KNOCK, 0, 0.0f);
 					//ゲームオーバーフラグを立てる
-					GameOverFlg = true;
+					gameOverFlg = true;
 					//スクロールストップ
 					playerSpeed = 0.0f;
 					oldPlayerSpeed = 0.0f;
@@ -520,7 +520,7 @@ void Player::CollisionPlayerVsObstacle()
 					//前倒れアニメーションセット
 					playerObj->SetMotion(KNOCKFRONT, 0, 0.0f);
 					//ゲームオーバーフラグを立てる
-					GameOverFlg = true;
+					gameOverFlg = true;
 					//スクロールストップ
 					playerSpeed = 0.0f;
 					oldPlayerSpeed = 0.0f;
@@ -552,7 +552,7 @@ void Player::InputJump()
 void Player::OnLanding()
 {
 	//走りアニメーションセット
-	if (!GameOverFlg)playerObj->SetMotion(RUN, 0, 0.0f);
+	if (!gameOverFlg)playerObj->SetMotion(RUN, 0, 0.0f);
 	jumpCount = 0;
 }
 
