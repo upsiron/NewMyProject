@@ -138,15 +138,15 @@ private:
 	const float BLOOM4 = 64;
 
 	//オフスクリーンで描画用
-	std::unique_ptr<FullScreenQuad> FullScreen{};         //ノーマル
-	std::unique_ptr<FullScreenQuad> FullScreenBright{};   //ブライトシェーダー用
-	std::unique_ptr<FullScreenQuad> FullScreenBokeh{};    //ボケシェーダー用
-	std::unique_ptr<FrameBuffer> OffScreen{};
-	std::unique_ptr<FrameBuffer> Bright{};
-	std::unique_ptr<FrameBuffer> Bloom1{};
-	std::unique_ptr<FrameBuffer> Bloom2{};
-	std::unique_ptr<FrameBuffer> Bloom3{};
-	std::unique_ptr<FrameBuffer> Bloom4{};
+	std::unique_ptr<FullScreenQuad> fullScreen{};         //ノーマル
+	std::unique_ptr<FullScreenQuad> fullScreenBright{};   //ブライトシェーダー用
+	std::unique_ptr<FullScreenQuad> fullScreenBokeh{};    //ボケシェーダー用
+	std::unique_ptr<FrameBuffer> offScreen{};
+	std::unique_ptr<FrameBuffer> bright{};
+	std::unique_ptr<FrameBuffer> bloom1{};
+	std::unique_ptr<FrameBuffer> bloom2{};
+	std::unique_ptr<FrameBuffer> bloom3{};
+	std::unique_ptr<FrameBuffer> bloom4{};
 public:
 	SceneLoad(Scene* nextScene) {
 		// ローディング後に遷移するシーンを保持
@@ -207,7 +207,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> PixelShaders[8];
 
 	//パーティクル
-	std::unique_ptr<ParticleSystem> Particles{};
+	std::unique_ptr<ParticleSystem> particles{};
 
 	//ブルーム関連
 	float threshold = 0.370f; //輝度閾値
@@ -220,15 +220,15 @@ private:
 	const float BLOOM4 = 64;
 
 	//オフスクリーンで描画用
-	std::unique_ptr<FullScreenQuad> FullScreen{};         //ノーマル
-	std::unique_ptr<FullScreenQuad> FullScreenBright{};   //ブライトシェーダー用
-	std::unique_ptr<FullScreenQuad> FullScreenBokeh{};    //ボケシェーダー用
-	std::unique_ptr<FrameBuffer> OffScreen{};
-	std::unique_ptr<FrameBuffer> Bright{};
-	std::unique_ptr<FrameBuffer> Bloom1{};
-	std::unique_ptr<FrameBuffer> Bloom2{};
-	std::unique_ptr<FrameBuffer> Bloom3{};
-	std::unique_ptr<FrameBuffer> Bloom4{};
+	std::unique_ptr<FullScreenQuad> fullScreen{};         //ノーマル
+	std::unique_ptr<FullScreenQuad> fullScreenBright{};   //ブライトシェーダー用
+	std::unique_ptr<FullScreenQuad> fullScreenBokeh{};    //ボケシェーダー用
+	std::unique_ptr<FrameBuffer> offScreen{};
+	std::unique_ptr<FrameBuffer> bright{};
+	std::unique_ptr<FrameBuffer> bloom1{};
+	std::unique_ptr<FrameBuffer> bloom2{};
+	std::unique_ptr<FrameBuffer> bloom3{};
+	std::unique_ptr<FrameBuffer> bloom4{};
 
 	//std::unique_ptr<Sprite> img;
 	//フェードインアウト用
@@ -313,15 +313,15 @@ private:
 	const float BLOOM4 = 64;
 
 	//オフスクリーンで描画用
-	std::unique_ptr<FullScreenQuad> FullScreen{};         //ノーマル
-	std::unique_ptr<FullScreenQuad> FullScreenBright{};   //ブライトシェーダー用
-	std::unique_ptr<FullScreenQuad> FullScreenBokeh{};    //ボケシェーダー用
-	std::unique_ptr<FrameBuffer> OffScreen{};
-	std::unique_ptr<FrameBuffer> Bright{};
-	std::unique_ptr<FrameBuffer> Bloom1{};
-	std::unique_ptr<FrameBuffer> Bloom2{};
-	std::unique_ptr<FrameBuffer> Bloom3{};
-	std::unique_ptr<FrameBuffer> Bloom4{};
+	std::unique_ptr<FullScreenQuad> fullScreen{};         //ノーマル
+	std::unique_ptr<FullScreenQuad> fullScreenBright{};   //ブライトシェーダー用
+	std::unique_ptr<FullScreenQuad> fullScreenBokeh{};    //ボケシェーダー用
+	std::unique_ptr<FrameBuffer> offScreen{};
+	std::unique_ptr<FrameBuffer> bright{};
+	std::unique_ptr<FrameBuffer> bloom1{};
+	std::unique_ptr<FrameBuffer> bloom2{};
+	std::unique_ptr<FrameBuffer> bloom3{};
+	std::unique_ptr<FrameBuffer> bloom4{};
 
 public:
 	SceneTitle() {}
@@ -379,15 +379,15 @@ private:
 	const float BLOOM4 = 64;
 
 	//オフスクリーンで描画用
-	std::unique_ptr<FullScreenQuad> FullScreen{};         //ノーマル
-	std::unique_ptr<FullScreenQuad> FullScreenBright{};   //ブライトシェーダー用
-	std::unique_ptr<FullScreenQuad> FullScreenBokeh{};    //ボケシェーダー用
-	std::unique_ptr<FrameBuffer> OffScreen{};
-	std::unique_ptr<FrameBuffer> Bright{};
-	std::unique_ptr<FrameBuffer> Bloom1{};
-	std::unique_ptr<FrameBuffer> Bloom2{};
-	std::unique_ptr<FrameBuffer> Bloom3{};
-	std::unique_ptr<FrameBuffer> Bloom4{};
+	std::unique_ptr<FullScreenQuad> fullScreen{};         //ノーマル
+	std::unique_ptr<FullScreenQuad> fullScreenBright{};   //ブライトシェーダー用
+	std::unique_ptr<FullScreenQuad> fullScreenBokeh{};    //ボケシェーダー用
+	std::unique_ptr<FrameBuffer> offScreen{};
+	std::unique_ptr<FrameBuffer> bright{};
+	std::unique_ptr<FrameBuffer> bloom1{};
+	std::unique_ptr<FrameBuffer> bloom2{};
+	std::unique_ptr<FrameBuffer> bloom3{};
+	std::unique_ptr<FrameBuffer> bloom4{};
 
 
 public:

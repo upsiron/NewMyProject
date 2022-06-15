@@ -55,15 +55,15 @@ void SceneLoad::Initialize()
     Particles = std::make_unique<ParticleSystem>(device, 200000);
 
     //ブルーム初期化
-    FullScreen = std::make_unique<FullScreenQuad>(device);
-    FullScreenBright = std::make_unique<FullScreenQuad>(device);
-    FullScreenBokeh = std::make_unique<FullScreenQuad>(device);
-    OffScreen = std::make_unique<FrameBuffer>(device, 1280 / SCREEN, 720 / SCREEN);
-    Bright = std::make_unique<FrameBuffer>(device, 1280 / SCREEN, 720 / SCREEN);
-    Bloom1 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM1, 720 / BLOOM1);
-    Bloom2 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM2, 720 / BLOOM2);
-    Bloom3 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM3, 720 / BLOOM3);
-    Bloom4 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM4, 720 / BLOOM4);
+    fullScreen = std::make_unique<FullScreenQuad>(device);
+    fullScreenBright = std::make_unique<FullScreenQuad>(device);
+    fullScreenBokeh = std::make_unique<FullScreenQuad>(device);
+    offScreen = std::make_unique<FrameBuffer>(device, 1280 / SCREEN, 720 / SCREEN);
+    bright = std::make_unique<FrameBuffer>(device, 1280 / SCREEN, 720 / SCREEN);
+    bloom1 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM1, 720 / BLOOM1);
+    bloom2 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM2, 720 / BLOOM2);
+    bloom3 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM3, 720 / BLOOM3);
+    bloom4 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM4, 720 / BLOOM4);
 } 
 
 void SceneLoad::LoadingThread(SceneLoad* scene)
@@ -142,36 +142,36 @@ void SceneLoad::Render() {
     //ブルーム関係レンダリング
     framework.SetSamplerCramp(0);
     ID3D11ShaderResourceView* ShaderResourceViews[2]{
-        OffScreen->getShaderResourceView(0),
-        OffScreen->getShaderResourceView(1),
+        offScreen->getShaderResourceView(0),
+        offScreen->getShaderResourceView(1),
     };
-    FullScreen->Blit(context, ShaderResourceViews, 0, 2, PixelShaders[1].Get());
+    fullScreen->Blit(context, ShaderResourceViews, 0, 2, PixelShaders[1].Get());
 
     context->OMSetBlendState(BsAdd, nullptr, 0xFFFFFFFF);
 
     ID3D11ShaderResourceView* BokehShaderResourceViews1[2]{
-        Bloom1->getShaderResourceView(0),
-        Bloom1->getShaderResourceView(1),
+        bloom1->getShaderResourceView(0),
+        bloom1->getShaderResourceView(1),
     };
-    FullScreenBokeh->Blit(context, BokehShaderResourceViews1, 0, 2, BokehShader.get());
+    fullScreenBokeh->Blit(context, BokehShaderResourceViews1, 0, 2, BokehShader.get());
 
     ID3D11ShaderResourceView* BokehShaderResourceViews2[2]{
-        Bloom2->getShaderResourceView(0),
-        Bloom2->getShaderResourceView(1),
+        bloom2->getShaderResourceView(0),
+        bloom2->getShaderResourceView(1),
     };
-    FullScreenBokeh->Blit(context, BokehShaderResourceViews2, 0, 2, BokehShader.get());
+    fullScreenBokeh->Blit(context, BokehShaderResourceViews2, 0, 2, BokehShader.get());
 
     ID3D11ShaderResourceView* BokehShaderResourceViews3[2]{
-        Bloom3->getShaderResourceView(0),
-        Bloom3->getShaderResourceView(1),
+        bloom3->getShaderResourceView(0),
+        bloom3->getShaderResourceView(1),
     };
-    FullScreenBokeh->Blit(context, BokehShaderResourceViews3, 0, 2, BokehShader.get());
+    fullScreenBokeh->Blit(context, BokehShaderResourceViews3, 0, 2, BokehShader.get());
 
     ID3D11ShaderResourceView* BokehShaderResourceViews4[2]{
-        Bloom4->getShaderResourceView(0),
-        Bloom4->getShaderResourceView(1),
+        bloom4->getShaderResourceView(0),
+        bloom4->getShaderResourceView(1),
     };
-    FullScreenBokeh->Blit(context, BokehShaderResourceViews4, 0, 2, BokehShader.get());
+    fullScreenBokeh->Blit(context, BokehShaderResourceViews4, 0, 2, BokehShader.get());
 
     context->OMSetBlendState(BsAlpha, nullptr, 0xFFFFFFFF);
 }
@@ -211,8 +211,8 @@ void SceneLoad::RenderBloom()
 
 		framework.SetSampler(0);
 		//オフスクリーン有効
-		OffScreen->Activate(context);
-		OffScreen->Clear(context);
+		offScreen->Activate(context);
+		offScreen->Clear(context);
 
 		Particles->Render(context, ParticleShader.get(), view, projection, framework.GetBlendState(Blender::BS_ALPHA));
 		// Now Loading…描画 
@@ -229,7 +229,7 @@ void SceneLoad::RenderBloom()
 		//font->TextOut(context, message, 620, 620, 48, 48, 0, 1, 1, 1);
 
 		//オフスクリーン無効
-		OffScreen->Deactivate(context);
+		offScreen->Deactivate(context);
 	}
 	//Bright
 	{
@@ -253,19 +253,19 @@ void SceneLoad::RenderBloom()
 			}
 
 			//オフスクリーン有効
-			Bright->Activate(context);
-			Bright->Clear(context);
+			bright->Activate(context);
+			bright->Clear(context);
 
 			framework.SetSamplerCramp(0);
 			ID3D11ShaderResourceView* ShaderResourceViews[2]{
-				OffScreen->getShaderResourceView(0),
-				OffScreen->getShaderResourceView(1),
+				offScreen->getShaderResourceView(0),
+				offScreen->getShaderResourceView(1),
 			};
-			FullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
+			fullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
 
 
 			//オフスクリーン無効
-			Bright->Deactivate(context);
+			bright->Deactivate(context);
 		}
 	}
 	//Bloom1
@@ -291,18 +291,18 @@ void SceneLoad::RenderBloom()
 			}
 
 			//オフスクリーン有効
-			Bloom1->Activate(context);
-			Bloom1->Clear(context);
+			bloom1->Activate(context);
+			bloom1->Clear(context);
 
 			framework.SetSamplerCramp(0);
 			ID3D11ShaderResourceView* ShaderResourceViews[2]{
-				Bright->getShaderResourceView(0),
-				Bright->getShaderResourceView(1),
+				bright->getShaderResourceView(0),
+				bright->getShaderResourceView(1),
 			};
-			FullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
+			fullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
 
 			//オフスクリーン無効
-			Bloom1->Deactivate(context);
+			bloom1->Deactivate(context);
 		}
 	}
 	//Bloom2
@@ -327,18 +327,18 @@ void SceneLoad::RenderBloom()
 			}
 
 			//オフスクリーン有効
-			Bloom2->Activate(context);
-			Bloom2->Clear(context);
+			bloom2->Activate(context);
+			bloom2->Clear(context);
 
 			framework.SetSamplerCramp(0);
 			ID3D11ShaderResourceView* ShaderResourceViews[2]{
-				Bloom1->getShaderResourceView(0),
-				Bloom1->getShaderResourceView(1),
+				bloom1->getShaderResourceView(0),
+				bloom1->getShaderResourceView(1),
 			};
-			FullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
+			fullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
 
 			//オフスクリーン無効
-			Bloom2->Deactivate(context);
+			bloom2->Deactivate(context);
 		}
 	}
 	//Bloom3
@@ -363,18 +363,18 @@ void SceneLoad::RenderBloom()
 			}
 
 			//オフスクリーン有効
-			Bloom3->Activate(context);
-			Bloom3->Clear(context);
+			bloom3->Activate(context);
+			bloom3->Clear(context);
 
 			framework.SetSamplerCramp(0);
 			ID3D11ShaderResourceView* ShaderResourceViews[2]{
-				Bloom2->getShaderResourceView(0),
-				Bloom2->getShaderResourceView(1),
+				bloom2->getShaderResourceView(0),
+				bloom2->getShaderResourceView(1),
 			};
-			FullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
+			fullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
 
 			//オフスクリーン無効
-			Bloom3->Deactivate(context);
+			bloom3->Deactivate(context);
 		}
 	}
 	//Bloom4
@@ -401,18 +401,18 @@ void SceneLoad::RenderBloom()
 
 
 			//オフスクリーン有効
-			Bloom4->Activate(context);
-			Bloom4->Clear(context);
+			bloom4->Activate(context);
+			bloom4->Clear(context);
 
 			framework.SetSamplerCramp(0);
 			ID3D11ShaderResourceView* ShaderResourceViews[2]{
-				Bloom3->getShaderResourceView(0),
-				Bloom3->getShaderResourceView(1),
+				bloom3->getShaderResourceView(0),
+				bloom3->getShaderResourceView(1),
 			};
-			FullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
+			fullScreenBright->Blit(context, ShaderResourceViews, 0, 2, BrightShader.get());
 
 			//オフスクリーン無効
-			Bloom4->Deactivate(context);
+			bloom4->Deactivate(context);
 		}
 	}
 }
