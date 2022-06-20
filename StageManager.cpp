@@ -11,14 +11,14 @@ void StageManager::Update(float elapsedTime)
 		if (stages.at(i)->GetPosition().z + 10.0f < Player::Instance().GetPosition().z)
 		{
 
-			if (Player::Instance().GetPosition().z >= 100.0f && Player::Instance().GetPosition().z <= 101.0f)
+			/*if (Player::Instance().GetPosition().z >= 100.0f && Player::Instance().GetPosition().z <= 101.0f)
 			{
 				Player::Instance().PlayerSpeedUp(0.1f);
 			}
 			if (Player::Instance().GetPosition().z >= 200.0f && Player::Instance().GetPosition().z <= 201.0f)
 			{
 				Player::Instance().PlayerSpeedUp(0.1f);
-			}
+			}*/
 
 			//ステージ更新時にランダムで決定されたパターンを更新
 			stages.at(i)->stageRand = r;
