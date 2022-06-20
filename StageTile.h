@@ -173,9 +173,201 @@ public:
 	//};
 
 	//ステージマップ
-	int StageTileMap[3][10][9] =
+	int StageTileMap[6][10][9] =
 	{
 		//0
+		{
+			//00
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//01
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//02
+			{
+			 OB1,  OB2, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//03
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//04
+			{
+			 NONE, NONE, NONE,
+			 NONE, HOLE, RED,
+			 NONE, NONE, NONE
+			},
+			//05
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//06
+			{
+			 OB1,  NONE, OB2,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//07
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, HOLE, NONE
+			 },
+			//08
+			{
+			 RED,  RED,  RED,
+			 NONE, NONE, COIN1,
+			 NONE, NONE, NONE
+			},
+			//09
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+		},
+
+		//1
+		{
+			//00
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//01
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//02
+			{
+			 OB1, OB2, OB3,
+			 NONE, NONE, NONE,
+			 GREEN, GREEN, GREEN
+			},
+			//03
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//04
+			{
+			 GREEN, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//05
+			{
+			 COIN2, MOB1, NONE,
+			 NONE, OB3, HOLE,
+			 OB1,  OB2, NONE
+			},
+			//06
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//07
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//08
+			{
+			 HOLE, OB1, OB2,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//09
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+		},
+
+		//2
+		{
+			//00
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//01
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, BLUE
+			 },
+			//02
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//03
+			{
+			 NONE, NONE, NONE,
+			 MOB3, OB1, MOB1,
+			 NONE, NONE, NONE
+			},
+			//04
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+			//05
+			{
+			 NONE, NONE, NONE,
+			 HOLE, BLUE, HOLE,
+			 NONE, NONE, NONE
+			},
+			//06
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//07
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			 },
+			//08
+			{
+			 NONE, OB1, COIN3,
+			 NONE, OB2, NONE,
+			 MOB1, OB3, MOB3
+			},
+			//09
+			{
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE,
+			 NONE, NONE, NONE
+			},
+		},
+
+		//3
 		{
 			//00
 			{
@@ -239,7 +431,7 @@ public:
 			},
 		},
 
-		//1
+		//4
 		{
 			//00
 			{
@@ -303,7 +495,7 @@ public:
 			},
 		},
 
-		//2
+		//5
 		{
 			//00
 			{
