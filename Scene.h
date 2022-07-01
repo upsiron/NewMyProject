@@ -188,7 +188,7 @@ private:
 
 	//ŽÀ‘Ì
 	Player* player = nullptr;
-	EnemyBlueSlime* enemy = {nullptr};
+	//EnemyBlueSlime* enemy = {nullptr};
 	ObstacleBlock* obstacle[StageMax][ObstacleMax] = { nullptr };
 	Coin* coin[CoinMax] = { nullptr };
 	StageBase* stageBase[StageMax] = { nullptr };

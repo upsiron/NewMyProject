@@ -81,17 +81,10 @@ void SceneMain::Initialize()
 	cameraController = new CameraController();
 
 
-	/*skyMesh = std::make_shared<SkinnedMesh>(device, "Data/Sky/sky.obj",true);
-	skyObj = std::make_unique<SkinnedObject>(skyMesh);
-	skyObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	skyObj->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 7.0f));
-	skyObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));*/
-
 	//---------------
 	// パーティクル
 	//---------------
 	//パーティクル初期化
-	//Particles = std::make_unique<ParticleSystem>(device, 10000);
 	particles = std::make_unique<ParticleSystem>(device, 200000);
 
 
@@ -189,16 +182,6 @@ void SceneMain::Initialize()
 		}
 	}
 
-	//------------
-	// エネミー 
-	//------------
-	// エネミーマネージャー初期化
-	/*EnemyManager& enemyManager = EnemyManager::Instance();
-	enemy = new EnemyBlueSlime;
-	enemy->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	enemyManager.Register(enemy);
-	*/
-
 
 	fadeInFlg = true;
 	fadeOutFlg = false;
@@ -212,12 +195,12 @@ void SceneMain::Initialize()
 	//BGM->Play(true);
 
 	//imgui
-	IMGUI_CHECKVERSION();
+	/*IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& IO = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, context);
-	ImGui::StyleColorsClassic();
+	ImGui::StyleColorsClassic();*/
 }
 
 //--------------------------------------------------------
@@ -294,19 +277,11 @@ void SceneMain::Update(float elapsedTime)
 		//カメラ更新
 		cameraController->Update(elapsedTime);
 
-		//test sky
-		/*skyObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, player->GetPosition().z));
-		skyObj->Update(elapsedTime);*/
-
 		//自機更新
 		player->Update(elapsedTime);
 		
 		//ステージ全体の更新処理
 		StageUpdate();
-
-		//エネミーマネージャー更新
-		/*EnemyManager::Instance().Update(elapsedTime);
-		EnemyManager::Instance().GetEnemy(0)->SetPosition(DirectX::XMFLOAT3(stageBase[0]->squea.spritPosition[0].x,0.0f,stageBase[0]->squea.spritPosition[0].z));*/
 
 		//障害物マネージャー更新
 		ObstacleBlockManager::Instance().Update(elapsedTime);
@@ -611,9 +586,6 @@ void SceneMain::RenderBloom()
 	// カメラパラメータ設定
 	Camera& camera = Camera::Instance();
 
-	//Framework& framework = Framework::Instance();
-	//ID3D11DeviceContext* context = framework.GetImmediateContext();
-	
 	//ラスタライザ―設定
 	context->RSSetState(framework.GetRasterizerState0());
 	//デプスステンシルステート設定
@@ -644,21 +616,37 @@ void SceneMain::RenderBloom()
 		offScreen->Activate(context);
 		offScreen->Clear(context);
 
+		//パーティクル
 		particles->Render(context, ParticleShader.get(), view, projection, framework.GetBlendState(Blender::BS_ALPHA));
+
+		//深度値を比較する
 		context->OMSetDepthStencilState(framework.GetDepthStencilState(), 1);
+
 		//プレイヤー描画
 		player->Render(context, view, projection, lightDirection, materialColor, false);
+
+		//コイン
 		CoinManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
-		//EnemyManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
+
+		//ステージ
 		StageTileManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
 		ObstacleBlockManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
+
 		//進んだ距離表示
 		float fontSize = 16;
 		const char* name = "M";
 		Sprite* Font = framework.GetFont();
 		std::string pMeter = to_string((int)player->GetPosition().z);
 		pMeter += name;
-		Font->TextOut(context, pMeter, 0, 0, 96, 96, 0, 1, 1, 1);
+		Font->TextOut(context, pMeter, 0, 0, 64, 64, 0, 1, 1, 1);
+
+		//コイン数
+		const char* coin = "Coin";
+		Sprite* CoinFont = framework.GetFont();
+		std::string cMeter = to_string(player->GetCoinCount());
+		CoinFont->TextOut(context, coin, 0, 80, 32, 32, 1, 1, 0, 1);
+		CoinFont->TextOut(context, cMeter, 140, 80, 32, 32, 1, 1, 0, 1);
+
 		//オフスクリーン無効
 		offScreen->Deactivate(context);
 	}
@@ -854,11 +842,7 @@ void SceneMain::RenderBloom()
 
 void SceneMain::Render()
 {
-	imGuiUpdate();
-
-	/*Framework& framework = Framework::Instance();
-
-	ID3D11DeviceContext* context = framework.GetImmediateContext();*/
+	//imGuiUpdate();
 
 	//ブルーム
 	RenderBloom();
@@ -943,49 +927,16 @@ void SceneMain::Render()
 
 	context->OMSetBlendState(BsAlpha, nullptr, 0xFFFFFFFF);
 
-
-	//Screen->Render(context, ScreenTexture.get(), 0, 0, SCREEN.x, SCREEN.y, 0, 0, 1024, 512);
-
-	//パーティクル描画
-	//Particles->Render(context, ParticleShader.get(), view, projection, BsAlpha);
-
-	/*context->OMSetDepthStencilState(framework.GetDepthStencilState(), 1);
-	framework.SetSampler(0);
-	Particles->Render(context, ParticleShader.get(), view, projection, framework.GetBlendState(Blender::BS_ALPHA));*/
-
-	//プレイヤー描画
-	//player->Render(context, view, projection, lightDirection, materialColor, false);
-
-	//ステージ描画
-	//StageManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
-	//StageTileManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
-
-	//障害物描画
-	//ObstacleBlockManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
-
-	// エネミー描画
-	//EnemyManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
-
-	//skyObj->Render(context, view, projection, lightDirection, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),false);
-
 	// ワールド座標からスクリーン座標へ
 	DirectX::XMFLOAT3 worldPosition = player->GetPosition();
 	DirectX::XMFLOAT3 screenPosition;
 	worldPosition.y += 1.5f;
 	WorldToScreen(&screenPosition, worldPosition);
 
-	////進んだ距離表示
-	//float fontSize = 16;
-	//const char* name = "M";
-	//Sprite* Font = framework.GetFont();
-	//std::string pMeter = to_string((int)player->GetPosition().z);
-	//pMeter += name;
-	//Font->TextOut(context, pMeter, 0, 0, 64, 64 ,0,183,206,1);
-
 	FadeBlack->render(context);
 	
 	//imGui
-	Scene::imGuiRender();
+	//Scene::imGuiRender();
 }
 
 void Scene::imGuiRender()
