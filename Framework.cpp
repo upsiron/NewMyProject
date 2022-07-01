@@ -240,6 +240,34 @@ bool Framework::Initialize()
 		hr = device->CreateSamplerState(&samplerDescCramp, samplerCrampState.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
+	{
+		//Samplers
+		D3D11_SAMPLER_DESC SamplersDesc{};
+		SamplersDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		SamplersDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamplersDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamplersDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamplersDesc.MipLODBias = 0;
+		SamplersDesc.MaxAnisotropy = 16;
+		SamplersDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		SamplersDesc.BorderColor[0] = 0;
+		SamplersDesc.BorderColor[1] = 0;
+		SamplersDesc.BorderColor[2] = 0;
+		SamplersDesc.BorderColor[3] = 0;
+		SamplersDesc.MinLOD = 0;
+		SamplersDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		hr = device->CreateSamplerState(&SamplersDesc, samplerStates[static_cast<size_t>(SAMPLER_STATE::POINT)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		SamplersDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		hr = device->CreateSamplerState(&SamplersDesc, samplerStates[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		SamplersDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+		hr = device->CreateSamplerState(&SamplersDesc, samplerStates[static_cast<size_t>(SAMPLER_STATE::ANISOTROPIC)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	}
+
 	// Create Depth Stencil View
 	D3D11_TEXTURE2D_DESC depthStencilBufferDesc = backBufferDesc;
 	//Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
@@ -327,6 +355,11 @@ void Framework::SetSampler(int slot)
 void Framework::SetSamplerCramp(int slot)
 {
 	immediateContext->PSSetSamplers(slot, 1, samplerCrampState.GetAddressOf());
+}
+
+void Framework::SetSamplers(int slot, int mode)
+{
+	immediateContext->PSSetSamplers(slot, 1, samplerStates[mode].GetAddressOf());
 }
 
 void Framework::Clear(float color[4])

@@ -47,6 +47,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> noneDepthStencilState;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerCrampState;
+	enum class SAMPLER_STATE { POINT, LINEAR, ANISOTROPIC };
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerStates[3];
 
 	UINT screenWidth;
 	UINT screenHeight;
@@ -78,6 +80,7 @@ public:
 	void SetViewPort(float width, float height);
 	void SetSampler(int slot);
 	void SetSamplerCramp(int slot);
+	void SetSamplers(int slot, int mode);
 
 	void Clear(float color[4] = { 0 });
 
