@@ -46,8 +46,8 @@ Player::Player()
 	SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	//スクロールスピード初期化
-	playerSpeed = 0.2f;
-	oldPlayerSpeed = 0.2f;
+	playerSpeed = 0.25f;
+	oldPlayerSpeed = 0.25f;
 
 	//コイン初期化
 	for (int i = 0; i < 3; i++)
@@ -72,7 +72,10 @@ void Player::Update(float elapsedTime)
 {
 	//リリース用
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_Y || KeyInput::KeyRelease() & KEY_START)debugFlg = !debugFlg;
+	if (gamePad.GetButtonDown() & GamePad::BTN_Y || KeyInput::KeyRelease() & KEY_START)debugFlg = true;
+
+	//デバッグ用
+	//if (gamePad.GetButtonDown() & GamePad::BTN_Y || KeyInput::KeyRelease() & KEY_START)debugFlg = !debugFlg;
 
 	//現在のelapsedTime保持
 	saveElapsedTime = elapsedTime;
@@ -103,11 +106,11 @@ void Player::Update(float elapsedTime)
 	// プレイヤーとコインとの衝突判定
 	CollisionPlayerVsCoin();
 
-	if (KeyInput::KeyRelease() & KEY_X && playerCoinCount == 3 && playerSpeed > 0.25f)
+	/*if (KeyInput::KeyRelease() & KEY_X && playerCoinCount == 3 && playerSpeed > 0.25f)
 	{
 		PlayerSpeedDown(0.1f);
 		playerCoinCount = 0;
-	}
+	}*/
 
 	//プレイヤーの更新
 	playerObj->Update(elapsedTime);
