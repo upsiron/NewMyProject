@@ -209,6 +209,11 @@ void SceneTitle::RenderBloom()
 	Framework& framework = Framework::Instance();
 	ID3D11DeviceContext* context = framework.GetImmediateContext();
 
+	//サンプラーセット
+	framework.SetSamplers(0, 0);
+	framework.SetSamplers(1, 1);
+	framework.SetSamplers(2, 2);
+
 	//ラスタライザ―設定
 	context->RSSetState(framework.GetRasterizerState0());
 	//デプスステンシルステート設定

@@ -273,7 +273,7 @@ public:
 			},
 			//05
 			{
-			 COIN2, MOB1, NONE,
+			 NONE, MOB1, NONE,
 			 NONE, OB3, HOLE,
 			 OB1,  OB2, NONE
 			},
@@ -281,7 +281,7 @@ public:
 			{
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
+			 COIN2, NONE, NONE
 			 },
 			//07
 			{
