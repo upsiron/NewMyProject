@@ -12,16 +12,14 @@ static const float waight[] =
 #define POINT 0
 #define LINEAR 1
 #define ANISOTROPIC 2
-#define LINEAR_BORDER_BLACK 3
-#define LINEAR_BORDER_WHITE 4
-SamplerState sampler_states[5] : register(s0);
+//#define LINEAR_BORDER_BLACK 3
+//#define LINEAR_BORDER_WHITE 4
+SamplerState sampler_states[3] : register(s0);
 Texture2D texture_map : register(t0);
 float4 main(VS_OUT pin) : SV_TARGET
 {
-    float4 color = texture_map.Sample(sampler_states[LINEAR_BORDER_BLACK], pin.texcoord);
-    
-    //color.g *= 1.2f;
-    
+    float4 color = texture_map.Sample(sampler_states[ANISOTROPIC], pin.texcoord);
+   
     //テクスチャサイズ取得
     uint width, height;
     texture_map.GetDimensions(width, height);
@@ -34,13 +32,11 @@ float4 main(VS_OUT pin) : SV_TARGET
     {
         for (int x = -1; x <= 1; x++)
         {
-            work += texture_map.Sample(sampler_states[LINEAR_BORDER_BLACK], pin.texcoord + float2(texcel.x * x, texcel.y * y)).rgb * waight[n];
+            work += texture_map.Sample(sampler_states[ANISOTROPIC], pin.texcoord + float2(texcel.x * x, texcel.y * y)).rgb * waight[n];
             n++;
         }
     }
     color.rgb = work;
-    //float3 mask = { 0.6, 0.6, 0.6 };
-    //color.rgb = (color.rgb * mask);
     
     return color;
 }
