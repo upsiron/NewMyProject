@@ -377,8 +377,8 @@ public:
 			 },
 			//01
 			{
-			 OB1,  OB2,  COIN1,
-			 NONE, NONE, NONE,
+			 OB1,  OB2,  NONE,
+			 NONE, NONE, COIN1,
 			 NONE, NONE, NONE
 			 },
 			//02
