@@ -210,7 +210,7 @@ private:
 	std::unique_ptr<ParticleSystem> particles{};
 
 	//ブルーム関連
-	float threshold = 0.370f; //輝度閾値
+	float threshold = 0.17f; //輝度閾値
 
 	//スクリーンぼかしのために割る数値
 	const float SCREEN = 1;
