@@ -195,12 +195,12 @@ void SceneMain::Initialize()
 	//BGM->Play(true);
 
 	//imgui
-	/*IMGUI_CHECKVERSION();
+	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& IO = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, context);
-	ImGui::StyleColorsClassic();*/
+	ImGui::StyleColorsClassic();
 }
 
 //--------------------------------------------------------
@@ -390,7 +390,7 @@ void SceneMain::StageUpdate()
 				//障害物4
 				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->MOB1)
 				{
-					if (stageBase[j]->stageRand == 2)
+					if (stageBase[j]->stageRand == 2 || 5)
 					{
 						obstacle[j][3]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i]);
 						//エネミーをステージを9等分して指定した位置にセット
@@ -414,7 +414,7 @@ void SceneMain::StageUpdate()
 				//障害物5
 				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->MOB2)
 				{
-					if (stageBase[j]->stageRand == 2)
+					if (stageBase[j]->stageRand == 2 || 5)
 					{
 						obstacle[j][4]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i]);
 						//エネミーをステージを9等分して指定した位置にセット
@@ -438,7 +438,7 @@ void SceneMain::StageUpdate()
 				//障害物6
 				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->MOB3)
 				{
-					if (stageBase[j]->stageRand == 2)
+					if (stageBase[j]->stageRand == 2||5)
 					{
 						obstacle[j][5]->SetObstacleColor(stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i]);
 						//エネミーをステージを9等分して指定した位置にセット
@@ -537,7 +537,7 @@ void SceneMain::imGuiUpdate()
 	// プレイヤーデバッグ描画
 	player->DrawDebugGUI();
 	//EnemyManager::Instance().DrawDebugGUI();
-	//StageManager::Instance().DrawDebugGUI();
+	StageManager::Instance().DrawDebugGUI();
 	CoinManager::Instance().DrawDebugGUI();
 	//StageTileManager::Instance().DrawDebugGUI();
 
@@ -842,7 +842,7 @@ void SceneMain::RenderBloom()
 
 void SceneMain::Render()
 {
-	//imGuiUpdate();
+	imGuiUpdate();
 
 	//ブルーム
 	RenderBloom();
@@ -936,7 +936,7 @@ void SceneMain::Render()
 	FadeBlack->render(context);
 	
 	//imGui
-	//Scene::imGuiRender();
+	Scene::imGuiRender();
 }
 
 void Scene::imGuiRender()
