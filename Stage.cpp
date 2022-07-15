@@ -18,37 +18,14 @@ Stage::Stage()
 	ID3D11Device* device = framework.GetDevice();
 
 	//ステージ初期化
-	stageBaseMesh = std::make_shared<SkinnedMesh>(device, "Data/Stage/StageTile.fbx", true);
-	stageBaseMesh2 = std::make_shared<SkinnedMesh>(device, "Data/Stage/untitled.fbx", true);
-
-	//device->Release();
+	stageTileMesh = std::make_shared<SkinnedMesh>(device, "Data/Stage/StageTile.fbx", true);
+	stageBaseMesh = std::make_shared<SkinnedMesh>(device, "Data/Stage/StageBase.fbx", true);
 }
 
 Stage::~Stage()
 {
-	// ステージモデルを破棄
-	//delete model;
-	//delete instance;
+	delete instance;
 }
-
-// 更新処理
-//void Stage::Update(float elapsedTime)
-//{
-//	
-//}
-
-//描画処理
-//void Stage::Render(ID3D11DeviceContext* immediateContext,
-//	const DirectX::XMFLOAT4X4& view,
-//	const DirectX::XMFLOAT4X4& projection,
-//	const DirectX::XMFLOAT4& light,
-//	const DirectX::XMFLOAT4& materialColor,
-//	bool wireframe)
-//{
-//	//ステージ描画
-//	//stageBaseObj->Render(immediateContext, view, projection, light, materialColor, false);
-//
-//}
 
 void Stage::DrawDebugGUI()
 {
