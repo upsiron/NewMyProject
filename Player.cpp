@@ -64,7 +64,6 @@ Player::Player()
 // デストラクタ
 Player::~Player()
 {
-	//delete model;
 }
 
 // プレイヤー更新処理
@@ -167,7 +166,7 @@ void Player::DrawDebugGUI()
 			if (gamePad.GetButtonDown() & GamePad::BTN_Y)debugFlg = !debugFlg;
 			if (ImGui::Button("Debug"))debugFlg = true;
 			if (ImGui::Button("NoDebug"))debugFlg = false;
-			ImGui::SliderFloat("scroll", &playerSpeed, 0.0f, 1.0f);
+			ImGui::SliderFloat("scroll", &oldPlayerSpeed, 0.0f, 1.0f);
 			ImGui::SliderFloat("jump", &jumpSpeed, 0.0f, 100.0f);
 			ImGui::SliderFloat("gravity", &gravity, -100.0f, 0.0f);
 			ImGui::InputInt("playerCoinCount", &playerCoinCount, 0.0f, 100.0f);
