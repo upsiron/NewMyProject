@@ -11,14 +11,24 @@ void StageManager::Update(float elapsedTime)
 		if (stages.at(i)->GetPosition().z + 10.0f < Player::Instance().GetPosition().z)
 		{
 
-			/*if (Player::Instance().GetPosition().z >= 100.0f && Player::Instance().GetPosition().z <= 101.0f)
+			/*if (Player::Instance().GetPosition().z >= 500.0f && Player::Instance().GetPosition().z <= 501.0f)
 			{
 				Player::Instance().PlayerSpeedUp(0.1f);
 			}
-			if (Player::Instance().GetPosition().z >= 200.0f && Player::Instance().GetPosition().z <= 201.0f)
+			if (Player::Instance().GetPosition().z >= 1000.0f && Player::Instance().GetPosition().z <= 1001.0f)
+			{
+				Player::Instance().PlayerSpeedUp(0.1f);
+			}
+			if (Player::Instance().GetPosition().z >= 1500.0f && Player::Instance().GetPosition().z <= 1501.0f)
 			{
 				Player::Instance().PlayerSpeedUp(0.1f);
 			}*/
+
+			if (Player::Instance().GetPosition().z >= 500.0f && Player::Instance().GetPosition().z <= 501.0f)
+			{
+				//Player::Instance().PlayerSpeedUp(0.1f);
+				stages.at(0)->stageRandWidth = 6;
+			}
 
 			//ステージ更新時にランダムで決定されたパターンを更新
 			stages.at(i)->stageRand = r;
@@ -28,7 +38,7 @@ void StageManager::Update(float elapsedTime)
 	}
 
 	//次に描画されるステージのパターンをランダムで決定
-	if (stages.at(0)->GetPosition().z < Player::Instance().GetPosition().z)r = rand() % 3;
+	if (stages.at(0)->GetPosition().z < Player::Instance().GetPosition().z)r = rand() % stages.at(0)->stageRandWidth;
 
 	//更新
 	for (StageBase* stageBase : stages)
