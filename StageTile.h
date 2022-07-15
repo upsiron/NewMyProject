@@ -511,50 +511,50 @@ public:
 			 },
 			//02
 			{
-			 MOB1, MOB2,  OB1,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			},
 			//03
 			{
+			 MOB1, MOB2, OB1,
 			 NONE, NONE, NONE,
-			 BLUE, HOLE, RED,
 			 NONE, NONE, NONE
 			},
 			//04
 			{
-			 MOB2, MOB3, MOB1,
-			 NONE, NONE, HOLE,
+			 NONE, NONE, NONE,
+			 NONE, BLUE, NONE,
 			 NONE, NONE, NONE
 			},
 			//05
 			{
-			 NONE, NONE, BLUE,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			},
 			//06
 			{
-			 MOB3, OB2,  MOB1,
+			 MOB1, OB2,  MOB3,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			 },
 			//07
 			{
 			 NONE, OB1, HOLE,
-			 HOLE, OB2, NONE,
-			 NONE, OB3, BLUE
+			 RED,  OB2, NONE,
+			 HOLE, OB3, NONE
 			 },
 			//08
 			{
-			 NONE, OB1, MOB3,
-			 RED,  OB2, NONE,
+			 NONE, OB1, NONE,
+			 HOLE, OB2, NONE,
 			 NONE, OB3, NONE
 			},
 			//09
 			{
 			 NONE, NONE, NONE,
-			 HOLE, HOLE, HOLE,
+			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			},
 		},
