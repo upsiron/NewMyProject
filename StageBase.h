@@ -35,4 +35,5 @@ public:
 
 	//ステージパターンランダム配置用変数
 	int stageRand = 0;
+	int stageRandWidth = 0;
 };
