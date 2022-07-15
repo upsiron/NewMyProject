@@ -8,10 +8,11 @@ static Stage* instance = nullptr;
 StageBase::StageBase()
 {
 	//ステージベース初期化
-	stageBaseObj = std::make_unique<SkinnedObject>(stageBaseMesh2);
+	stageBaseObj = std::make_unique<SkinnedObject>(stageBaseMesh);
 	stageBaseObj->SetPosition(DirectX::XMFLOAT3(0.0f, -1.5f, 0.0f));
 	stageBaseObj->SetScale(DirectX::XMFLOAT3(5.0f, 0.1f, 5.0f));
 	stageBaseObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	stageRandWidth = 3;
 }
 
 StageBase::~StageBase()
@@ -134,6 +135,7 @@ void StageBase::DrawDebugGUI()
 			angle.z = DirectX::XMConvertToRadians(a.z);
 			// スケール
 			ImGui::InputFloat3("Scale", &scale.x);
+			ImGui::InputInt("SRW", &stageRandWidth);
 		}
 	}
 	ImGui::End();

@@ -5,7 +5,7 @@
 //コンストラクタ
 StageTile::StageTile()
 {
-	stageTileObj = std::make_unique<SkinnedObject>(stageBaseMesh);
+	stageTileObj = std::make_unique<SkinnedObject>(stageTileMesh);
 	stageTileObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	stageTileObj->SetScale(DirectX::XMFLOAT3(1.6f, 0.1f, 1.6f));
 	stageTileObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -20,7 +20,7 @@ StageTile::~StageTile()
 void StageTile::Update(float elapsedTime)
 {
 	stageTileObj->SetPosition(position);
-
+	
 	//タイルの4点ポジション取得
 	tileLeftTop = DirectX::XMFLOAT3(
 		stageTileObj->GetPosition().x - stageTileObj->GetScale().x - StageScaleGap,
