@@ -88,7 +88,7 @@ protected:
 	// 着地した時に呼ばれる
 	virtual void OnLanding() {}
 
-protected:
+
 	DirectX::XMFLOAT4X4	transform = {
 		1,0,0,0,
 		0,1,0,0,
@@ -137,4 +137,6 @@ private:
 
 	//床に当たってるかチェック
 	bool FloorCheck();
+
+
 };
