@@ -210,7 +210,7 @@ private:
 	std::unique_ptr<ParticleSystem> particles{};
 
 	//ブルーム関連
-	float threshold = 0.17f; //輝度閾値
+	float threshold = 0.058f; //輝度閾値
 
 	//スクリーンぼかしのために割る数値
 	const float SCREEN = 1;
@@ -230,7 +230,10 @@ private:
 	std::unique_ptr<FrameBuffer> bloom3{};
 	std::unique_ptr<FrameBuffer> bloom4{};
 
-	//std::unique_ptr<Sprite> img;
+	//画像用
+	std::unique_ptr<Sprite> speedUp;
+	std::unique_ptr<Sprite> speedMax;
+	
 	//フェードインアウト用
 	std::unique_ptr<Transition> FadeBlack;
 
@@ -323,6 +326,12 @@ private:
 	std::unique_ptr<FrameBuffer> bloom3{};
 	std::unique_ptr<FrameBuffer> bloom4{};
 
+	//BGM用
+	std::unique_ptr<SoundSource> BGM;
+
+	//SE用
+	std::unique_ptr<SoundSource> decisionSE;
+
 public:
 	SceneTitle() {}
 	virtual ~SceneTitle() 
@@ -389,7 +398,12 @@ private:
 	std::unique_ptr<FrameBuffer> bloom3{};
 	std::unique_ptr<FrameBuffer> bloom4{};
 
+	//BGM用
+	std::unique_ptr<SoundSource> BGM;
 
+	//SE用
+	std::unique_ptr<SoundSource> decisionSE;
+	std::unique_ptr<SoundSource> cursorSE;
 public:
 	static SceneClear& Instance()
 	{
