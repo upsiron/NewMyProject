@@ -61,11 +61,23 @@ public:
 	//ギミック更新処理
 	void GimmickUpdate();
 
+	//SE用
+	std::unique_ptr<SoundSource> gimmickSE;
+	std::unique_ptr<SoundSource> speedUpSE;
+
+	//スピードカウント用
+	int speedLevelCount = 0;
+	int renderTimer = 0;
 protected:
 	//着地した時に呼ばれる
 	void OnLanding() override;
 
 private:
+	//SE用
+	std::unique_ptr<SoundSource> jumpSE;
+	std::unique_ptr<SoundSource> jumpEndSE;
+	std::unique_ptr<SoundSource> collisionSE;
+	std::unique_ptr<SoundSource> coinSE;
 
 	float				moveSpeed = 6.0f;
 	float				turnSpeed = DirectX::XMConvertToRadians(720);

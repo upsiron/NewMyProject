@@ -59,6 +59,18 @@ Player::Player()
 
 	//ゲームオーバーフラグ初期化
 	gameOverFlg = false;
+
+	//スピードアップUI表示用
+	speedLevelCount = 0;
+	renderTimer = 0;
+
+	//プレイヤーSE初期化
+	jumpSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/Jump.wav");
+	jumpEndSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/JumpEnd.wav");
+	collisionSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/Collision.wav");
+	coinSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/Coin.wav");
+	gimmickSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/Gimmick.wav");
+	speedUpSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/SpeedUp.wav");
 }
 
 // デストラクタ
@@ -71,7 +83,7 @@ void Player::Update(float elapsedTime)
 {
 	//リリース用
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_Y || KeyInput::KeyRelease() & KEY_START)debugFlg = true;
+	if (gamePad.GetButtonDown() & GamePad::BTN_B || KeyInput::KeyRelease() & KEY_START)debugFlg = true;
 
 	//デバッグ用
 	//if (gamePad.GetButtonDown() & GamePad::BTN_Y || KeyInput::KeyRelease() & KEY_START)debugFlg = !debugFlg;
@@ -357,6 +369,9 @@ void Player::CollisionPlayerVsCoin()
 		//コインが当たっている時といない時で状態を変える
 		if (debugFlg && Collision::HitSphere(position, 0.4f, { object->GetPosition().x,  object->GetPosition().y - 1.5f, object->GetPosition().z }, 0.4f))
 		{
+			//コインSE鳴らす
+			coinSE->Play(false);
+
 			coinState[i] = 1;
 		}
 		else
@@ -368,7 +383,7 @@ void Player::CollisionPlayerVsCoin()
 		if (coinState[i] == 1 && coinAngle[i] > 0.0f)
 		{
 			coinAngle[i] += 0.05f;
-			coinPositionY[i] += 3.0f;
+			coinPositionY[i] += 2.5f;
 		}
 		else
 		{
@@ -428,11 +443,16 @@ void Player::CollisionPlayerVsObstacle()
 				position.x = SavePos.x;
 				if (position.x > obstacle->GetPosition().x)
 				{
+					//衝突SE鳴らす
+					collisionSE->Play(false);
+					
 					//スクロールストップ
 					playerSpeed = 0.0f;
 					oldPlayerSpeed = 0.0f;
+					
 					//左倒れアニメーションセット
 					playerObj->SetMotion(KNOCKLEFT, 0, 0.0f);
+					
 					//ゲームオーバーフラグを立てる
 					gameOverFlg = true;
 				}
@@ -458,11 +478,16 @@ void Player::CollisionPlayerVsObstacle()
 				position.x = SavePos.x;
 				if (position.x < obstacle->GetPosition().x)
 				{
+					//衝突SE鳴らす
+					collisionSE->Play(false);
+					
 					//スクロールストップ
 					playerSpeed = 0.0f;
 					oldPlayerSpeed = 0.0f;
+					
 					//右倒れアニメーションセット
 					playerObj->SetMotion(KNOCKRIGHT, 0, 0.0f);
+					
 					//ゲームオーバーフラグを立てる
 					gameOverFlg = true;
 				}
@@ -487,46 +512,51 @@ void Player::CollisionPlayerVsObstacle()
 				position.x = SavePos.x;
 				if (position.z < obstacle->GetPosition().z)
 				{
-					//後ろ倒れアニメーションセット
-					playerObj->SetMotion(KNOCK, 0, 0.0f);
-					//ゲームオーバーフラグを立てる
-					gameOverFlg = true;
+					//衝突SE鳴らす
+					collisionSE->Play(false);
+					
 					//スクロールストップ
 					playerSpeed = 0.0f;
 					oldPlayerSpeed = 0.0f;
+					
+					//後ろ倒れアニメーションセット
+					playerObj->SetMotion(KNOCK, 0, 0.0f);
+					
+					//ゲームオーバーフラグを立てる
+					gameOverFlg = true;
+					
 				}
 			}
 		}
-		/*else if (position.y > (obstacle->GetPosition().y + obstacle->GetScale().y) &&
-			position.z > (obstacle->GetPosition().z - obstacle->GetScale().z) &&
-			position.x < (obstacle->GetPosition().x + obstacle->GetScale().x) &&
-			position.x > (obstacle->GetPosition().x - obstacle->GetScale().x) &&
-			position.z < (obstacle->GetPosition().z + obstacle->GetScale().z))*/
-		{
-			/////////////////////
-			//ブロック上 当たり判定
-			/////////////////////
-			if (Collision::FloorVsPlayer(
-				obstacle->ObstacleUpLeftTop,
-				obstacle->ObstacleUpRightTop,
-				obstacle->ObstacleUpLeftBottom,
-				obstacle->ObstacleUpRightBottom,
-				position)
-				)
-			{	
-				//当たる直前に保持していた位置を代入	
-				position = SavePos;
-				SetVelocity({ 0,0,0 });
-				if (position.y >= obstacle->GetPosition().y)
-				{
-					//前倒れアニメーションセット
-					playerObj->SetMotion(KNOCKFRONT, 0, 0.0f);
-					//ゲームオーバーフラグを立てる
-					gameOverFlg = true;
-					//スクロールストップ
-					playerSpeed = 0.0f;
-					oldPlayerSpeed = 0.0f;
-				}
+		/////////////////////
+		//ブロック上 当たり判定
+		/////////////////////
+		if (Collision::FloorVsPlayer(
+			obstacle->ObstacleUpLeftTop,
+			obstacle->ObstacleUpRightTop,
+			obstacle->ObstacleUpLeftBottom,
+			obstacle->ObstacleUpRightBottom,
+			position)
+			)
+		{	
+			//当たる直前に保持していた位置を代入	
+			position = SavePos;
+			SetVelocity({ 0,0,0 });
+			if (position.y >= obstacle->GetPosition().y)
+			{
+				//衝突SE鳴らす
+				collisionSE->Play(false);
+				
+				//スクロールストップ
+				playerSpeed = 0.0f;
+				oldPlayerSpeed = 0.0f;
+				
+				//前倒れアニメーションセット
+				playerObj->SetMotion(KNOCKFRONT, 0, 0.0f);
+				
+				//ゲームオーバーフラグを立てる
+				gameOverFlg = true;
+				
 			}
 		}
 
@@ -542,6 +572,8 @@ void Player::InputJump()
 		// ジャンプ回数制限
 		if (jumpCount < jumpLimit)
 		{
+			//ジャンプのSE鳴らす
+			jumpSE->Play(false);
 			//ジャンプアニメーションセット
 			playerObj->SetMotion(JUMP, 0, 0.03f);
 			jumpCount++;
@@ -556,5 +588,6 @@ void Player::OnLanding()
 	//走りアニメーションセット
 	if (!gameOverFlg)playerObj->SetMotion(RUN, 0, 0.0f);
 	jumpCount = 0;
+	jumpEndSE->Play(false);
 }
 
