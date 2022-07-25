@@ -29,14 +29,14 @@ public:
 private:
 	int ColorNum = 0;
 	DirectX::XMFLOAT4 ObstacleColor[14] = {
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
-		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
-		{0.0f, 0.0f, 1.0f, 1.0f},//MOVEBLUE
+		{2.0f, 2.0f, 2.0f, 1.0f},//NONE
+		{2.0f, 2.0f, 2.0f, 1.0f},//NONE
+		{2.0f, 2.0f, 2.0f, 1.0f},//NONE
+		{2.0f, 2.0f, 2.0f, 1.0f},//NONE
+		{2.0f, 2.0f, 2.0f, 1.0f},//NONE
+		{0.0f, 0.0f, 5.0f, 1.0f},//MOVEBLUE
+		{0.0f, 0.0f, 5.0f, 1.0f},//MOVEBLUE
+		{0.0f, 0.0f, 5.0f, 1.0f},//MOVEBLUE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
