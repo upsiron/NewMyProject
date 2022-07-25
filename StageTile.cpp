@@ -19,6 +19,17 @@ StageTile::~StageTile()
 // 更新処理
 void StageTile::Update(float elapsedTime)
 {
+	if (ColorNum == RED || ColorNum == GREEN || ColorNum == BLUE)
+	{
+		stageTileObj = std::make_unique<SkinnedObject>(gimmickTileMesh);
+		stageTileObj->SetScale(DirectX::XMFLOAT3(1.6f, 0.1f, 1.6f));
+	}
+	else
+	{
+		stageTileObj = std::make_unique<SkinnedObject>(stageTileMesh);
+		stageTileObj->SetScale(DirectX::XMFLOAT3(1.6f, 0.1f, 1.6f));
+	}
+
 	stageTileObj->SetPosition(position);
 	
 	//タイルの4点ポジション取得
