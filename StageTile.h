@@ -273,7 +273,7 @@ public:
 			},
 			//05
 			{
-			 NONE, MOB1, NONE,
+			 NONE, NONE, NONE,
 			 NONE, OB3, HOLE,
 			 OB1,  OB2, NONE
 			},
@@ -517,7 +517,7 @@ public:
 			},
 			//03
 			{
-			 MOB1, MOB2, OB1,
+			 MOB3,  OB1, MOB1,
 			 NONE, NONE, NONE,
 			 NONE, NONE, NONE
 			},
@@ -578,9 +578,9 @@ private:
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
 		{1.0f, 1.0f, 1.0f, 1.0f},//NONE
-		{1.0f, 0.0f, 0.0f, 1.0f},//RED
-		{0.0f, 1.0f, 0.0f, 1.0f},//GREEN
-		{0.0f, 0.0f, 1.0f, 1.0f},//BLUE
+		{2.5f, 0.0f, 0.0f, 1.0f},//RED
+		{0.0f, 2.5f, 0.0f, 1.0f},//GREEN
+		{0.0f, 0.0f, 5.0f, 1.0f},//BLUE
 		{1.0f, 1.0f, 1.0f, 1.0f},//COIN
 		{1.0f, 1.0f, 1.0f, 1.0f},//COIN
 		{1.0f, 1.0f, 1.0f, 1.0f},//COIN
