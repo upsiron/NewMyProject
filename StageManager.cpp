@@ -10,21 +10,28 @@ void StageManager::Update(float elapsedTime)
 	{
 		if (stages.at(i)->GetPosition().z + 10.0f < Player::Instance().GetPosition().z)
 		{
-
-			/*if (Player::Instance().GetPosition().z >= 500.0f && Player::Instance().GetPosition().z <= 501.0f)
+			//スピードアップ処理
+			if (Player::Instance().GetPosition().z >= 500.0f && Player::Instance().GetPosition().z <= 501.0f)
 			{
-				Player::Instance().PlayerSpeedUp(0.1f);
+				Player::Instance().speedUpSE->Play(false);
+				Player::Instance().PlayerSpeedUp(0.05f);
+				Player::Instance().speedLevelCount = 1;
 			}
 			if (Player::Instance().GetPosition().z >= 1000.0f && Player::Instance().GetPosition().z <= 1001.0f)
 			{
-				Player::Instance().PlayerSpeedUp(0.1f);
+				Player::Instance().speedUpSE->Play(false);
+				Player::Instance().PlayerSpeedUp(0.05f);
+				Player::Instance().speedLevelCount = 2;
 			}
 			if (Player::Instance().GetPosition().z >= 1500.0f && Player::Instance().GetPosition().z <= 1501.0f)
 			{
-				Player::Instance().PlayerSpeedUp(0.1f);
-			}*/
+				Player::Instance().speedUpSE->Play(false);
+				Player::Instance().PlayerSpeedUp(0.05f);
+				Player::Instance().speedLevelCount = 3;
+			}
 
-			if (Player::Instance().GetPosition().z >= 500.0f && Player::Instance().GetPosition().z <= 501.0f)
+			//ステーぞレベルアップ処理
+			if (Player::Instance().GetPosition().z >= 1500.0f && Player::Instance().GetPosition().z <= 1501.0f)
 			{
 				//Player::Instance().PlayerSpeedUp(0.1f);
 				stages.at(0)->stageRandWidth = 6;
