@@ -47,7 +47,7 @@ void SceneTitle::Initialize()
 	//カメラコントローラー初期化
 	cameraController = new CameraController();
 
-	imgTitle = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data//Image/title2.png");
+	imgTitle = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data//Image/Title.png");
 	imgPushSpace = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data//Image/PushSpace.png");
 	FadeBlack = std::make_unique<Transition>();
 	FadeBlack->init(device, L"Data/Image/unnamed.png", { 0,0 }, { 1920,1080 }, { 0,0 }, { 1920,1080 }, { 1.0f,1.0f,1.0f,1.0f });
@@ -74,6 +74,15 @@ void SceneTitle::Initialize()
 
 	state = 0;
 	timer = 0;
+
+	//音楽初期化
+	BGM = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/GameTitleBGM.wav");
+
+	//SE初期化
+	decisionSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/Decision.wav");
+
+	//音楽再生
+	BGM->Play(true);
 }
 
 //--------------------------------------------------------
@@ -104,6 +113,9 @@ void SceneTitle::Update(float elapsedTime)
 		FadeBlack->fadeIn(0.03f);
 		if (KeyInput::KeyRelease() & KEY_START || gamePad.GetButtonDown() & GamePad::BTN_B)
 		{
+			//SE鳴らす
+			decisionSE->Play(false);
+
 			state++;
 		}
 		break;
@@ -115,6 +127,7 @@ void SceneTitle::Update(float elapsedTime)
 		}
 		break;
 	case 3:
+		BGM->Stop();
 		SceneManager::Instance().ChangeScene(
 			new SceneLoad(new SceneMain()));
 		//SceneManager::Instance().ChangeScene(new SceneMain);

@@ -42,6 +42,10 @@ void SceneMain::Initialize()
 	FadeBlack = std::make_unique<Transition>();
 	FadeBlack->init(device, L"Data/Image/unnamed.png", { 0.0f,0.0f }, { 1920.0f,1080.0f }, { 0.0f,0.0f }, { 1920.0f,1080.0f }, { 1.0f,1.0f,1.0f,1.0f });
 
+	//画像初期化
+	speedUp = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data//Image/SpeedUp.png");
+	speedMax = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data//Image/SpeedMax.png");
+
 	//スクリーン縦横サイズ変数
 	float screenWidth = static_cast<float>(framework.GetScreenWidth());
 	float screenHeight = static_cast<float>(framework.GetScreenHeight());
@@ -189,18 +193,18 @@ void SceneMain::Initialize()
 	ObstacleMove[1] = -3.0f;
 
 	//音楽初期化
-	BGM = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/stage.wav");
+	BGM = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/GameMainBGM.wav");
 
 	//音楽再生
-	//BGM->Play(true);
+	BGM->Play(true);
 
 	//imgui
-	IMGUI_CHECKVERSION();
+	/*IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& IO = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, context);
-	ImGui::StyleColorsClassic();
+	ImGui::StyleColorsClassic();*/
 }
 
 //--------------------------------------------------------
@@ -243,65 +247,44 @@ void SceneMain::Update(float elapsedTime)
 	dir.z = LightDir.z;
 	SetDirLight(dir, DirectX::XMFLOAT3(diffuseColor));
 
-	//if (fadeInFlg)
-	//{
-	//	FadeBlack->fadeIn(0.03f);
+	
+	FadeBlack->fadeIn(0.03f);
 
-    //  //フェードインする前のステージ更新	
-	//	StageManager::Instance().Update(elapsedTime);
-	//	StageTileManager::Instance().Update(elapsedTime);
-	//	EnemyManager::Instance().Update(elapsedTime);
+	//ターゲットする物のpos入れる変数
+	DirectX::XMFLOAT3 target = player->GetPosition();
+	//カメラの高さ調整
+	target.z -= 2.0f;
 
-	//	//フェードインする前のカメラの位置、ターゲット設定
-	//	DirectX::XMFLOAT3 target = player->GetPosition();
-	//	target.y += 3.5f;
-	//	cameraController->SetTarget(DirectX::XMFLOAT3(0.0f, target.y, target.z));
+	//カメラにターゲットさせるものを設定
+	cameraController->SetTarget(DirectX::XMFLOAT3(0.0f, 5.8f, target.z));
+	//カメラ更新
+	cameraController->Update(elapsedTime);
 
-	//	//フェードインする前のカメラ更新
-	//	cameraController->Update(elapsedTime);
+	//自機更新
+	player->Update(elapsedTime);
+	
+	//ステージ全体の更新処理
+	StageUpdate();
 
-	//	if (FadeBlack->GetAlpha() <= 0.0f) fadeInFlg = false;
-	//}
+	//障害物マネージャー更新
+	ObstacleBlockManager::Instance().Update(elapsedTime);
 
-	//if (!fadeInFlg)
+	//コイン更新
+	CoinManager::Instance().Update(elapsedTime);
+
+	//ステージ更新
+	StageManager::Instance().Update(elapsedTime);
+	StageTileManager::Instance().Update(elapsedTime);
+
+	//パーティクル更新
+	particles->Update(elapsedTime);
+	particles->Star({ player->GetPosition().x,player->GetPosition().y + 5.0f,player->GetPosition().z }, 
+					{ 0.0f, 0.0f, -(rand() % 10001) * 0.002f - 0.001f }, 200000);
+
+	//ゲームオーバー処理
+	if (player->GetGameOverFlg())
 	{
-		FadeBlack->fadeIn(0.03f);
-
-		//ターゲットする物のpos入れる変数
-		DirectX::XMFLOAT3 target = player->GetPosition();
-		//カメラの高さ調整
-		target.z -= 2.0f;
-
-		//カメラにターゲットさせるものを設定
-		cameraController->SetTarget(DirectX::XMFLOAT3(0.0f, 5.8f, target.z));
-		//カメラ更新
-		cameraController->Update(elapsedTime);
-
-		//自機更新
-		player->Update(elapsedTime);
-		
-		//ステージ全体の更新処理
-		StageUpdate();
-
-		//障害物マネージャー更新
-		ObstacleBlockManager::Instance().Update(elapsedTime);
-
-		//コイン更新
-		CoinManager::Instance().Update(elapsedTime);
-
-		//ステージ更新
-		StageManager::Instance().Update(elapsedTime);
-		StageTileManager::Instance().Update(elapsedTime);
-
-		//パーティクル更新
-		particles->Update(elapsedTime);
-		particles->Star({ player->GetPosition().x,player->GetPosition().y + 5.0f,player->GetPosition().z }, { 0.0f, 0.0f, -(rand() % 10001) * 0.002f - 0.001f }, 200000);
-
-		//ゲームオーバー処理
-		if (player->GetGameOverFlg())
-		{
-			fadeOutFlg = true;
-		}
+		fadeOutFlg = true;
 	}
 
 	if (fadeOutFlg)
@@ -309,6 +292,7 @@ void SceneMain::Update(float elapsedTime)
 		FadeBlack->fadeOut(0.04f);
 		if (FadeBlack->GetAlpha() >= 1.0f)
 		{
+			BGM->Stop();
 			//リザルトの順位計算
 			ResultMeter();
 			//終了処理
@@ -334,7 +318,6 @@ void SceneMain::StageUpdate()
 		for (int i = 0; i < StageTileMax; i++)
 		{
 			//ステージのHOLEの部分以外で配置
-			//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] != HOLE)
 			if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] != stageTile[0][0]->HOLE)
 			{
 				//------------
@@ -350,7 +333,6 @@ void SceneMain::StageUpdate()
 
 				//動かない
 				//障害物１
-				//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB1)
 				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->OB1)
 				{
 					//エネミーをステージを9等分して指定した位置にセット
@@ -362,7 +344,6 @@ void SceneMain::StageUpdate()
 					obstacle[j][0]->SetExistFlg(true);
 				}
 				//障害物２
-				//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB2)
 				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->OB2)
 				{
 					//エネミーをステージを9等分して指定した位置にセット
@@ -374,7 +355,6 @@ void SceneMain::StageUpdate()
 					obstacle[j][1]->SetExistFlg(true);
 				}
 				//障害物3
-				//if (stageTile[j][i]->stageTileMap[stageBase[j]->Pattern][stageBase[j]->Rand][i] == OB3)
 				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->OB3)
 				{
 					//エネミーをステージを9等分して指定した位置にセット
@@ -470,10 +450,6 @@ void SceneMain::StageUpdate()
 
 					coin[0]->SetExistFlg(true);
 				}
-				else
-				{
-					//coin[0]->SetExistFlg(false);
-				}
 
 				//コイン２
 				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->COIN2)
@@ -485,10 +461,6 @@ void SceneMain::StageUpdate()
 
 					coin[1]->SetExistFlg(true);
 				}
-				else
-				{
-					//coin[1]->SetExistFlg(false);
-				}
 
 				//コイン３
 				if (stageTile[j][i]->StageTileMap[stageBase[j]->stageRand][j][i] == stageTile[0][0]->COIN3)
@@ -499,10 +471,6 @@ void SceneMain::StageUpdate()
 						stageBase[j]->squea.spritPosition[i].z));
 
 					coin[2]->SetExistFlg(true);
-				}
-				else
-				{
-					//coin[2]->SetExistFlg(false);
 				}
 
 				//-------------------
@@ -516,7 +484,6 @@ void SceneMain::StageUpdate()
 				//------------
 				// タイル配置 
 				//------------
-				//穴が開く部分のタイルを重ねて隠す
 				stageTile[j][i]->SetPosition(DirectX::XMFLOAT3(stageBase[j]->squea.spritPosition[6].x, -20.0f, stageBase[j]->squea.spritPosition[6].z - 100.0f));
 			}
 		}
@@ -631,6 +598,35 @@ void SceneMain::RenderBloom()
 		//ステージ
 		StageTileManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
 		ObstacleBlockManager::Instance().Render(context, view, projection, lightDirection, materialColor, false);
+
+		//スピードアップUI
+		if (player->speedLevelCount == 1 || player->speedLevelCount == 2)
+		{
+			//player->renderTimer == 0;
+			if (timer / 32 % 2 && player->renderTimer < 100)
+			{
+				player->renderTimer++;
+				speedUp->Render(context, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f);
+			}
+		}
+		if (player->speedLevelCount == 2)
+		{
+			//player->renderTimer == 0;
+			if (timer / 32 % 2 && player->renderTimer < 200)
+			{
+				player->renderTimer++;
+				speedUp->Render(context, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f);
+			}
+		}
+		//スピードマックスUI	
+		if (player->speedLevelCount == 3)
+		{
+			if (timer / 32 % 2 && player->renderTimer < 300)
+			{
+				player->renderTimer++;
+				speedMax->Render(context, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f);
+			}
+		}
 
 		//進んだ距離表示
 		float fontSize = 16;
@@ -842,7 +838,7 @@ void SceneMain::RenderBloom()
 
 void SceneMain::Render()
 {
-	imGuiUpdate();
+	//imGuiUpdate();
 
 	//ブルーム
 	RenderBloom();
@@ -936,7 +932,7 @@ void SceneMain::Render()
 	FadeBlack->render(context);
 	
 	//imGui
-	Scene::imGuiRender();
+	//Scene::imGuiRender();
 }
 
 void Scene::imGuiRender()

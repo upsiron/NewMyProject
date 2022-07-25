@@ -51,7 +51,7 @@ void SceneClear::Initialize()
 	//カメラコントローラー初期化
 	cameraController = new CameraController();
 
-	img = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data/Image/result2.png");
+	img = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data/Image/Result.png");
 	imgButtonTitle = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data/Image/ResultTitle.png");
 	imgButtonReplay = std::make_unique<Sprite>(Framework::Instance().GetDevice(), L"Data/Image/ResultReplay.png");
 	FadeBlack = std::make_unique<Transition>();
@@ -76,6 +76,16 @@ void SceneClear::Initialize()
 	bloom2 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM2, 720 / BLOOM2);
 	bloom3 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM3, 720 / BLOOM3);
 	bloom4 = std::make_unique<FrameBuffer>(device, 1280 / BLOOM4, 720 / BLOOM4);
+
+
+	//音楽初期化
+	BGM = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/GameResultBGM.wav");
+
+	//SE初期化
+	decisionSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/Decision.wav");
+	cursorSE = framework.GetSoundManager()->CreateSoundSource("Data/Sounds/Cursor.wav");
+
+	BGM->Play(true);
 
 	ChangeSceneState = 1;
 
@@ -121,16 +131,23 @@ void SceneClear::Update(float elapsedTime)
 	float ax = gamePad.GetAxisLX();
 	if (ax > 0.0f)
 	{
+		//SE鳴らす
+		//cursorSE->Play(false);
+
 		ButtonTitleColor = { 1.0f,1.0f,1.0f,1.0f };
 		ButtonReplayColor = { 0.0f,1.0f,1.0f,1.0f };
 		ChangeSceneState = 0;
 	}
 	else if (ax < 0.0f)
 	{
+		//SE鳴らす
+		//cursorSE->Play(false);
+
 		ButtonTitleColor = { 0.0f,1.0f,1.0f,1.0f };
 		ButtonReplayColor = { 1.0f,1.0f,1.0f,1.0f };
 		ChangeSceneState = 1;
 	}
+
 
 
 	//カメラにターゲットさせるものを設定
@@ -154,6 +171,9 @@ void SceneClear::Update(float elapsedTime)
 		FadeBlack->fadeIn(0.03f);
 		if (KeyInput::KeyRelease() & KEY_START || gamePad.GetButtonDown() & GamePad::BTN_B)
 		{
+			//SE鳴らす
+			decisionSE->Play(false);
+
 			state++;
 		}
 		break;
@@ -165,6 +185,9 @@ void SceneClear::Update(float elapsedTime)
 		}
 		break;
 	case 3:
+
+		BGM->Stop();
+
 		//カメラコントローラーdelete
 		if (cameraController != nullptr)
 		{
