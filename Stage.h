@@ -12,6 +12,7 @@ class Stage : public SkinnedObject
 {
 public:
 	std::shared_ptr<SkinnedMesh> stageTileMesh;
+	std::shared_ptr<SkinnedMesh> gimmickTileMesh;
 	std::shared_ptr<SkinnedMesh> stageBaseMesh;
 	std::unique_ptr<SkinnedObject> stageBaseObj;
 	std::unique_ptr<SkinnedObject> stageTileObj;
