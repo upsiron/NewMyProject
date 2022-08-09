@@ -21,6 +21,8 @@ Stage::Stage()
 	stageTileMesh = std::make_shared<SkinnedMesh>(device, "Data/Stage/StageTile.fbx", true);
 	gimmickTileMesh = std::make_shared<SkinnedMesh>(device, "Data/Stage/GimmickTile.fbx", true);
 	stageBaseMesh = std::make_shared<SkinnedMesh>(device, "Data/Stage/StageBase.fbx", true);
+
+
 }
 
 Stage::~Stage()
