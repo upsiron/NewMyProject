@@ -6,7 +6,6 @@
 #include "texture.h"
 #include "shader.h"
 #include "ComputeShader.h"
-//#include "view.h"
 
 class Texture;
 class Shader;
@@ -24,8 +23,6 @@ private:
 	};
 	VERTEX* v;			//頂点データ
 	
-
-	//int numParticles;
 
 	// 頂点データ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> VertexBuffer;
@@ -54,17 +51,7 @@ public:
 
 	void Animation(float elapsed_time, float speed = 0.1f);
 
-	//void Render(ID3D11DeviceContext* immediate_context, Shader* shader, view* view, ID3D11BlendState* state);
 	void Render(ID3D11DeviceContext* immediate_context, Shader* shader, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, ID3D11BlendState* state);
-
-	void Set(
-		int type,
-		float timer,
-		DirectX::XMFLOAT3 p,
-		DirectX::XMFLOAT3 v = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT3 f = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT2 size = DirectX::XMFLOAT2(1.0f, 1.0f)
-	);
 
 	void Set(
 		int type,
@@ -77,27 +64,16 @@ public:
 		DirectX::XMFLOAT2 size = DirectX::XMFLOAT2(1.0f, 1.0f)
 	);
 
-	void Snow(DirectX::XMFLOAT3 pos, int max);
+	//今後使うかもしれないが現在は使わないのでコメントアウト
+	/*void Snow(DirectX::XMFLOAT3 pos, int max);
 	void Spark(DirectX::XMFLOAT3 pos, int max);
 	void Fire(DirectX::XMFLOAT3 pos, int max);
-	void Smoke(DirectX::XMFLOAT3 pos, int max);
+	void Smoke(DirectX::XMFLOAT3 pos, int max);*/
+
 	void Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int max);
 	void hanabi(DirectX::XMFLOAT3 pos, int max);
 	void Sphere(DirectX::XMFLOAT3 pos, int max);
 
-	/*struct ParticleData
-	{
-		float x, y, z;
-		float w, h;
-		float aw, ah;
-		float vx, vy, vz;
-		float ax, ay, az;
-		float alpha;
-		float timer;
-		float animeTimer;
-		float elapsedTime;
-		int type;
-	};*/
 	struct ParticleData
 	{
 		DirectX::XMFLOAT3 pos;

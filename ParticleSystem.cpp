@@ -2,7 +2,7 @@
 #include "ParticleSystem.h"
 #include "Player.h"
 
-
+//初期化
 ParticleSystem::ParticleSystem(ID3D11Device* device, int num)
 {
 	data = new ParticleData[num];
@@ -13,9 +13,6 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, int num)
 	numParticles = num;
 	for (int i = 0; i < numParticles; i++) { data[i].type = -1; }
 	//パーティクル作成と画像ロード
-	//texture = std::make_unique<Texture>();
-	//texture->Load(L"Assets/particle1.png");
-
 	load_texture_from_file(device, L"Data/Particle/particle256x256.png", ColorTexture.GetAddressOf(), &ColorTexture2dDesc);
 
 
@@ -46,6 +43,7 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, int num)
 	computeShader->Initialize(this);
 }
 
+//引数に画像を設定して初期化
 ParticleSystem::ParticleSystem(ID3D11Device* device, std::shared_ptr<Texture> texture, int num)
 {
 	data = new ParticleData[num];
@@ -57,8 +55,6 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, std::shared_ptr<Texture> te
 	for (int i = 0; i < numParticles; i++) { data[i].type = -1; }
 	//パーティクル作成と画像設定
 	this->texture = texture;
-
-	//	ID3D11Device* device = pSystem->GetDevice();
 
 	//	頂点バッファ作成
 	D3D11_BUFFER_DESC bd;
@@ -82,21 +78,18 @@ ParticleSystem::ParticleSystem(ID3D11Device* device, std::shared_ptr<Texture> te
 
 	hr = device->CreateBuffer(&cbd, nullptr, ConstantBuffer.GetAddressOf());
 	assert(SUCCEEDED(hr));
+
+	computeShader = std::make_unique<ComputeShader>();
+	computeShader->Initialize(this);
 }
 
 
 void ParticleSystem::Animation(float elapsed_time, float speed)
 {
-	//float time = pSystem->elapsed_time;
 	for (int i = 0; i < numParticles; i++) {
 		if (data[i].type < 0) continue;
 
 		data[i].animeTimer += elapsed_time;
-
-		//if (data[i].anime_timer > speed) {
-		//	data[i].anime_timer = 0.0f;
-		//	data[i].type = (data[i].type + 1) % 6;
-		//}	
 	}
 }
 
@@ -151,29 +144,30 @@ void ParticleSystem::Render(ID3D11DeviceContext* immediate_context, Shader* shad
 	shader->Disactivate(immediate_context);
 }
 
-void ParticleSystem::Set(int type, float timer,
-	DirectX::XMFLOAT3 p, DirectX::XMFLOAT3 v, DirectX::XMFLOAT3 f, DirectX::XMFLOAT2 size)
-{
-	for (int i = 0; i < numParticles; i++) {
-		if (data[i].type >= 0) continue;
-		data[i].type = type;
-		data[i].pos.x = p.x;
-		data[i].pos.y = p.y;
-		data[i].pos.z = p.z;
-		data[i].posV.x = v.x;
-		data[i].posV.y = v.y;
-		data[i].posV.z = v.z;
-		data[i].posA.x = f.x;
-		data[i].posA.y = f.y;
-		data[i].posA.z = f.z;
-		data[i].size.x = size.x;
-		data[i].size.y = size.y;
-		data[i].alpha = 1.0f;
-		data[i].timer = timer;
-		break;
-	}
-}
+//void ParticleSystem::Set(int type, float timer,
+//	DirectX::XMFLOAT3 p, DirectX::XMFLOAT3 v, DirectX::XMFLOAT3 f, DirectX::XMFLOAT2 size)
+//{
+//	for (int i = 0; i < numParticles; i++) {
+//		if (data[i].type >= 0) continue;
+//		data[i].type = type;
+//		data[i].pos.x = p.x;
+//		data[i].pos.y = p.y;
+//		data[i].pos.z = p.z;
+//		data[i].posV.x = v.x;
+//		data[i].posV.y = v.y;
+//		data[i].posV.z = v.z;
+//		data[i].posA.x = f.x;
+//		data[i].posA.y = f.y;
+//		data[i].posA.z = f.z;
+//		data[i].size.x = size.x;
+//		data[i].size.y = size.y;
+//		data[i].alpha = 1.0f;
+//		data[i].timer = timer;
+//		break;
+//	}
+//}
 
+//コンピュートシェーダーで計算するために送る数値をセット
 void ParticleSystem::Set(int type, int index, float timer, DirectX::XMFLOAT3 p, DirectX::XMFLOAT3 v, DirectX::XMFLOAT3 f, DirectX::XMFLOAT3 c, DirectX::XMFLOAT2 size)
 {
 	data[index].type = type;
@@ -196,94 +190,97 @@ void ParticleSystem::Set(int type, int index, float timer, DirectX::XMFLOAT3 p, 
 }
 
 
-void ParticleSystem::Snow(DirectX::XMFLOAT3 pos, int max)
-{
-	for (int i = 0; i < max; i++) {
-		//発生位置
-		DirectX::XMFLOAT3 p = { 0,0,0 };
-		p.x = pos.x + (rand() % 10001 - 5000) * 0.01f;
-		p.y = pos.y;
-		p.z = pos.z + (rand() % 10001 - 5000) * 0.01f;
-		//発生方向
-		DirectX::XMFLOAT3 v = { 0,0,0 };
-		v.y = -(rand() % 10001) * 0.0002f - 0.002f;
-		//力
-		DirectX::XMFLOAT3 f = { 0,0,0 };
-		f.x = (rand() % 10001) * 0.00001f + 0.1f;
-		f.z = (rand() % 10001 - 5000) * 0.00001f;
-		//大きさ
-		DirectX::XMFLOAT2 s = { .2f,.2f };
+//今後使うかもしれないパーティクルの動き、現在は使わないのでコメントアウト
 
-		Set(12, 5, p, v, f, s);
-	}
-}
+//void ParticleSystem::Snow(DirectX::XMFLOAT3 pos, int max)
+//{
+//	for (int i = 0; i < max; i++) {
+//		//発生位置
+//		DirectX::XMFLOAT3 p = { 0,0,0 };
+//		p.x = pos.x + (rand() % 10001 - 5000) * 0.01f;
+//		p.y = pos.y;
+//		p.z = pos.z + (rand() % 10001 - 5000) * 0.01f;
+//		//発生方向
+//		DirectX::XMFLOAT3 v = { 0,0,0 };
+//		v.y = -(rand() % 10001) * 0.0002f - 0.002f;
+//		//力
+//		DirectX::XMFLOAT3 f = { 0,0,0 };
+//		f.x = (rand() % 10001) * 0.00001f + 0.1f;
+//		f.z = (rand() % 10001 - 5000) * 0.00001f;
+//		//大きさ
+//		DirectX::XMFLOAT2 s = { .2f,.2f };
+//
+//		Set(12, 5, p, v, f, s);
+//	}
+//}
+//
+//void ParticleSystem::Spark(DirectX::XMFLOAT3 pos, int max)
+//{
+//	for (int i = 0; i < max; i++) {
+//		DirectX::XMFLOAT3 p;
+//		p.x = pos.x;
+//		p.y = pos.y;
+//		p.z = pos.z;
+//
+//		DirectX::XMFLOAT3 v = { 0,0,0 };
+//		v.x = (rand() % 10001 - 5000) * 0.0001f;
+//		v.y = (rand() % 10001) * 0.0002f + 1.2f;
+//		v.z = (rand() % 10001 - 5000) * 0.0001f;
+//
+//		DirectX::XMFLOAT3 f = { 0,-1.2f,0 };
+//		DirectX::XMFLOAT2 s = { 0.05f,0.05f };
+//
+//		Set(2, 3, p, v, f, s);
+//
+//	}
+//}
+//
+//void ParticleSystem::Fire(DirectX::XMFLOAT3 pos, int max)
+//{
+//	for (int i = 0; i < max; i++) {
+//
+//		data[i].type = 2;
+//		data[i].pos.x = pos.x + (rand() % 10001 - 5000) * 0.00005f;
+//		data[i].pos.y = pos.y + (rand() % 10001) * 0.0001f + 0.2f;
+//		data[i].pos.z = pos.z + (rand() % 10001 - 5000) * 0.00005f;
+//		data[i].posV.x = (rand() % 10001 - 5000) * 0.0002f;
+//		data[i].posV.y = (rand() % 10001) * 0.0004f + 0.005f;
+//		data[i].posV.z = (rand() % 10001 - 5000) * 0.0002f;
+//		data[i].posA.x = 0;
+//		data[i].posA.y = -2.0f;
+//		data[i].posA.z = 0;
+//		data[i].size.x = 0.05f;
+//		data[i].size.y = 0.05f;
+//		data[i].alpha = 1.0f;
+//		data[i].timer = 4.0f;
+//	}
+//}
+//
+//void ParticleSystem::Smoke(DirectX::XMFLOAT3 pos, int max)
+//{
+//	for (int i = 0; i < max; i++) {
+//
+//		data[i].type = 2;
+//		data[i].pos.x = pos.x + (rand() % 20001 - 5000) * 0.01f;
+//		data[i].pos.y = pos.y + (rand() % 20001 - 5000) * 0.01f;
+//		data[i].pos.z = pos.z + (rand() % 20001 - 5000) * 0.01f;
+//		data[i].posV.x = sinf(particleAngle);
+//		data[i].posV.y = cosf(particleAngle);
+//		data[i].posV.z = 0;
+//		data[i].posA.x = 0;
+//		data[i].posA.y = 0;
+//		data[i].posA.z = 0;
+//		data[i].color.x = 1;
+//		data[i].color.y = 1;
+//		data[i].color.z = 1;
+//		data[i].size.x = 0.05f;
+//		data[i].size.y = 0.05f;
+//		data[i].alpha = 1.0f;
+//		data[i].timer = 4.0f;
+//	}
+//}
 
-void ParticleSystem::Spark(DirectX::XMFLOAT3 pos, int max)
-{
-	for (int i = 0; i < max; i++) {
-		DirectX::XMFLOAT3 p;
-		p.x = pos.x;
-		p.y = pos.y;
-		p.z = pos.z;
-
-		DirectX::XMFLOAT3 v = { 0,0,0 };
-		v.x = (rand() % 10001 - 5000) * 0.0001f;
-		v.y = (rand() % 10001) * 0.0002f + 1.2f;
-		v.z = (rand() % 10001 - 5000) * 0.0001f;
-
-		DirectX::XMFLOAT3 f = { 0,-1.2f,0 };
-		DirectX::XMFLOAT2 s = { 0.05f,0.05f };
-
-		Set(2, 3, p, v, f, s);
-
-	}
-}
-
-void ParticleSystem::Fire(DirectX::XMFLOAT3 pos, int max)
-{
-	for (int i = 0; i < max; i++) {
-
-		data[i].type = 2;
-		data[i].pos.x = pos.x + (rand() % 10001 - 5000) * 0.00005f;
-		data[i].pos.y = pos.y + (rand() % 10001) * 0.0001f + 0.2f;
-		data[i].pos.z = pos.z + (rand() % 10001 - 5000) * 0.00005f;
-		data[i].posV.x = (rand() % 10001 - 5000) * 0.0002f;
-		data[i].posV.y = (rand() % 10001) * 0.0004f + 0.005f;
-		data[i].posV.z = (rand() % 10001 - 5000) * 0.0002f;
-		data[i].posA.x = 0;
-		data[i].posA.y = -2.0f;
-		data[i].posA.z = 0;
-		data[i].size.x = 0.05f;
-		data[i].size.y = 0.05f;
-		data[i].alpha = 1.0f;
-		data[i].timer = 4.0f;
-	}
-}
-
-void ParticleSystem::Smoke(DirectX::XMFLOAT3 pos, int max)
-{
-	for (int i = 0; i < max; i++) {
-
-		data[i].type = 2;
-		data[i].pos.x = pos.x + (rand() % 20001 - 5000) * 0.01f;
-		data[i].pos.y = pos.y + (rand() % 20001 - 5000) * 0.01f;
-		data[i].pos.z = pos.z + (rand() % 20001 - 5000) * 0.01f;
-		data[i].posV.x = sinf(particleAngle);
-		data[i].posV.y = cosf(particleAngle);
-		data[i].posV.z = 0;
-		data[i].posA.x = 0;
-		data[i].posA.y = 0;
-		data[i].posA.z = 0;
-		data[i].color.x = 1;
-		data[i].color.y = 1;
-		data[i].color.z = 1;
-		data[i].size.x = 0.05f;
-		data[i].size.y = 0.05f;
-		data[i].alpha = 1.0f;
-		data[i].timer = 4.0f;
-	}
-}
-
+//背景スターの動き
 void ParticleSystem::Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int max)
 {
 	for (int i = 0; i < max; i++) {
@@ -306,6 +303,7 @@ void ParticleSystem::Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int
 	}
 }
 
+//リザルト花火の動き
 void ParticleSystem::hanabi(DirectX::XMFLOAT3 pos, int max)
 {
 	hanabiX = (rand() % 10001 - 6001) * 0.01f;
