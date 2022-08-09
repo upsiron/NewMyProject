@@ -49,41 +49,73 @@ public:
 		COIN3,
 	};
 
-	//int stageTileMap[3][6][9] =
+	//読み込んだステージマップの数値を入れる
+	int StageTileMapTxt[6][10][9] = { 0 };
+
+	//実際にプログラム上で使うステージマップの変数
+	int StageTileMap[6][10][9] = { 0 };
+
+
+	//ステージマップ
+	//int StageTileMap[6][10][9] =
 	//{
 	//	//0
 	//	{
 	//		//00
 	//		{
-	//		 OB1,  OB2,  NONE,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		 },
 	//		//01
 	//		{
 	//		 NONE, NONE, NONE,
-	//		 HOLE, HOLE, HOLE,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		 },
 	//		//02
 	//		{
-	//		 OB1,  NONE, OB2,
+	//		 OB1,  OB2, NONE,
 	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		},
 	//		//03
 	//		{
 	//		 NONE, NONE, NONE,
-	//		 NONE, HOLE, HOLE,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		},
 	//		//04
 	//		{
 	//		 NONE, NONE, NONE,
-	//		 NONE, NONE, NONE,
+	//		 NONE, HOLE, RED,
 	//		 NONE, NONE, NONE
 	//		},
 	//		//05
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//06
+	//		{
+	//		 OB1,  NONE, OB2,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//07
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, HOLE, NONE
+	//		 },
+	//		//08
+	//		{
+	//		 RED,  RED,  RED,
+	//		 NONE, NONE, COIN1,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//09
 	//		{
 	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE,
@@ -95,35 +127,59 @@ public:
 	//	{
 	//		//00
 	//		{
-	//		 NONE, NONE, RED,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		 },
 	//		//01
 	//		{
-	//		 OB1,  HOLE, NONE,
-	//		 NONE, HOLE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		 },
 	//		//02
 	//		{
-	//		 NONE, RED,  NONE,
-	//		 HOLE, HOLE, HOLE,
-	//		 NONE, NONE, NONE
+	//		 OB1, OB2, OB3,
+	//		 NONE, NONE, NONE,
+	//		 GREEN, GREEN, GREEN
 	//		},
 	//		//03
 	//		{
 	//		 NONE, NONE, NONE,
-	//		 HOLE, HOLE, NONE,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		},
 	//		//04
 	//		{
-	//		 RED,  NONE, OB1,
+	//		 GREEN, NONE, NONE,
 	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		},
 	//		//05
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, OB3, HOLE,
+	//		 OB1,  OB2, NONE
+	//		},
+	//		//06
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 COIN2, NONE, NONE
+	//		 },
+	//		//07
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//08
+	//		{
+	//		 HOLE, OB1, OB2,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//09
 	//		{
 	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE,
@@ -133,37 +189,253 @@ public:
 
 	//	//2
 	//	{
-	//		//2_0
+	//		//00
 	//		{
-	//		 NONE, NONE, GREEN,
-	//		 NONE, HOLE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		 },
-	//		//2_1
+	//		//01
 	//		{
-	//		 NONE, HOLE, OB1,
-	//		 NONE, HOLE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, BLUE
+	//		 },
+	//		//02
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//03
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 MOB3, OB1, MOB1,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//04
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//05
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 HOLE, BLUE, HOLE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//06
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		 },
-	//		//2_2
+	//		//07
 	//		{
-	//		 NONE, GREEN, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//08
+	//		{
+	//		 NONE, OB1, COIN3,
+	//		 NONE, OB2, NONE,
+	//		 MOB1, OB3, MOB3
+	//		},
+	//		//09
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//	},
+
+	//	//3
+	//	{
+	//		//00
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//01
+	//		{
+	//		 OB1,  OB2,  NONE,
+	//		 NONE, NONE, COIN1,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//02
+	//		{
+	//		 HOLE, HOLE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//03
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, OB1,  NONE
+	//		},
+	//		//04
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 OB1,  NONE, OB2
+	//		},
+	//		//05
+	//		{
+	//		 COIN2, NONE, NONE,
+	//		 RED,  HOLE, RED,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//06
+	//		{
+	//		 NONE, OB1,  NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//07
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 HOLE, NONE, NONE,
+	//		 NONE, NONE, COIN3
+	//		 },
+	//		//08
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, OB1,  OB2
+	//		},
+	//		//09
+	//		{
+	//		 OB1,  OB2,  OB3,
+	//		 NONE, NONE, NONE,
+	//		 GREEN, GREEN, GREEN
+	//		},
+	//	},
+
+	//	//4
+	//	{
+	//		//00
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, COIN1, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//01
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 OB1,  NONE, OB2
+	//		 },
+	//		//02
+	//		{
+	//		 NONE, HOLE, HOLE,
+	//		 NONE, HOLE, HOLE,
+	//		 NONE, HOLE, HOLE
+	//		},
+	//		//03
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, RED,  NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//04
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 OB1,  OB2,  NONE
+	//		},
+	//		//05
+	//		{
+	//		 NONE, OB1,  OB2,
+	//		 NONE, NONE, NONE,
+	//		 NONE, GREEN, GREEN
+	//		},
+	//		//06
+	//		{
+	//		 OB1,  RED,  NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//07
+	//		{
+	//		 NONE, OB1,  NONE,
+	//		 NONE, NONE, HOLE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//08
+	//		{
+	//		 NONE, NONE,  NONE,
 	//		 HOLE, HOLE, HOLE,
 	//		 NONE, NONE, NONE
 	//		},
-	//		//2_3
+	//		//09
 	//		{
-	//		 OB1, NONE, NONE,
-	//		 NONE, HOLE, HOLE,
+	//		 NONE, HOLE, NONE,
+	//		 NONE, HOLE, NONE,
 	//		 NONE, NONE, NONE
 	//		},
-	//		//2_4
+	//	},
+
+	//	//5
+	//	{
+	//		//00
 	//		{
-	//		 GREEN, NONE, NONE,
-	//		 HOLE, HOLE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//01
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, BLUE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//02
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE
 	//		},
-	//		//2_5
+	//		//03
+	//		{
+	//		 MOB3,  OB1, MOB1,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//04
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, BLUE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//05
+	//		{
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		},
+	//		//06
+	//		{
+	//		 MOB1, OB2,  MOB3,
+	//		 NONE, NONE, NONE,
+	//		 NONE, NONE, NONE
+	//		 },
+	//		//07
+	//		{
+	//		 NONE, OB1, HOLE,
+	//		 RED,  OB2, NONE,
+	//		 HOLE, OB3, NONE
+	//		 },
+	//		//08
+	//		{
+	//		 NONE, OB1, NONE,
+	//		 HOLE, OB2, NONE,
+	//		 NONE, OB3, NONE
+	//		},
+	//		//09
 	//		{
 	//		 NONE, NONE, NONE,
 	//		 NONE, NONE, NONE,
@@ -171,394 +443,6 @@ public:
 	//		},
 	//	},
 	//};
-
-	//ステージマップ
-	int StageTileMap[6][10][9] =
-	{
-		//0
-		{
-			//00
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//01
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//02
-			{
-			 OB1,  OB2, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//03
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//04
-			{
-			 NONE, NONE, NONE,
-			 NONE, HOLE, RED,
-			 NONE, NONE, NONE
-			},
-			//05
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//06
-			{
-			 OB1,  NONE, OB2,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//07
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, HOLE, NONE
-			 },
-			//08
-			{
-			 RED,  RED,  RED,
-			 NONE, NONE, COIN1,
-			 NONE, NONE, NONE
-			},
-			//09
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-		},
-
-		//1
-		{
-			//00
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//01
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//02
-			{
-			 OB1, OB2, OB3,
-			 NONE, NONE, NONE,
-			 GREEN, GREEN, GREEN
-			},
-			//03
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//04
-			{
-			 GREEN, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//05
-			{
-			 NONE, NONE, NONE,
-			 NONE, OB3, HOLE,
-			 OB1,  OB2, NONE
-			},
-			//06
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 COIN2, NONE, NONE
-			 },
-			//07
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//08
-			{
-			 HOLE, OB1, OB2,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//09
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-		},
-
-		//2
-		{
-			//00
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//01
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, BLUE
-			 },
-			//02
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//03
-			{
-			 NONE, NONE, NONE,
-			 MOB3, OB1, MOB1,
-			 NONE, NONE, NONE
-			},
-			//04
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//05
-			{
-			 NONE, NONE, NONE,
-			 HOLE, BLUE, HOLE,
-			 NONE, NONE, NONE
-			},
-			//06
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//07
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//08
-			{
-			 NONE, OB1, COIN3,
-			 NONE, OB2, NONE,
-			 MOB1, OB3, MOB3
-			},
-			//09
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-		},
-
-		//3
-		{
-			//00
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//01
-			{
-			 OB1,  OB2,  NONE,
-			 NONE, NONE, COIN1,
-			 NONE, NONE, NONE
-			 },
-			//02
-			{
-			 HOLE, HOLE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//03
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, OB1,  NONE
-			},
-			//04
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 OB1,  NONE, OB2
-			},
-			//05
-			{
-			 COIN2, NONE, NONE,
-			 RED,  HOLE, RED,
-			 NONE, NONE, NONE
-			},
-			//06
-			{
-			 NONE, OB1,  NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//07
-			{
-			 NONE, NONE, NONE,
-			 HOLE, NONE, NONE,
-			 NONE, NONE, COIN3
-			 },
-			//08
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, OB1,  OB2
-			},
-			//09
-			{
-			 OB1,  OB2,  OB3,
-			 NONE, NONE, NONE,
-			 GREEN, GREEN, GREEN
-			},
-		},
-
-		//4
-		{
-			//00
-			{
-			 NONE, NONE, NONE,
-			 NONE, COIN1, NONE,
-			 NONE, NONE, NONE
-			 },
-			//01
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 OB1,  NONE, OB2
-			 },
-			//02
-			{
-			 NONE, HOLE, HOLE,
-			 NONE, HOLE, HOLE,
-			 NONE, HOLE, HOLE
-			},
-			//03
-			{
-			 NONE, NONE, NONE,
-			 NONE, RED,  NONE,
-			 NONE, NONE, NONE
-			},
-			//04
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 OB1,  OB2,  NONE
-			},
-			//05
-			{
-			 NONE, OB1,  OB2,
-			 NONE, NONE, NONE,
-			 NONE, GREEN, GREEN
-			},
-			//06
-			{
-			 OB1,  RED,  NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//07
-			{
-			 NONE, OB1,  NONE,
-			 NONE, NONE, HOLE,
-			 NONE, NONE, NONE
-			 },
-			//08
-			{
-			 NONE, NONE,  NONE,
-			 HOLE, HOLE, HOLE,
-			 NONE, NONE, NONE
-			},
-			//09
-			{
-			 NONE, HOLE, NONE,
-			 NONE, HOLE, NONE,
-			 NONE, NONE, NONE
-			},
-		},
-
-		//5
-		{
-			//00
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//01
-			{
-			 NONE, NONE, NONE,
-			 NONE, BLUE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//02
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//03
-			{
-			 MOB3,  OB1, MOB1,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//04
-			{
-			 NONE, NONE, NONE,
-			 NONE, BLUE, NONE,
-			 NONE, NONE, NONE
-			},
-			//05
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-			//06
-			{
-			 MOB1, OB2,  MOB3,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			 },
-			//07
-			{
-			 NONE, OB1, HOLE,
-			 RED,  OB2, NONE,
-			 HOLE, OB3, NONE
-			 },
-			//08
-			{
-			 NONE, OB1, NONE,
-			 HOLE, OB2, NONE,
-			 NONE, OB3, NONE
-			},
-			//09
-			{
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE,
-			 NONE, NONE, NONE
-			},
-		},
-	};
 
 	//カラー getter/setter
 	void SetTileColor(int c) { ColorNum = c; }

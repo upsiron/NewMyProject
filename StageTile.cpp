@@ -1,10 +1,89 @@
 #include "stageTile.h"
 #include "collision.h"
 #include "scene.h"
+#include <iostream>
+#include <string>    
+#include <fstream> 
 
 //コンストラクタ
 StageTile::StageTile()
 {
+	//ファイル読み取り
+	std::string Filename = "Text/stage.txt";
+	std::ifstream ReadingFile(Filename, std::ios::in);
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			for (int k = 0; k < 9; k++)
+			{
+				ReadingFile >> StageTileMapTxt[i][j][k];
+				StageTileMap[i][j][k] = StageTileMapTxt[i][j][k];
+			}
+		}
+	}
+
+	//ファイル書き込み
+	Filename = "Text/stage.txt";
+	std::ofstream WritingFile;
+	WritingFile.open(Filename, std::ios::out);
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			for (int k = 0; k < 9; k++)
+			{
+				WritingFile << StageTileMap[i][j][k]<< endl;
+			}
+		}
+	}
+
+	////ファイル読み取り
+	///*std::string line;
+	//std::string line2;*/
+	//std::ifstream ReadingFile("Text/Book.csv");
+	//std::ofstream WritingFile("Text/Book.csv");
+	///*while (std::getline(ReadingFile,line))
+	//{
+	//	std::istringstream i_stream(line);
+
+	//	while (std::getline(i_stream, line2,','))
+	//	{
+	//		ofs << line2 << ',';
+	//	}
+	//	ofs << endl;
+	//}*/
+
+	//for (int i = 0; i < 6; i++)
+	//{
+	//	for (int j = 0; j < 10; j++)
+	//	{
+	//		for (int k = 0; k < 9; k++)
+	//		{
+	//			ReadingFile >> StageTileMapTxt[i][j][k];
+	//			StageTileMap[i][j][k] = StageTileMapTxt[i][j][k];
+	//			//WritingFile << StageTileMapTxt[i][j][k];
+	//			//if ((k + 1) % 3 == 0)WritingFile << endl;
+	// 
+	//		}
+	//	}
+	//}
+
+	////ファイル書き込み
+	//std::ofstream ofs("Text/Book.csv");
+	//for (int i = 0; i < 6; i++)
+	//{
+	//	for (int j = 0; j < 10; j++)
+	//	{
+	//		for (int k = 0; k < 9; k++)
+	//		{
+	//			WritingFile << StageTileMap[i][j][k];
+	//			//WritingFile << StageTileMapTxt[i][j][k];
+	//			//if ((k + 1) % 3 == 0)WritingFile << endl;
+	//		}
+	//	}
+	//}
+
 	stageTileObj = std::make_unique<SkinnedObject>(stageTileMesh);
 	stageTileObj->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	stageTileObj->SetScale(DirectX::XMFLOAT3(1.6f, 0.1f, 1.6f));
