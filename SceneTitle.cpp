@@ -2,7 +2,6 @@
 #include "scene.h"
 #include "Camera.h"
 #include "KeyInput.h"
-//#include "framework.h"
 
 //**********************************************
 //
@@ -130,7 +129,6 @@ void SceneTitle::Update(float elapsedTime)
 		BGM->Stop();
 		SceneManager::Instance().ChangeScene(
 			new SceneLoad(new SceneMain()));
-		//SceneManager::Instance().ChangeScene(new SceneMain);
 		return;
 	}
 }
@@ -258,7 +256,6 @@ void SceneTitle::RenderBloom()
 		offScreen->Clear(context);
 
 		Particles->Render(context, ParticleShader.get(), view, projection, framework.GetBlendState(Blender::BS_ALPHA));
-		//img->Render(context, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 669.0f, 373.0f);
 		imgTitle->Render(context, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1280.0f, 720.0f);
 		if (timer / 32 % 2) imgPushSpace->Render(context, 0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1280.0f, 720.0f);
 

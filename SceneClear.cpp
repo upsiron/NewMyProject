@@ -2,8 +2,6 @@
 #include "scene.h"
 #include "Camera.h"
 #include "KeyInput.h"
-//#include "framework.h"
-
 #include <iostream>
 #include <string>    
 #include <fstream>   
