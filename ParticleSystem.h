@@ -71,7 +71,9 @@ public:
 	void Smoke(DirectX::XMFLOAT3 pos, int max);*/
 
 	void Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int max);
+	void Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int max, DirectX::XMFLOAT3 color);
 	void hanabi(DirectX::XMFLOAT3 pos, int max);
+	void Fire(DirectX::XMFLOAT3 pos, int max);
 	void Sphere(DirectX::XMFLOAT3 pos, int max);
 
 	struct ParticleData
@@ -90,7 +92,20 @@ public:
 	};
 	ParticleData* data; //パーティクルデータ
 
+	//パーティクルの総数
 	int numParticles;
+
+	//パーティクルの向き
+	DirectX::XMFLOAT3 particleVelocity;
+	//パーティクルのカラー
+	DirectX::XMFLOAT3 particleColor;
+	DirectX::XMFLOAT3 starColor[4]
+	{
+		{1.0f,0.0f,0.0f},//red
+		{1.0f,0.0f,1.0f},//purple
+		{0.0f,1.0f,0.0f},//green
+		{0.0f,0.0f,1.0f},//bule
+	};
 
 	//花火関連変数
 	float particleAngle;

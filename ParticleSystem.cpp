@@ -303,6 +303,28 @@ void ParticleSystem::Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int
 	}
 }
 
+void ParticleSystem::Star(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 velocity, int max, DirectX::XMFLOAT3 color)
+{
+	for (int i = 0; i < max; i++) {
+		if (data[i].timer <= 0)
+		{
+			//パーティクルスターセット
+			Set(2,                                                  //type
+				i,                                                  //index
+				float(rand() % 20),								    //timer
+				{
+					pos.x + (rand() % 20001 - 5000) * 0.01f,		//position
+					pos.y + (rand() % 20001 - 5000) * 0.01f,
+					pos.z + (rand() % 20001 - 5000) * 0.01f
+				},
+				velocity,                                           //velocity
+				{ 0.0f,0.0f,0.0f },                                 //force
+				color,												//color
+				{ 0.05f,0.05f });                                   //size
+		}
+	}
+}
+
 //リザルト花火の動き
 void ParticleSystem::hanabi(DirectX::XMFLOAT3 pos, int max)
 {
@@ -323,6 +345,32 @@ void ParticleSystem::hanabi(DirectX::XMFLOAT3 pos, int max)
 				{ 0.0f,-3.2f,0.0f },                                               //force
 				{ hanabiColor[hanabiRand] },                                       //color
 				{ 0.05f,0.05f });                                                  //size
+		}
+	}
+}
+
+//
+void ParticleSystem::Fire(DirectX::XMFLOAT3 pos, int max)
+{
+	for (int i = 0; i < max; i++) {
+		if (data[i].timer <= 0)
+		{
+			Set(2,                                                  //type
+				i,                                                  //index
+				4.0f,												//timer
+				{
+					pos.x + (rand() % 10001 - 5000) * 0.0002f,	//position
+					pos.y /*+ (rand() % 10001) * 0.0001f + 0.2f*/,
+					pos.z + (rand() % 10001 - 5000) * 0.0002f
+				},
+				{
+					0.0f,//(rand() % 10001 - 5000) * 0.0002f,              //velocity
+					(rand() % 10001) * 0.0002f + 1.2f,
+					0.0f,//(rand() % 10001 - 5000) * 0.0002f,
+				},
+				{ 0.0f,0.0,0.0f },                                //force
+				{ 0.0f,1.0f,0.0f },                                 //color
+				{ 0.1f,0.1f });                                     //size
 		}
 	}
 }
