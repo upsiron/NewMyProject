@@ -44,10 +44,6 @@ void Coin::Render(ID3D11DeviceContext* immediateContext,
 void Coin::DrawDebugGUI()
 {
 	std::string str = "";
-	/*if (activeNode != nullptr)
-	{
-		str = activeNode->GetName();
-	}*/
 	//トランスフォーム
 	if (ImGui::CollapsingHeader("Coin", ImGuiTreeNodeFlags_DefaultOpen))
 	{

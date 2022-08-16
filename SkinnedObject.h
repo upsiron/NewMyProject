@@ -14,11 +14,6 @@ protected:
 	DirectX::XMFLOAT4X4 world = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 	std::shared_ptr<SkinnedMesh>	mesh;
 	Animation::KeyFrame keyframe;
-	
-	//ギミック用フラグ
-	bool RedGimmickFlg = false;
-	bool GreenGimmickFlg = false;
-	bool BlueGimmickFlg = false;
 
 	//アニメーション関連の変数
 	int NextMotion{ 4 };
@@ -50,8 +45,6 @@ public:
 	const DirectX::XMFLOAT3& GetScale() const { return scale; }
 	const DirectX::XMFLOAT3& GetAngle() const { return angle; }
 	const DirectX::XMFLOAT4X4& GetWorld() const { return world; }
-	const bool& GetRedFlg() const { return RedGimmickFlg; }
-	const bool& GetBlueFlg() const { return BlueGimmickFlg; }
 
 	void Update(float elapsedTime);
 

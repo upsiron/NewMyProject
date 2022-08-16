@@ -5,10 +5,9 @@
 #include <vector>
 #include <string>
 #include <fbxsdk.h>
-//19回目
 #include <unordered_map>
 //↑mapとunordered_mapは別物だから気を付けよう！！
-//30回目
+
 /*ここからシリアライズ始まるし
 ほしい機能だからちゃんとやろうね*/
 #include "cereal/archives/binary.hpp"
@@ -16,11 +15,6 @@
 #include "cereal/types/vector.hpp"
 #include "cereal/types/set.hpp"
 #include "cereal/types/unordered_map.hpp"
-//#include <cereal/archives\binary.hpp>
-//#include <cereal/types\memory.hpp>
-//#include <cereal/types\vector.hpp>
-//#include <cereal/types\set.hpp>
-//#include <cereal/types\unordered_map.hpp>
 //↓シリアライズ云々について調べた話、見たいときに開いて↓
 /*
 * 前提として、シリアライズとかってなーんだって話
@@ -40,7 +34,6 @@ using namespace std;
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
-//30回目
 //DirectXMath構造体用のserializeテンプレート関数を定義
 namespace DirectX
 {
@@ -101,7 +94,6 @@ struct SceneSkin
 		FbxNodeAttribute::EType Attribute{ FbxNodeAttribute::EType::eUnknown };
 		int64_t ParentIndex{ -1 };
 
-		//30回目
 		template<class T>
 		void serialize(T& archive)
 		{
@@ -133,7 +125,6 @@ struct SceneSkin
 	}
 };
 
-//19回目
 struct Material
 {
 	uint64_t UniqueID = 0;
@@ -146,7 +137,6 @@ struct Material
 	string TextureName[4];	//4個入れる用(なんで４？)
 	ComPtr<ID3D11ShaderResourceView> ShaderResourceView[4];
 
-	//30回目
 	template<class T>
 	void serialize(T& archive)
 	{
@@ -161,7 +151,7 @@ mapとの違いはソート状態で保存されずに要素検索だけで使う場合が多いみたい
 
 
 
-//25回目(アニメーション)
+//アニメーション
 struct Animation
 {
 	string Name;
@@ -181,7 +171,6 @@ struct Animation
 				.0f,.0f,1.0f,.0f,
 				.0f,.0f,.0f,1.0f
 			};
-			/*27回目*/
 			//ノードの変換データには移動回転スケーリングの各ベクトルが含まれる
 			//親ノードに対する移動回転スケーリングのベクトルが含まれる
 			//だからここは親に対する(親子付けするには行列を毛毛たりするから)行列になる？
@@ -189,7 +178,6 @@ struct Animation
 			XMFLOAT4 Rotation = { .0f,.0f,.0f,1.0f };
 			XMFLOAT3 Translation = { .0f,.0f,.0f };
 
-			//30回目
 			template<class T>
 			void serialize(T& archive)
 			{
@@ -223,14 +211,12 @@ public:
 	{
 		XMFLOAT3 Position;
 		XMFLOAT3 Normal;
-		//29回目
 		XMFLOAT4 Tangent;
 		XMFLOAT2 Texcoord;
-		//pdf22回目 ウェイト値とボーン番号を追加
+		//ウェイト値とボーン番号
 		float BoneWeights[MAX_BONEINFLUENCE] = { 1.0f,.0f,.0f,.0f };
 		uint32_t BoneIndeces[MAX_BONEINFLUENCE] = {};
 
-		//30回目
 		/*serialize Func*/
 		template<class T>
 		void serialize(T& archive)
@@ -238,7 +224,7 @@ public:
 			archive(Position, Normal, Tangent, Texcoord, BoneWeights, BoneIndeces);
 		}
 	};
-	//23回目
+
 	static const int MAXBONES = 256;
 	struct Constant
 	{
@@ -253,7 +239,7 @@ public:
 			.0f,.0f,.0f,1.0f}
 		};
 	};
-	//24回目
+	
 	struct Skeleton
 	{
 
@@ -279,7 +265,7 @@ public:
 			};
 			bool Orphan() const { return ParentIndex < 0; };
 
-			//30回目
+		
 			template<class T>
 			void serialize(T& archive)
 			{
@@ -301,7 +287,6 @@ public:
 			return -1;
 		}
 
-		//30回目
 		template<class T>
 		void serialize(T& archive)
 		{
@@ -319,8 +304,6 @@ public:
 	};
 	std::vector<Face> faces;
 
-
-	//pdf18回目
 	struct Mesh
 	{
 		uint64_t UniqueID = 0;
@@ -332,7 +315,6 @@ public:
 		vector<Vertex>	 Vertices;
 		vector<uint32_t> Indices;
 
-		//20回目追加
 		struct Subset
 		{
 			uint64_t Materrial_UniqueID = 0;
@@ -341,7 +323,6 @@ public:
 			uint32_t StartIndexLocation = 0;
 			uint32_t IndexCount = 0;
 
-			//30回目
 			template<class T>
 			void serialize(T& archive)
 			{
@@ -350,7 +331,6 @@ public:
 		};
 		vector<Subset> Subsets;
 
-		//21回目
 		XMFLOAT4X4 DefaultGlobalTransform =
 		{
 		1.0f,0.0f,0.0f,0.0f,
@@ -358,17 +338,15 @@ public:
 		0.0f,0.0f,1.0f,0.0f,
 		0.0f,0.0f,0.0f,1.0f
 		};
-		//24回目
+
 		Skeleton BindPose;//紐付するポーズ？されたポーズ？
 
-		//29回目
 		XMFLOAT3 BoundingBox[2]
 		{
 			{  D3D11_FLOAT32_MAX,  D3D11_FLOAT32_MAX,  D3D11_FLOAT32_MAX },
 			{ -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX }
 		};
 	private:
-		//18回目
 		ComPtr<ID3D11Buffer> VertexBuffer;
 		ComPtr<ID3D11Buffer> IndexBuffer;
 		friend class SkinnedMesh;
@@ -383,8 +361,6 @@ public:
 	vector<Mesh> Meshes;
 	//↓をクラス内に入れないと複数回定義エラーが出てくる、多分グローバル扱いになってたから？
 	unordered_map<uint64_t, Material>Materials;
-
-	//25回目
 	vector<Animation> AnimationClips;
 
 private:
@@ -406,50 +382,25 @@ public:
 
 	virtual ~SkinnedMesh() = default;
 	void FetchMeshes(FbxScene* FBXScene, vector<Mesh>& Meshes);
-	//19回目
 	void FetchMaterials(FbxScene* FBXScene, unordered_map<uint64_t, Material>& material);
-	//24回目
 	/*バインドポーズ情報を抽出する関数*/
 	void FetchSkeleton(FbxMesh* FBXMesh, Skeleton& BindPose);
-	//25回目
 	void FetchAnimation(FbxScene* FBXScene, vector<Animation>& AnimationClips,
 		float SamplingRate/*この値が0の場合は、デフォルトのフレームレートでサンプリングされる(アニメーションスピード？)*/);
-	//27回目
 	void UpdateAnimation(Animation::KeyFrame& KeyFlame);
-	//28回目(アニメーション付与？)
+	//アニメーション付与？
 	bool AppendAnimation(const char* AnimationFilename,
 		float SamplingRate = 0.0f);
 	void BlendAnimation(const Animation::KeyFrame* KeyFlames[2],
 		float Factor, Animation::KeyFrame& KeyFlame);
 
 	void CreateComObject(ID3D11Device* Device, const char* FBX_Filename);
-	//void Render(ID3D11DeviceContext* DeviceContext,
-	//	const XMFLOAT4X4& World, const XMFLOAT4& MaterialColor,
-	//	const Animation::KeyFrame* KeyFlame/*25回目追加*/);
-
-	void Render(ID3D11DeviceContext* DeviceContext,
-		const XMFLOAT4X4& WorldViewProjection,
-		const XMFLOAT4& rightdirection, const XMFLOAT4& MaterialColor,
-		const Animation::KeyFrame* KeyFlame/*25回目追加*/);
-
+	
 	void Render(ID3D11DeviceContext* DeviceContext,
 		const XMFLOAT4X4& WorldViewProjection,
 		const XMFLOAT4X4& World,
 		const XMFLOAT4& rightdirection, const XMFLOAT4& MaterialColor,
-		const Animation::KeyFrame* KeyFlame/*25回目追加*/);
-
-	// レイピック関数  
-	/*int RayPick(const DirectX::XMFLOAT3& startPosition,
-		const DirectX::XMFLOAT3& endPosition,
-		DirectX::XMFLOAT3* outPosition,
-		DirectX::XMFLOAT3* outNormal,
-		float* outLength);*/
-	/*引数
-	startPosition : レイを飛ばす開始座標
-	endPosition   : レイを飛ばす終了座標
-	outPosition   : レイが当たった座標
-	outNormal     : レイが当たった面の法線
-	outLength     : レイが当たった面までの距離  戻り値 : マテリアル番号*/
+		const Animation::KeyFrame* KeyFlame);
 
 	DirectX::XMFLOAT4X4 coordinate_conversion = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1 };
 protected:

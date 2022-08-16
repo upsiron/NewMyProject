@@ -2,17 +2,13 @@
 #include <sstream>
 #include <functional>
 #include "Texture.h"
-//19回目
 #include <filesystem>
 #include "SkinnedMesh.h"
 #include "shader.h"
-
-//21回目
 #include "ConvertMatrix.h"
-//30回目
 #include <fstream>
 using namespace DirectX;
-//22回目
+
 //グローバルスコープに追加で大丈夫なんすか…？
 struct BoneInfluence
 {
@@ -65,124 +61,9 @@ void FetchBoneInfluence(const FbxMesh* FBXMesh,
 	}
 }
 
-
-
-//int SkinnedMesh::RayPick(const DirectX::XMFLOAT3& startPosition, const DirectX::XMFLOAT3& endPosition, DirectX::XMFLOAT3* outPosition, DirectX::XMFLOAT3* outNormal, float* outLength)
-//{
-//	/*引数
-//	startPosition : レイを飛ばす開始座標
-//	endPosition   : レイを飛ばす終了座標
-//	outPosition   : レイが当たった座標
-//	outNormal     : レイが当たった面の法線
-//	outLength     : レイが当たった面までの距離  戻り値 : マテリアル番号*/
-//
-//	int ret = -1;
-//	DirectX::XMVECTOR start = DirectX::XMLoadFloat3(&startPosition);
-//	DirectX::XMVECTOR end = DirectX::XMLoadFloat3(&endPosition);
-//	DirectX::XMVECTOR vec = DirectX::XMVectorSubtract(end, start);
-//	DirectX::XMVECTOR length = DirectX::XMVector3Length(vec);
-//	DirectX::XMVECTOR dir = DirectX::XMVector3Normalize(vec);
-//	float neart;
-//	DirectX::XMStoreFloat(&neart, length);
-//
-//	DirectX::XMVECTOR position, normal;
-//
-//	for (const auto& it : faces) {
-//		// 面頂点取得   
-//		DirectX::XMVECTOR a = DirectX::XMLoadFloat3(&it.Position[0]);
-//		DirectX::XMVECTOR b = DirectX::XMLoadFloat3(&it.Position[1]);
-//		DirectX::XMVECTOR c = DirectX::XMLoadFloat3(&it.Position[2]);
-//		//  3 辺算出 
-//		DirectX::XMVECTOR ab = DirectX::XMVectorSubtract(b, a);
-//		DirectX::XMVECTOR bc = DirectX::XMVectorSubtract(c, b);
-//		DirectX::XMVECTOR ca = DirectX::XMVectorSubtract(a, c);
-//		// 外積による法線算出 
-//		DirectX::XMVECTOR n = DirectX::XMVector3Cross(ab, bc);
-//		// 内積の結果がプラスならば裏向き
-//		DirectX::XMVECTOR dot = DirectX::XMVector3Dot(dir, n);
-//		float fdot;
-//		DirectX::XMStoreFloat(&fdot, dot);
-//		if (fdot >= 0) continue;
-//
-//		// 交点算出  
-//		//cp  あたった座標
-//		//cp = start(レイの開始座標) + dir(レイの向き) * t(スカラー)    tを求める
-//		//レイの開始位置から頂点aへのベクトルと法線を使って直角三角形を作る
-//		//そこから射影(d)を作り、d+法線でd'を作る
-//		//  [　　　|-----------------------|start
-//		//　|　 　d|射影                 / ↓     
-//		//  |　　　|-------------------/---↓dir ]
-//		//　|　　　↑|                /     |     |
-//		//　|　　　↑|              /       |     |
-//		//　|　　　↑|            /         |     |
-//		//d'{ 法線 ↑|         /            |      } t(比率)
-//		//　|　　　↑|       /              |     |
-//		//　|　　　↑|     /                |     |
-//		//　|　　　↑|  /                   |     |
-//		//　[　 　　|/_____________________|____]______c
-//		//     　　a　\                    |           |
-//		//       　　　　\                 |           |
-//		//          　　　　\              |           |
-//		//             　　　　\           cp          |
-//		//                　　　　\                    |
-//		//                   　　　　\                 | 
-//		//                      　　　　\              |
-//		//                         　　　　\           |
-//		//                            　　　　\        |
-//		//                               　　　　\     |
-//		//                                  　　　　\  |
-//		//                                    　　　　\|b
-//		//
-//		DirectX::XMVECTOR v0 = DirectX::XMVectorSubtract(a, start);
-//		DirectX::XMVECTOR t = DirectX::XMVectorDivide(DirectX::XMVector3Dot(n, v0), dot);
-//		float ft;
-//		DirectX::XMStoreFloat(&ft, t);
-//		if (ft < 0.0f || ft > neart) continue;
-//
-//		DirectX::XMVECTOR cp = DirectX::XMVectorAdd(DirectX::XMVectorMultiply(dir, t), start);
-//
-//		//  内点判定  
-//		DirectX::XMVECTOR v1 = DirectX::XMVectorSubtract(a, cp);
-//		DirectX::XMVECTOR temp1 = DirectX::XMVector3Cross(v1, ab);
-//		DirectX::XMVECTOR work1 = DirectX::XMVector3Dot(temp1, n);
-//		float fwork1;
-//		DirectX::XMStoreFloat(&fwork1, work1);
-//		if (fwork1 < 0.0f) continue;
-//
-//		DirectX::XMVECTOR v2 = DirectX::XMVectorSubtract(b, cp);
-//		DirectX::XMVECTOR temp2 = DirectX::XMVector3Cross(v2, bc);
-//		DirectX::XMVECTOR work2 = DirectX::XMVector3Dot(temp2, n);
-//		float fwork2;
-//		DirectX::XMStoreFloat(&fwork2, work2);
-//		if (fwork2 < 0.0f) continue;
-//
-//		DirectX::XMVECTOR v3 = DirectX::XMVectorSubtract(c, cp);
-//		DirectX::XMVECTOR temp3 = DirectX::XMVector3Cross(v3, ca);
-//		DirectX::XMVECTOR work3 = DirectX::XMVector3Dot(temp3, n);
-//		float fwork3;
-//		DirectX::XMStoreFloat(&fwork3, work3);
-//		if (fwork3 < 0.0f) continue;
-//
-//		// 情報保存 
-//		position = cp;
-//		normal = n;
-//		neart = ft;
-//		ret = it.MaterialIndex;
-//	}
-//	if (ret != -1) {
-//		DirectX::XMStoreFloat3(outPosition, position);
-//		DirectX::XMStoreFloat3(outNormal, normal);
-//	}
-//	//最も近いヒット位置までの距離  
-//	*outLength = neart;
-//	return ret;
-//}
-
-
 SkinnedMesh::SkinnedMesh(ID3D11Device* Device, const char* FBX_Filename,
 	bool Triangulate, float SamplingRate)
 {
-	/*30回目*/
 	//引数のFBX_Filenameの拡張子をcerealに変えて、そのファイルが存在している場合にはそっちのシリアライズされた方を
 	//ロードする、だけど存在しない場合にはfbxファイルのほうからロードするようにする
 	//だけど、シリアライズされたデータは元データのほうの変更を検知できないので、変更された場合はまた新しくデータを作り直す必要がある
@@ -256,11 +137,9 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* Device, const char* FBX_Filename,
 			}
 		};
 		Traverse(FBXScene->GetRootNode());
-		//18回目追加
 		FetchMeshes(FBXScene, Meshes);
-		//19回目追加
 		FetchMaterials(FBXScene, Materials);
-		//25回目追加 たぶんn秒ごとのフレームを切り取って描画してる？
+		//たぶんn秒ごとのフレームを切り取って描画してる？
 		//float SamplingRate = 1;
 		
 		FetchAnimation(FBXScene, AnimationClips, SamplingRate);
@@ -282,7 +161,6 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* Device, const char* FBX_Filename,
 		}
 #endif
 		FBXManager->Destroy();
-		/*30回目追加*/
 		//ofstream...OutputFilestream(出力用)
 		// ofstream Variable("ファイル名にしたい奴","開くときのモード")
 		//第一引数に入れた文字列がファイル名になる(この場合だとCerealFilename.c_str())
@@ -291,13 +169,12 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* Device, const char* FBX_Filename,
 		cereal::BinaryOutputArchive serialization(OFS);
 		serialization(SceneView, Meshes, Materials, AnimationClips);
 	}
-	//18回目追加
 	CreateComObject(Device, FBX_Filename);
 }
 
+//アニメーション付き用
 SkinnedMesh::SkinnedMesh(ID3D11Device* Device, const char* FBX_Filename, std::vector<std::string>& AnimationFilename, bool Triangulate, float SamplingRate)
 {
-	/*30回目*/
 	//引数のFBX_Filenameの拡張子をcerealに変えて、そのファイルが存在している場合にはそっちのシリアライズされた方を
 	//ロードする、だけど存在しない場合にはfbxファイルのほうからロードするようにする
 	//だけど、シリアライズされたデータは元データのほうの変更を検知できないので、変更された場合はまた新しくデータを作り直す必要がある
@@ -371,11 +248,9 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* Device, const char* FBX_Filename, std::ve
 			}
 		};
 		Traverse(FBXScene->GetRootNode());
-		//18回目追加
 		FetchMeshes(FBXScene, Meshes);
-		//19回目追加
 		FetchMaterials(FBXScene, Materials);
-		//25回目追加 たぶんn秒ごとのフレームを切り取って描画してる？
+		//たぶんn秒ごとのフレームを切り取って描画してる？
 		//float SamplingRate = 1;
 
 		for (const std::string AnimationFilename : AnimationFilename)
@@ -401,7 +276,6 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* Device, const char* FBX_Filename, std::ve
 		}
 #endif
 		FBXManager->Destroy();
-		/*30回目追加*/
 		//ofstream...OutputFilestream(出力用)
 		// ofstream Variable("ファイル名にしたい奴","開くときのモード")
 		//第一引数に入れた文字列がファイル名になる(この場合だとCerealFilename.c_str())
@@ -410,7 +284,6 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* Device, const char* FBX_Filename, std::ve
 		cereal::BinaryOutputArchive serialization(OFS);
 		serialization(SceneView, Meshes, Materials, AnimationClips);
 	}
-	//18回目追加
 	CreateComObject(Device, FBX_Filename);
 }
 
@@ -436,13 +309,11 @@ void SkinnedMesh::FetchMeshes(FbxScene* FBXScene,
 			ms.NodeIndex = SceneView.IndexOf(ms.UniqueID);
 
 			Face f;
-			//22回目
 			vector<BoneInfluencePerControlPoint> BoneInfluence;
 			FetchBoneInfluence(FBXMesh, BoneInfluence);
-			//24回目
 			FetchSkeleton(FBXMesh, ms.BindPose);
 
-			//20回目(複数メッシュの対応)
+			//複数メッシュの対応
 			vector<Mesh::Subset>& Subsets = ms.Subsets;
 			const int MaterialCount = FBXMesh->GetNode()->GetMaterialCount();
 			f.MaterialIndex = MaterialCount;
@@ -493,7 +364,6 @@ void SkinnedMesh::FetchMeshes(FbxScene* FBXScene,
 
 			for (int PolygonIndex = 0; PolygonIndex < PolygonCount; ++PolygonIndex)
 			{
-				//20回目追加
 				const int MaterialIndex = MaterialCount > 0 ?
 					FBXMesh->GetElementMaterial()->GetIndexArray().GetAt(PolygonIndex) : 0;
 				Mesh::Subset& sb = Subsets.at(MaterialIndex);
@@ -520,8 +390,6 @@ void SkinnedMesh::FetchMeshes(FbxScene* FBXScene,
 						XMVECTOR GlobalPosition = DirectX::XMVector3TransformCoord(LocalPosition, MeshTranceform);
 						DirectX::XMStoreFloat3(&f.Position[PositionInPolygon], GlobalPosition);
 
-
-						//22回目(ボーン情報の追加)
 						const BoneInfluencePerControlPoint& InfluencesPerControlPoint = BoneInfluence.at(PolygonVertex);
 						//int Loopcount;
 						for (size_t InfluencesIndex = 0; InfluencesIndex < InfluencesPerControlPoint.size(); ++InfluencesIndex)
@@ -560,7 +428,6 @@ void SkinnedMesh::FetchMeshes(FbxScene* FBXScene,
 						//一回できたらここ直してみたらどうだろう
 					}
 
-					//29回目
 					//法線情報の取得
 					/*
 					* GenerateTangentsData
@@ -582,12 +449,10 @@ void SkinnedMesh::FetchMeshes(FbxScene* FBXScene,
 					int test = ms.Vertices.capacity();
 
 					ms.Vertices.at(VertexIndex) = move(vertex);
-					//ms.Indices.at(VertexIndex) = VertexIndex;
-					//20回目追加
 					ms.Indices.at(static_cast<size_t>(Offset) + PositionInPolygon) = VertexIndex;
 					sb.IndexCount++;
 				}
-				//21回目
+
 				//これは、モデルの位置姿勢スケール情報をとってそれ自体の行列(姿勢行列？)
 				//を変数にぶちこんでる
 				//こうしないと複数メッシュのモデルの時全部同じ位置(原点)に出てしまって変になってしまうから
@@ -636,7 +501,6 @@ void SkinnedMesh::FetchMaterials(FbxScene* FBXScene,
 			//マテリアル自体の情報を取得
 			const FbxSurfaceMaterial* FBXMaterial = FBXNode->GetMaterial(MaterialIndex);
 
-			//29回目
 			//ただここに追加するかはわからない
 			const FbxSurfaceMaterial* FBXSurfaceMaterial = FBXNode->GetMaterial(MaterialIndex);
 
@@ -710,7 +574,7 @@ void SkinnedMesh::FetchMaterials(FbxScene* FBXScene,
 		}
 	}
 }
-//24回目
+
 void SkinnedMesh::FetchSkeleton(FbxMesh* FBXMesh, Skeleton& BindPose)
 {
 	const int DeformerCount = FBXMesh->GetDeformerCount(FbxDeformer::eSkin);
@@ -785,8 +649,6 @@ void SkinnedMesh::FetchSkeleton(FbxMesh* FBXMesh, Skeleton& BindPose)
 	}
 }
 
-
-//25回目
 void SkinnedMesh::FetchAnimation(FbxScene* FBXScene, vector<Animation>& AnimationClips, float SamplingRate)
 {
 	//アニメーションを格納する配列
@@ -846,7 +708,6 @@ void SkinnedMesh::FetchAnimation(FbxScene* FBXScene, vector<Animation>& Animatio
 					Nd.GlobalTransform =
 						FBXMatToDirMat4x4(FBXNode->EvaluateGlobalTransform(Time));
 
-					//27回目
 					/*
 					* LocalTransform
 					* 親のローカル座標を基準にした、ノードの変換行列
@@ -1006,14 +867,6 @@ void SkinnedMesh::CreateComObject(ID3D11Device* Device,
 		//22回目追加
 		{ "WEIGHTS",	0,	DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{ "BONES",		0,	DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-
-		//{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		//{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		//// UNIT.17
-		//{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		//// UNIT.20
-		//{ "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		//{ "BONES", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	create_vs_from_cso(Device, "Shaders/Phong_vs.cso", VertexShader.GetAddressOf(), InputLayout.GetAddressOf(), InputElementDesc, ARRAYSIZE(InputElementDesc));
@@ -1026,38 +879,6 @@ void SkinnedMesh::CreateComObject(ID3D11Device* Device,
 	//FBXに元々あるやつをあてがってるからかわからないけど何とも言えない…なので頑張ってくださいね
 
 #if 1
-	//D3D11_RASTERIZER_DESC rasterizerDesc = {};
-	//rasterizerDesc.FillMode = D3D11_FILL_SOLID; //D3D11_FILL_WIREFRAME, D3D11_FILL_SOLID
-	//rasterizerDesc.CullMode = D3D11_CULL_BACK; //D3D11_CULL_NONE, D3D11_CULL_FRONT, D3D11_CULL_BACK   
-	//rasterizerDesc.FrontCounterClockwise = FALSE;
-	//rasterizerDesc.DepthBias = 0;
-	//rasterizerDesc.DepthBiasClamp = 0;
-	//rasterizerDesc.SlopeScaledDepthBias = 0;
-	//rasterizerDesc.DepthClipEnable = TRUE;
-	//rasterizerDesc.ScissorEnable = FALSE;
-	//rasterizerDesc.MultisampleEnable = FALSE;
-	//rasterizerDesc.AntialiasedLineEnable = FALSE;
-	//hr = Device->CreateRasterizerState(&rasterizerDesc, rasterizerStates[0].GetAddressOf());
-	//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	//D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-	//depthStencilDesc.DepthEnable = TRUE;
-	//depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	//depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-	//depthStencilDesc.StencilEnable = FALSE;
-	//depthStencilDesc.StencilReadMask = 0xFF;
-	//depthStencilDesc.StencilWriteMask = 0xFF;
-	//depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	//depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	//depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	//depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-	//depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	//depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	//depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	//depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-	//hr = Device->CreateDepthStencilState(&depthStencilDesc, depthStencilState.GetAddressOf());
-	//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
 
 #endif
 
@@ -1065,7 +886,6 @@ void SkinnedMesh::CreateComObject(ID3D11Device* Device,
 	for (unordered_map<uint64_t, Material>::iterator itr = Materials.begin();
 		itr != Materials.end(); ++itr)
 	{
-		//29回目
 		for (size_t TextureIndex = 0; TextureIndex < 2; ++TextureIndex)
 		{
 			//ここからちょっと出てくるsecondはmapに保存されてる実際の値をとってる
@@ -1104,360 +924,11 @@ void SkinnedMesh::CreateComObject(ID3D11Device* Device,
 	}
 }
 
-//void SkinnedMesh::Render(ID3D11DeviceContext* DeviceContext,
-//	const XMFLOAT4X4& World, const XMFLOAT4& MaterialColor,
-//	const Animation::KeyFrame* KeyFlame)
-//{
-//	for (const Mesh& ms : Meshes)
-//	{
-//		uint32_t Stride = sizeof(Vertex);
-//		uint32_t Offset = 0;
-//		DeviceContext->IASetVertexBuffers(0, 1, ms.VertexBuffer.GetAddressOf(),
-//			&Stride, &Offset);
-//		DeviceContext->IASetIndexBuffer(ms.IndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-//		DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//		DeviceContext->IASetInputLayout(InputLayout.Get());
-//
-//		DeviceContext->VSSetShader(VertexShader.Get(), nullptr, 0);
-//		DeviceContext->PSSetShader(PixelShader.Get(), nullptr, 0);
-//
-//		/*test*/
-//		//DeviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
-//		//DeviceContext->RSSetState(rasterizerStates[0].Get());
-//
-//		Constant Data;
-//		if (KeyFlame && KeyFlame->Nodes.size() > 0)
-//		{
-//			const Animation::KeyFrame::Node& msnd = KeyFlame->Nodes.at(ms.NodeIndex);
-//
-//			XMStoreFloat4x4(&Data.World,
-//				XMLoadFloat4x4(&msnd.GlobalTransform) * XMLoadFloat4x4(&World));
-//			const size_t BoneCount = ms.BindPose.Bones.size();
-//			_ASSERT_EXPR((BoneCount < MAXBONES),
-//				L"The value of the 'bone_count' has exceeded MAX_BONES.");
-//			//↑今のボーンの数がボーンの最大値を超えたよっていうエラー
-//
-//			for (int BoneIndex = 0; BoneIndex < BoneCount; ++BoneIndex)
-//			{
-//				const Skeleton::Bone& bn = ms.BindPose.Bones.at(BoneIndex);
-//				const Animation::KeyFrame::Node& BoneNode = KeyFlame->Nodes.at(bn.NodeIndex);
-//				XMStoreFloat4x4(&Data.BoneTransform[BoneIndex],
-//					XMLoadFloat4x4(&bn.OffsetTransform) *
-//					XMLoadFloat4x4(&BoneNode.GlobalTransform) *
-//					XMMatrixInverse(nullptr, XMLoadFloat4x4(&ms.DefaultGlobalTransform)));
-//			}
-//		}
-//		else
-//		{
-//			XMStoreFloat4x4(&Data.World,
-//				XMLoadFloat4x4(&ms.DefaultGlobalTransform) * XMLoadFloat4x4(&World));
-//			for (size_t BoneIndex = 0; BoneIndex < MAXBONES; ++BoneIndex)
-//			{
-//				Data.BoneTransform[BoneIndex] =
-//				{
-//					1.0f,.0f,.0f,.0f,
-//					.0f,1.0f,.0f,.0f,
-//					.0f,.0f,1.0f,.0f,
-//					.0f,.0f,.0f,1.0f
-//				};
-//			}
-//		}
-//
-//		//Data.World = World;
-//		//21回目
-//		//XMStoreFloat4x4(&Data.World,
-//		//	XMLoadFloat4x4(&ms.DefaultGlobalTransform) * XMLoadFloat4x4(&World));
-//		//26回目  なんかData自体の行列変わってないな？ KeyFlameが変な値は言ってる？
-//		//const Animation::KeyFrame::Node& msnd = KeyFlame->Nodes.at(ms.NodeIndex);
-//		//XMStoreFloat4x4(&Data.World,
-//		//	XMLoadFloat4x4(&msnd.GlobalTransform) * XMLoadFloat4x4(&World));
-//		/*
-//		* なんで変えたかっていうと、ロードしてるオブジェクトのアニメーションで座標や姿勢(行列)が変わってるので、
-//		* オブジェクトが持ってるキーフレームから行列を取得しないと、アニメーションしてるように見えないため
-//
-//		*やってることは取得したGlobalTransform行列を定数バッファのワールド変換行列に合成してる
-//		*/
-//
-//
-//		//const size_t BoneCount = ms.BindPose.Bones.size();
-//		//for (int BoneIndex = 0; BoneIndex < BoneCount; ++BoneIndex)
-//		//{
-//		//	const Skeleton::Bone& bn = ms.BindPose.Bones.at(BoneIndex);
-//		//	const Animation::KeyFrame::Node& BoneNode = KeyFlame->Nodes.at(bn.NodeIndex);
-//		//	XMStoreFloat4x4(&Data.BoneTransform[BoneIndex],
-//		//		XMLoadFloat4x4(&bn.OffsetTransform) *
-//		//		XMLoadFloat4x4(&BoneNode.GlobalTransform) *
-//		//		XMMatrixInverse(nullptr, XMLoadFloat4x4(&ms.DefaultGlobalTransform)));
-//		//}
-//#if 0
-//		//23回目
-//		XMStoreFloat4x4(&Data.BoneTransform[0], XMMatrixIdentity());
-//		//45度分のねじれをここでボーンの[n]番目に与えてる
-//		XMStoreFloat4x4(&Data.BoneTransform[1],
-//			XMMatrixRotationRollPitchYaw(.0f, .0f, XMConvertToRadians(+45)));
-//		XMStoreFloat4x4(&Data.BoneTransform[2],
-//			XMMatrixRotationRollPitchYaw(.0f, .0f, XMConvertToRadians(-45)));
-//
-//		/*
-//		* バインドポーズトランスフォーム(BindPoseTransform)
-//		* モデル空間からワールド空間への返還
-//		*/
-//		XMMATRIX B[3];//BoneのB?
-//		B[0] = XMLoadFloat4x4(&ms.BindPose.Bones.at(0).OffsetTransform);
-//		B[1] = XMLoadFloat4x4(&ms.BindPose.Bones.at(1).OffsetTransform);
-//		B[2] = XMLoadFloat4x4(&ms.BindPose.Bones.at(2).OffsetTransform);
-//
-//		/*
-//		* アニメーションボーントランスフォーム(AnimationBoneTransform)
-//		* ボーン空間から親ボーン空間への返還(親子付け云々のやつ？)
-//		*/
-//		XMMATRIX A[3];
-//		//まず、A0の空間からモデルの空間へ変換
-//		A[0] = XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f);
-//		//次にA1の空間からA0の空間へ変換(A0が親)
-//		A[1] = XMMatrixRotationRollPitchYaw(0, 0,
-//			XMConvertToRadians(45)) * XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-//		//最後にA2の空間からA1の空間
-//		A[2] = XMMatrixRotationRollPitchYaw(0, 0,
-//			XMConvertToRadians(-45)) * XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-//
-//		//親子付けというかねじれた部分(Animation)の影響をその子ボーンに与えないといけないから
-//		//親の行列を掛けてる
-//		XMStoreFloat4x4(&Data.BoneTransform[0], B[0] * A[0]);
-//		XMStoreFloat4x4(&Data.BoneTransform[1], B[1] * A[1] * A[0]);
-//		XMStoreFloat4x4(&Data.BoneTransform[2], B[1] * A[2] * A[1] * A[0]);
-//#endif 
-//
-//		//テクスチャ関連はこっち側
-//		Data.MaterialColor = MaterialColor;
-//
-//		//20回目追加分(subset分の描画を追加)
-//		for (const Mesh::Subset& sb : ms.Subsets)
-//		{
-//			if (sb.Materrial_UniqueID != 0)
-//			{
-//				const Material& mt = Materials.at(sb.Materrial_UniqueID);
-//				if (Materials.size() > 0)
-//				{
-//					//19回目追加
-//					//テクスチャ無しでマテリアルのみで着色してたらこれを描かないと色が反映されないから
-//					//XMStoreFloat4(&Data.MaterialColor,
-//					//	XMLoadFloat4(&MaterialColor) * XMLoadFloat4(&Materials.cbegin()->second.Kd));
-//					XMStoreFloat4(&Data.MaterialColor,
-//						XMLoadFloat4(&MaterialColor) * XMLoadFloat4(&mt.Kd));
-//
-//					//19回目追加
-//					//DeviceContext->PSSetShaderResources(0, 1,
-//					//	Materials.cbegin()->second.ShaderResourceView[0].GetAddressOf());
-//					DeviceContext->PSSetShaderResources(0, 1,
-//						mt.ShaderResourceView[0].GetAddressOf());
-//				}
-//			}
-//			else
-//			{
-//				//ここでダミーを設定したい
-//				DeviceContext->PSSetShaderResources(0, 1,
-//					Dummy.GetAddressOf());
-//
-//			}
-//			DeviceContext->UpdateSubresource(Constantbuffer.Get(), 0, 0, &Data, 0, 0);
-//			DeviceContext->VSSetConstantBuffers(0, 1, Constantbuffer.GetAddressOf());
-//
-//			D3D11_BUFFER_DESC BufferDesc;
-//			ms.IndexBuffer->GetDesc(&BufferDesc);
-//			//DeviceContext->DrawIndexed(BufferDesc.ByteWidth / sizeof(uint32_t), 0, 0);
-//			DeviceContext->DrawIndexed(sb.IndexCount, sb.StartIndexLocation, 0);
-//		}
-//	}
-//}
-
-//void SkinnedMesh::Render(ID3D11DeviceContext* DeviceContext,
-//	const XMFLOAT4X4& WorldViewProjection,
-//	const XMFLOAT4& lightdirection,
-//	const XMFLOAT4& MaterialColor,
-//	const Animation::KeyFrame* KeyFlame)
-//{
-//	for (const Mesh& ms : Meshes)
-//	{
-//		uint32_t Stride = sizeof(Vertex);
-//		uint32_t Offset = 0;
-//		DeviceContext->IASetVertexBuffers(0, 1, ms.VertexBuffer.GetAddressOf(),
-//			&Stride, &Offset);
-//		DeviceContext->IASetIndexBuffer(ms.IndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-//		DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//		DeviceContext->IASetInputLayout(InputLayout.Get());
-//
-//		DeviceContext->VSSetShader(VertexShader.Get(), nullptr, 0);
-//		DeviceContext->PSSetShader(PixelShader.Get(), nullptr, 0);
-//
-//		/*test*/
-//		//DeviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
-//		//DeviceContext->RSSetState(rasterizerStates[0].Get());
-//		//アニメーションの数分まわしてる
-//		static int i = 0;
-//		if (i >= 70)
-//		{
-//			i = 0;
-//		}
-//			Constant Data;
-//		if (KeyFlame && KeyFlame->Nodes.size() > 0)
-//		{
-//			//const Animation::KeyFrame::Node& msnd = KeyFlame->Nodes.at(ms.NodeIndex);
-//			const Animation::KeyFrame::Node& msnd = KeyFlame->Nodes.at(i);
-//			i++;
-//			XMStoreFloat4x4(&Data.WorldViewProjection,
-//				XMLoadFloat4x4(&msnd.GlobalTransform) * XMLoadFloat4x4(&WorldViewProjection));
-//			/*XMStoreFloat4x4(&Data.World,
-//				XMLoadFloat4x4(&msnd.GlobalTransform) *  XMLoadFloat4x4(&World));*/
-//			const size_t BoneCount = ms.BindPose.Bones.size();
-//			_ASSERT_EXPR((BoneCount < MAXBONES),
-//				L"The value of the 'bone_count' has exceeded MAX_BONES.");
-//			//↑今のボーンの数がボーンの最大値を超えたよっていうエラー
-//
-//			for (int BoneIndex = 0; BoneIndex < BoneCount; ++BoneIndex)
-//			{
-//				const Skeleton::Bone& bn = ms.BindPose.Bones.at(BoneIndex);
-//				const Animation::KeyFrame::Node& BoneNode = KeyFlame->Nodes.at(bn.NodeIndex);
-//				XMStoreFloat4x4(&Data.BoneTransform[BoneIndex],
-//					XMLoadFloat4x4(&bn.OffsetTransform) *
-//					XMLoadFloat4x4(&BoneNode.GlobalTransform) *
-//					XMMatrixInverse(nullptr, XMLoadFloat4x4(&ms.DefaultGlobalTransform)));
-//			}
-//		}
-//		else
-//		{
-//			XMStoreFloat4x4(&Data.WorldViewProjection,
-//				XMLoadFloat4x4(&ms.DefaultGlobalTransform) * XMLoadFloat4x4(&WorldViewProjection));
-//			/*	XMStoreFloat4x4(&Data.World,
-//					XMLoadFloat4x4(&ms.DefaultGlobalTransform) * XMLoadFloat4x4(&World));*/
-//			for (size_t BoneIndex = 0; BoneIndex < MAXBONES; ++BoneIndex)
-//			{
-//				Data.BoneTransform[BoneIndex] =
-//				{
-//					1.0f,.0f,.0f,.0f,
-//					.0f,1.0f,.0f,.0f,
-//					.0f,.0f,1.0f,.0f,
-//					.0f,.0f,.0f,1.0f
-//				};
-//			}
-//		}
-//
-//		Data.LightDirection = lightdirection;
-//		//Data.World = World;
-//		//21回目
-//		//XMStoreFloat4x4(&Data.World,
-//		//	XMLoadFloat4x4(&ms.DefaultGlobalTransform) * XMLoadFloat4x4(&World));
-//		//26回目  なんかData自体の行列変わってないな？ KeyFlameが変な値は言ってる？
-//		//const Animation::KeyFrame::Node& msnd = KeyFlame->Nodes.at(ms.NodeIndex);
-//		//XMStoreFloat4x4(&Data.World,
-//		//	XMLoadFloat4x4(&msnd.GlobalTransform) * XMLoadFloat4x4(&World));
-//		/*
-//		* なんで変えたかっていうと、ロードしてるオブジェクトのアニメーションで座標や姿勢(行列)が変わってるので、
-//		* オブジェクトが持ってるキーフレームから行列を取得しないと、アニメーションしてるように見えないため
-//
-//		*やってることは取得したGlobalTransform行列を定数バッファのワールド変換行列に合成してる
-//		*/
-//
-//
-//		//const size_t BoneCount = ms.BindPose.Bones.size();
-//		//for (int BoneIndex = 0; BoneIndex < BoneCount; ++BoneIndex)
-//		//{
-//		//	const Skeleton::Bone& bn = ms.BindPose.Bones.at(BoneIndex);
-//		//	const Animation::KeyFrame::Node& BoneNode = KeyFlame->Nodes.at(bn.NodeIndex);
-//		//	XMStoreFloat4x4(&Data.BoneTransform[BoneIndex],
-//		//		XMLoadFloat4x4(&bn.OffsetTransform) *
-//		//		XMLoadFloat4x4(&BoneNode.GlobalTransform) *
-//		//		XMMatrixInverse(nullptr, XMLoadFloat4x4(&ms.DefaultGlobalTransform)));
-//		//}
-//#if 0
-//		//23回目
-//		XMStoreFloat4x4(&Data.BoneTransform[0], XMMatrixIdentity());
-//		//45度分のねじれをここでボーンの[n]番目に与えてる
-//		XMStoreFloat4x4(&Data.BoneTransform[1],
-//			XMMatrixRotationRollPitchYaw(.0f, .0f, XMConvertToRadians(+45)));
-//		XMStoreFloat4x4(&Data.BoneTransform[2],
-//			XMMatrixRotationRollPitchYaw(.0f, .0f, XMConvertToRadians(-45)));
-//
-//		/*
-//		* バインドポーズトランスフォーム(BindPoseTransform)
-//		* モデル空間からワールド空間への返還
-//		*/
-//		XMMATRIX B[3];//BoneのB?
-//		B[0] = XMLoadFloat4x4(&ms.BindPose.Bones.at(0).OffsetTransform);
-//		B[1] = XMLoadFloat4x4(&ms.BindPose.Bones.at(1).OffsetTransform);
-//		B[2] = XMLoadFloat4x4(&ms.BindPose.Bones.at(2).OffsetTransform);
-//
-//		/*
-//		* アニメーションボーントランスフォーム(AnimationBoneTransform)
-//		* ボーン空間から親ボーン空間への返還(親子付け云々のやつ？)
-//		*/
-//		XMMATRIX A[3];
-//		//まず、A0の空間からモデルの空間へ変換
-//		A[0] = XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f);
-//		//次にA1の空間からA0の空間へ変換(A0が親)
-//		A[1] = XMMatrixRotationRollPitchYaw(0, 0,
-//			XMConvertToRadians(45)) * XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-//		//最後にA2の空間からA1の空間
-//		A[2] = XMMatrixRotationRollPitchYaw(0, 0,
-//			XMConvertToRadians(-45)) * XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-//
-//		//親子付けというかねじれた部分(Animation)の影響をその子ボーンに与えないといけないから
-//		//親の行列を掛けてる
-//		XMStoreFloat4x4(&Data.BoneTransform[0], B[0] * A[0]);
-//		XMStoreFloat4x4(&Data.BoneTransform[1], B[1] * A[1] * A[0]);
-//		XMStoreFloat4x4(&Data.BoneTransform[2], B[1] * A[2] * A[1] * A[0]);
-//#endif 
-//
-//		//テクスチャ関連はこっち側
-//		Data.MaterialColor = MaterialColor;
-//
-//
-//		//20回目追加分(subset分の描画を追加)
-//		for (const Mesh::Subset& sb : ms.Subsets)
-//		{
-//			if (sb.Materrial_UniqueID != 0)
-//			{
-//				const Material& mt = Materials.at(sb.Materrial_UniqueID);
-//				if (Materials.size() > 0)
-//				{
-//					//19回目追加
-//					//テクスチャ無しでマテリアルのみで着色してたらこれを描かないと色が反映されないから
-//					//XMStoreFloat4(&Data.MaterialColor,
-//					//	XMLoadFloat4(&MaterialColor) * XMLoadFloat4(&Materials.cbegin()->second.Kd));
-//					XMStoreFloat4(&Data.MaterialColor,
-//						XMLoadFloat4(&MaterialColor) * XMLoadFloat4(&mt.Kd));
-//
-//					//19回目追加
-//					//DeviceContext->PSSetShaderResources(0, 1,
-//					//	Materials.cbegin()->second.ShaderResourceView[0].GetAddressOf());
-//					DeviceContext->PSSetShaderResources(0, 1,
-//						mt.ShaderResourceView[0].GetAddressOf());
-//				}
-//			}
-//			else
-//			{
-//				//ここでダミーを設定したい
-//				DeviceContext->PSSetShaderResources(0, 1,
-//					Dummy.GetAddressOf());
-//
-//			}
-//			DeviceContext->UpdateSubresource(Constantbuffer.Get(), 0, 0, &Data, 0, 0);
-//			DeviceContext->VSSetConstantBuffers(0, 1, Constantbuffer.GetAddressOf());
-//			DeviceContext->PSSetConstantBuffers(0, 1, Constantbuffer.GetAddressOf());
-//
-//			D3D11_BUFFER_DESC BufferDesc;
-//			ms.IndexBuffer->GetDesc(&BufferDesc);
-//			//DeviceContext->DrawIndexed(BufferDesc.ByteWidth / sizeof(uint32_t), 0, 0);
-//			DeviceContext->DrawIndexed(sb.IndexCount, sb.StartIndexLocation, 0);
-//		}
-//	}
-//}
-
 void SkinnedMesh::Render(ID3D11DeviceContext* DeviceContext,
 	const XMFLOAT4X4& WorldViewProjection,
 	const XMFLOAT4X4& World,
 	const XMFLOAT4& lightdirection, const XMFLOAT4& MaterialColor,
-	const Animation::KeyFrame* KeyFlame/*25回目追加*/)
+	const Animation::KeyFrame* KeyFlame)
 {
 	for (const Mesh& ms : Meshes)
 	{
@@ -1472,11 +943,8 @@ void SkinnedMesh::Render(ID3D11DeviceContext* DeviceContext,
 		DeviceContext->VSSetShader(VertexShader.Get(), nullptr, 0);
 		DeviceContext->PSSetShader(PixelShader.Get(), nullptr, 0);
 
-		/*test*/
-		//DeviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
-		//DeviceContext->RSSetState(rasterizerStates[0].Get());
+		
 		//アニメーションの数分まわしてる
-
 		Constant Data;
 		if (KeyFlame && KeyFlame->Nodes.size() > 0)
 		{
@@ -1520,76 +988,12 @@ void SkinnedMesh::Render(ID3D11DeviceContext* DeviceContext,
 		}
 
 		Data.LightDirection = lightdirection;
-		//Data.World = World;
-		//21回目
-		//XMStoreFloat4x4(&Data.World,
-		//	XMLoadFloat4x4(&ms.DefaultGlobalTransform) * XMLoadFloat4x4(&World));
-		//26回目  なんかData自体の行列変わってないな？ KeyFlameが変な値は言ってる？
-		//const Animation::KeyFrame::Node& msnd = KeyFlame->Nodes.at(ms.NodeIndex);
-		//XMStoreFloat4x4(&Data.World,
-		//	XMLoadFloat4x4(&msnd.GlobalTransform) * XMLoadFloat4x4(&World));
-		/*
-		* なんで変えたかっていうと、ロードしてるオブジェクトのアニメーションで座標や姿勢(行列)が変わってるので、
-		* オブジェクトが持ってるキーフレームから行列を取得しないと、アニメーションしてるように見えないため
-
-		*やってることは取得したGlobalTransform行列を定数バッファのワールド変換行列に合成してる
-		*/
-
-
-		//const size_t BoneCount = ms.BindPose.Bones.size();
-		//for (int BoneIndex = 0; BoneIndex < BoneCount; ++BoneIndex)
-		//{
-		//	const Skeleton::Bone& bn = ms.BindPose.Bones.at(BoneIndex);
-		//	const Animation::KeyFrame::Node& BoneNode = KeyFlame->Nodes.at(bn.NodeIndex);
-		//	XMStoreFloat4x4(&Data.BoneTransform[BoneIndex],
-		//		XMLoadFloat4x4(&bn.OffsetTransform) *
-		//		XMLoadFloat4x4(&BoneNode.GlobalTransform) *
-		//		XMMatrixInverse(nullptr, XMLoadFloat4x4(&ms.DefaultGlobalTransform)));
-		//}
-#if 0
-		//23回目
-		XMStoreFloat4x4(&Data.BoneTransform[0], XMMatrixIdentity());
-		//45度分のねじれをここでボーンの[n]番目に与えてる
-		XMStoreFloat4x4(&Data.BoneTransform[1],
-			XMMatrixRotationRollPitchYaw(.0f, .0f, XMConvertToRadians(+45)));
-		XMStoreFloat4x4(&Data.BoneTransform[2],
-			XMMatrixRotationRollPitchYaw(.0f, .0f, XMConvertToRadians(-45)));
-
-		/*
-		* バインドポーズトランスフォーム(BindPoseTransform)
-		* モデル空間からワールド空間への返還
-		*/
-		XMMATRIX B[3];//BoneのB?
-		B[0] = XMLoadFloat4x4(&ms.BindPose.Bones.at(0).OffsetTransform);
-		B[1] = XMLoadFloat4x4(&ms.BindPose.Bones.at(1).OffsetTransform);
-		B[2] = XMLoadFloat4x4(&ms.BindPose.Bones.at(2).OffsetTransform);
-
-		/*
-		* アニメーションボーントランスフォーム(AnimationBoneTransform)
-		* ボーン空間から親ボーン空間への返還(親子付け云々のやつ？)
-		*/
-		XMMATRIX A[3];
-		//まず、A0の空間からモデルの空間へ変換
-		A[0] = XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f);
-		//次にA1の空間からA0の空間へ変換(A0が親)
-		A[1] = XMMatrixRotationRollPitchYaw(0, 0,
-			XMConvertToRadians(45)) * XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-		//最後にA2の空間からA1の空間
-		A[2] = XMMatrixRotationRollPitchYaw(0, 0,
-			XMConvertToRadians(-45)) * XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-
-		//親子付けというかねじれた部分(Animation)の影響をその子ボーンに与えないといけないから
-		//親の行列を掛けてる
-		XMStoreFloat4x4(&Data.BoneTransform[0], B[0] * A[0]);
-		XMStoreFloat4x4(&Data.BoneTransform[1], B[1] * A[1] * A[0]);
-		XMStoreFloat4x4(&Data.BoneTransform[2], B[1] * A[2] * A[1] * A[0]);
-#endif 
 
 		//テクスチャ関連はこっち側
 		Data.MaterialColor = MaterialColor;
 
 
-		//20回目追加分(subset分の描画を追加)
+		//subset分の描画を追加
 		for (const Mesh::Subset& sb : ms.Subsets)
 		{
 			if (sb.Materrial_UniqueID != 0)
@@ -1597,16 +1001,10 @@ void SkinnedMesh::Render(ID3D11DeviceContext* DeviceContext,
 				const Material& mt = Materials.at(sb.Materrial_UniqueID);
 				if (Materials.size() > 0)
 				{
-					//19回目追加
 					//テクスチャ無しでマテリアルのみで着色してたらこれを描かないと色が反映されないから
-					//XMStoreFloat4(&Data.MaterialColor,
-					//	XMLoadFloat4(&MaterialColor) * XMLoadFloat4(&Materials.cbegin()->second.Kd));
 					XMStoreFloat4(&Data.MaterialColor,
 						XMLoadFloat4(&MaterialColor) * XMLoadFloat4(&mt.Kd));
 
-					//19回目追加
-					//DeviceContext->PSSetShaderResources(0, 1,
-					//	Materials.cbegin()->second.ShaderResourceView[0].GetAddressOf());
 					DeviceContext->PSSetShaderResources(0, 1,
 						mt.ShaderResourceView[0].GetAddressOf());
 				}
@@ -1624,7 +1022,6 @@ void SkinnedMesh::Render(ID3D11DeviceContext* DeviceContext,
 
 			D3D11_BUFFER_DESC BufferDesc;
 			ms.IndexBuffer->GetDesc(&BufferDesc);
-			//DeviceContext->DrawIndexed(BufferDesc.ByteWidth / sizeof(uint32_t), 0, 0);
 			DeviceContext->DrawIndexed(sb.IndexCount, sb.StartIndexLocation, 0);
 		}
 	}

@@ -26,12 +26,8 @@ void SkinnedObject::Update(float elapsedTime)
 		DirectX::XMMATRIX C = XMLoadFloat4x4(&CoordinateSystemTransform);
 
 	DirectX::XMStoreFloat4x4(&world, s * r * t);
-	//DirectX::XMStoreFloat4x4(&world,  s * r * t);
 
-	//if (Player::Instance().GetDebugFlg())
-	{
-		if (mesh->AnimationClips.size() > 0)Animate(elapsedTime);
-	}
+	if (mesh->AnimationClips.size() > 0)Animate(elapsedTime);
 }
 
 void SkinnedObject::Animate(float elapsedTime)
@@ -104,8 +100,6 @@ void SkinnedObject::Render(
 
 	// 描画
 	mesh->Render(immediateContext, worldViewProjection, world, light, materialColor, keyframe);
-
-	//mesh->render(immediateContext, worldViewProjection, world, light, materialColor, wireframe, current_time, current_animation);
 }
 
 
@@ -125,10 +119,6 @@ void SkinnedObject::Render(
 
 	DirectX::XMFLOAT4X4 worldViewProjection;
 	DirectX::XMStoreFloat4x4(&worldViewProjection, wvp);
-
-	// 描画
-	//mesh->Render(immediateContext, worldViewProjection, world, light, materialColor,nullptr);
-
 
 	if (mesh->AnimationClips.size() > 0)
 	{
@@ -154,39 +144,4 @@ void SkinnedObject::SetMotion(int NextMotion, int TargetFrame, float Interval)
 
 
 
-//int SkinnedObject::RayPick(
-//	const DirectX::XMFLOAT3& startPosition,
-//	const DirectX::XMFLOAT3& endPosition,
-//	DirectX::XMFLOAT3* outPosition,
-//	DirectX::XMFLOAT3* outNormal)
-//{
-//	DirectX::XMMATRIX worldTransform = DirectX::XMLoadFloat4x4(&world);
-//	DirectX::XMMATRIX inverseTransform = DirectX::XMMatrixInverse(nullptr, worldTransform);
-//
-//	// オブジェクト空間でのレイに変換
-//	DirectX::XMVECTOR worldStart = DirectX::XMLoadFloat3(&startPosition);
-//	DirectX::XMVECTOR worldEnd = DirectX::XMLoadFloat3(&endPosition);
-//	DirectX::XMVECTOR localStart = DirectX::XMVector3TransformCoord(worldStart, inverseTransform);
-//	DirectX::XMVECTOR localEnd = DirectX::XMVector3TransformCoord(worldEnd, inverseTransform);
-//
-//	// レイピック
-//	float outDistance;
-//	DirectX::XMFLOAT3 start, end;
-//	DirectX::XMStoreFloat3(&start, localStart);
-//	DirectX::XMStoreFloat3(&end, localEnd);
-//
-//	int ret = Stage::Instance().RayCast(start, end, outPosition, outNormal, &outDistance);
-//	if (ret != -1)
-//	{
-//		// オブジェクト空間からワールド空間へ変換
-//		DirectX::XMVECTOR localPosition = DirectX::XMLoadFloat3(outPosition);
-//		DirectX::XMVECTOR localNormal = DirectX::XMLoadFloat3(outNormal);
-//		DirectX::XMVECTOR worldPosition = DirectX::XMVector3TransformCoord(localPosition, worldTransform);
-//		DirectX::XMVECTOR worldNormal = DirectX::XMVector3TransformNormal(localNormal, worldTransform);
-//
-//		DirectX::XMStoreFloat3(outPosition, worldPosition);
-//		DirectX::XMStoreFloat3(outNormal, worldNormal);
-//	}
-//
-//	return ret;
-//}
+
