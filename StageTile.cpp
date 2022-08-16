@@ -8,35 +8,35 @@
 //コンストラクタ
 StageTile::StageTile()
 {
-	//ファイル読み取り
-	std::string Filename = "Text/stage.txt";
-	std::ifstream ReadingFile(Filename, std::ios::in);
-	for (int i = 0; i < 6; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			for (int k = 0; k < 9; k++)
-			{
-				ReadingFile >> StageTileMapTxt[i][j][k];
-				StageTileMap[i][j][k] = StageTileMapTxt[i][j][k];
-			}
-		}
-	}
+	////ファイル読み取り
+	//std::string Filename = "Text/stage.txt";
+	//std::ifstream ReadingFile(Filename, std::ios::in);
+	//for (int i = 0; i < 6; i++)
+	//{
+	//	for (int j = 0; j < 10; j++)
+	//	{
+	//		for (int k = 0; k < 9; k++)
+	//		{
+	//			ReadingFile >> StageTileMapTxt[i][j][k];
+	//			StageTileMap[i][j][k] = StageTileMapTxt[i][j][k];
+	//		}
+	//	}
+	//}
 
-	//ファイル書き込み
-	Filename = "Text/stage.txt";
-	std::ofstream WritingFile;
-	WritingFile.open(Filename, std::ios::out);
-	for (int i = 0; i < 6; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			for (int k = 0; k < 9; k++)
-			{
-				WritingFile << StageTileMap[i][j][k]<< endl;
-			}
-		}
-	}
+	////ファイル書き込み
+	//Filename = "Text/stage.txt";
+	//std::ofstream WritingFile;
+	//WritingFile.open(Filename, std::ios::out);
+	//for (int i = 0; i < 6; i++)
+	//{
+	//	for (int j = 0; j < 10; j++)
+	//	{
+	//		for (int k = 0; k < 9; k++)
+	//		{
+	//			WritingFile << StageTileMap[i][j][k]<< endl;
+	//		}
+	//	}
+	//}
 
 	////ファイル読み取り
 	///*std::string line;
@@ -98,7 +98,7 @@ StageTile::~StageTile()
 // 更新処理
 void StageTile::Update(float elapsedTime)
 {
-	if (ColorNum == RED || ColorNum == GREEN || ColorNum == BLUE)
+	if (ColorNum == RED || ColorNum == GREEN || ColorNum == BLUE || ColorNum == YELLOW || ColorNum == LIGHTBLUE || ColorNum == PURPLE)
 	{
 		stageTileObj = std::make_unique<SkinnedObject>(gimmickTileMesh);
 		stageTileObj->SetScale(DirectX::XMFLOAT3(1.6f, 0.1f, 1.6f));

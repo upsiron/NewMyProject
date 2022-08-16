@@ -180,7 +180,7 @@ void Character::UpdateHorizontalVelocity(float elapsedFrame)
 			// 移動ベクトルによる加速処理
 			//velocity.x += moveVecX * acceleration;
 			velocity.x += moveVecX;
-			//velocity.z += moveVecZ * acceleration;
+			velocity.z += moveVecZ * acceleration;
 
 			// 最大速度制限
 			float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
@@ -232,24 +232,57 @@ bool Character::FloorCheck()
 			stageTile->tileRightBottom,
 			playerObj->GetPosition()))
 		{
-			//プレイヤーが乗っている床のいろが赤なら赤のフラグture
-			if (stageTile->GetTileColor() == 8)
-			{
-				Player::Instance().gimmickSE->Play(false); RedGimmickFlg = true;
-			}
-			else RedGimmickFlg = false;
-
-			//プレイヤーが乗っている床のいろが緑なら緑のフラグture
-			if (stageTile->GetTileColor() == 9)
+			//赤//
+			//プレイヤーが乗っている床の色が赤なら赤のフラグture
+			if (stageTile->GetTileColor() == stageTile->RED)
 			{
 				Player::Instance().gimmickSE->Play(false);
-				GreenGimmickFlg = true;
+				Player::Instance().RedGimmickFlg = true;
+			}
+			else Player::Instance().RedGimmickFlg = false;
+
+			//青//
+			//プレイヤーが乗っている床の色が青なら青のフラグture
+			if (stageTile->GetTileColor() == stageTile->BLUE)
+			{
+				Player::Instance().gimmickSE->Play(false); 
+				Player::Instance().BlueGimmickFlg = true;
+			}
+			else Player::Instance().BlueGimmickFlg = false;
+
+			//緑//
+			//プレイヤーが乗っている床の色が緑なら緑のフラグture
+			if (stageTile->GetTileColor() == stageTile->GREEN)
+			{
+				Player::Instance().gimmickSE->Play(false);
+				Player::Instance().GreenGimmickFlg = true;
 			}
 			//色がないなら各フラグfalse
-			else GreenGimmickFlg = false;
+			else Player::Instance().GreenGimmickFlg = false;
 
-			//プレイヤーが乗っている床のいろが青なら青のフラグture
-			if (stageTile->GetTileColor() == 10)
+			//黄//
+			//プレイヤーが乗っている床の色が黄なら黄のフラグture
+			if (stageTile->GetTileColor() == stageTile->YELLOW)
+			{
+				Player::Instance().gimmickSE->Play(false);
+				Player::Instance().YellowGimmickFlg = true;
+			}
+			//色がないなら各フラグfalse
+			else Player::Instance().YellowGimmickFlg = false;
+
+			//紫//
+			//プレイヤーが乗っている床の色が紫なら紫のフラグture
+			if (stageTile->GetTileColor() == stageTile->PURPLE)
+			{
+				Player::Instance().gimmickSE->Play(false);
+				Player::Instance().PurpleGimmickFlg = true;
+			}
+			//色がないなら各フラグfalse
+			else Player::Instance().PurpleGimmickFlg = false;
+
+			//水色//
+			//プレイヤーが乗っている床の色が水色なら水色のフラグture
+			if (stageTile->GetTileColor() == stageTile->LIGHTBLUE)
 			{
 				Player::Instance().gimmickSE->Play(false);
 				flgCount = oldFlgCount + 1;
@@ -259,10 +292,10 @@ bool Character::FloorCheck()
 					flgCount++;
 					break;
 				case 1:
-					BlueGimmickFlg = true;
+					Player::Instance().LightBlueGimmickFlg = true;
 					break;
 				case 2:
-					BlueGimmickFlg = false;
+					Player::Instance().LightBlueGimmickFlg = false;
 					flgCount = 0;
 					break;
 				}

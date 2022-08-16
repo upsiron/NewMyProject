@@ -121,6 +121,7 @@ protected:
 	int     flgCount = 0;
 	int     oldFlgCount = 0;
 
+
 private:
 
 	// ‚’¼‘¬—Íˆ—XV
