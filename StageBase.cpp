@@ -12,7 +12,7 @@ StageBase::StageBase()
 	stageBaseObj->SetPosition(DirectX::XMFLOAT3(0.0f, -1.5f, 0.0f));
 	stageBaseObj->SetScale(DirectX::XMFLOAT3(5.0f, 0.1f, 5.0f));
 	stageBaseObj->SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	stageRandWidth = 3;
+	stageRandWidth = 6;
 }
 
 StageBase::~StageBase()
