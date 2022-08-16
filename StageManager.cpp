@@ -16,12 +16,15 @@ void StageManager::Update(float elapsedTime)
 				Player::Instance().speedUpSE->Play(false);
 				Player::Instance().PlayerSpeedUp(0.05f);
 				Player::Instance().speedLevelCount = 1;
+				Player::Instance().SetPlayerColor({ 1.0f,1.0f,1.0f,1.0f });
 			}
 			if (Player::Instance().GetPosition().z >= 1000.0f && Player::Instance().GetPosition().z <= 1001.0f)
 			{
 				Player::Instance().speedUpSE->Play(false);
 				Player::Instance().PlayerSpeedUp(0.05f);
 				Player::Instance().speedLevelCount = 2;
+				Player::Instance().SetPlayerColor({ 2.0f,2.0f,2.0f,1.0f });
+				meterCount = 1;
 			}
 			if (Player::Instance().GetPosition().z >= 1500.0f && Player::Instance().GetPosition().z <= 1501.0f)
 			{
@@ -29,13 +32,18 @@ void StageManager::Update(float elapsedTime)
 				Player::Instance().PlayerSpeedUp(0.05f);
 				Player::Instance().speedLevelCount = 3;
 			}
-
-			//ステーぞレベルアップ処理
-			if (Player::Instance().GetPosition().z >= 1500.0f && Player::Instance().GetPosition().z <= 1501.0f)
+			if (Player::Instance().GetPosition().z >= 2000.0f && Player::Instance().GetPosition().z <= 2001.0f)
 			{
-				//Player::Instance().PlayerSpeedUp(0.1f);
-				stages.at(0)->stageRandWidth = 6;
+				meterCount = 2; 
+				stages.at(0)->stageRandWidth = 8;
 			}
+			if (Player::Instance().GetPosition().z >= 3000.0f && Player::Instance().GetPosition().z <= 3001.0f)meterCount = 3;
+
+			//ステージレベルアップ処理
+			/*if (Player::Instance().GetPosition().z >= 1500.0f && Player::Instance().GetPosition().z <= 1501.0f)
+			{
+				stages.at(0)->stageRandWidth = 8;
+			}*/
 
 			//ステージ更新時にランダムで決定されたパターンを更新
 			stages.at(i)->stageRand = r;
@@ -45,7 +53,14 @@ void StageManager::Update(float elapsedTime)
 	}
 
 	//次に描画されるステージのパターンをランダムで決定
-	if (stages.at(0)->GetPosition().z < Player::Instance().GetPosition().z)r = rand() % stages.at(0)->stageRandWidth;
+	if (stages.at(0)->GetPosition().z < Player::Instance().GetPosition().z)
+	{
+		if (Player::Instance().GetPosition().z >= 1000.0f * meterCount && Player::Instance().GetPosition().z <= 1030.0f * meterCount)
+		{
+			r = 9;
+		}
+		else r = rand() % stages.at(0)->stageRandWidth;
+	}
 
 	//更新
 	for (StageBase* stageBase : stages)

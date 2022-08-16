@@ -53,6 +53,8 @@ private:
 	//乱数
 	int r = 0;
 
+	//メートルカウント
+	int meterCount = 1;
 
 	const int stageMax = 10;
 };
