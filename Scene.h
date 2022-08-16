@@ -243,6 +243,12 @@ private:
 	//BGM用
 	std::unique_ptr<SoundSource> BGM;
 
+	//視野角用
+	float fov;
+
+	//プレイヤーとカメラの距離用
+	float plCamSpace;
+
 	// フェードインアウトフラグ
 	bool fadeInFlg = false;
 	bool fadeOutFlg = false;
@@ -266,6 +272,8 @@ public:
 
 	//リザルトランキング計算関数
 	void ResultMeter();
+
+	void UIRender();
 
 	//ライトセット
 	static void SetDirLight(DirectX::XMFLOAT3 dir, DirectX::XMFLOAT3 color);
