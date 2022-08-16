@@ -61,6 +61,33 @@ public:
 	//ギミック更新処理
 	void GimmickUpdate();
 
+	void InvincibleUpdate();
+
+	//プレイヤカラーセット関数
+	void SetPlayerColor(DirectX::XMFLOAT4 color) { Color = color; }
+
+	//RGBゲット関数
+	float GetR() { return R; }
+	float GetG() { return G; }
+	float GetB() { return B; }
+
+	//ライトブルーフラグゲット関数
+	const bool& GetLightBlueFlg() const { return LightBlueGimmickFlg; }
+
+	//無敵フラグゲット関数
+	bool GetInvincibleFlg() { return playerInvincibleFlg; }
+
+	//無敵タイマーゲット関数
+	float GetInvincibleTime() { return playerInvincibleTime; }
+
+	//ギミック用フラグ
+	bool RedGimmickFlg = false;
+	bool GreenGimmickFlg = false;
+	bool BlueGimmickFlg = false;
+	bool YellowGimmickFlg = false;
+	bool PurpleGimmickFlg = false;
+	bool LightBlueGimmickFlg = false;
+
 	//SE用
 	std::unique_ptr<SoundSource> gimmickSE;
 	std::unique_ptr<SoundSource> speedUpSE;
@@ -82,18 +109,27 @@ private:
 	float				moveSpeed = 6.0f;
 	float				turnSpeed = DirectX::XMConvertToRadians(720);
 
-	float               stageSideEndPos = 1.4f * 3.0f;	 //ステージの端っこの当たり判定用
+	float               stageSideEndPos = 1.4f * 3.0f;	//ステージの端っこの当たり判定用
 
 	int					jumpCount = 0;					//ジャンプした回数カウント用
 	int					jumpLimit = 1;					//ジャンプの回数制限用
 
 	float               saveElapsedTime = 0.0f;			//アニメーションに使うelapsedTime用
 
-	bool                gameOverFlg = false;           //ゲームオーバーフラグ
+	bool                gameOverFlg = false;            //ゲームオーバーフラグ
 
-	bool                debugFlg = false;              //デバッグフラグ
+	bool                debugFlg = false;               //デバッグフラグ
 
-	float               gimmickTime = 0;			   //ギミック用タイム
+	float               blueGimmickTime = 0;			//ギミック用タイム
+	float               yellowGimmickTime = 0;
+	float               purpleGimmickTime = 0;
+
+	bool                reversalFlg = false;            //反転フラグ
+
+	bool                playerInvincibleFlg = false;	//プレイヤー無敵フラグ
+	float               playerInvincibleTime = 0;		//プレイヤ無敵時間
+
+	//コイン関係
 	int                 coinState[3] = { 0 };          //コイン状態
 	float				coinAngle[3] = { 0.1f };       //コイン回転量
 	float				coinPositionY[3] = { 0.0f };   //コイン移動量

@@ -45,6 +45,9 @@ Player::Player()
 	SetScale(DirectX::XMFLOAT3(0.013f, 0.013f, 0.013f));
 	SetAngle(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
+	//プレイヤーカラー設定
+	Color = { 0.7f, 0.7f, 0.7f, 1.0f };
+
 	//スクロールスピード初期化
 	playerSpeed = 0.25f;
 	oldPlayerSpeed = 0.25f;
@@ -100,7 +103,7 @@ void Player::Update(float elapsedTime)
 	if(debugFlg)position.z += playerSpeed;
 
 	//ギミック更新処理
-	GimmickUpdate();
+	if (!playerInvincibleFlg)GimmickUpdate();
 	
 	// 速力更新処理
 	UpdateVelocity(elapsedTime);
@@ -112,10 +115,13 @@ void Player::Update(float elapsedTime)
 	if (!gameOverFlg)InputJump();
 
 	// プレイヤーと障害物との衝突判定
-	CollisionPlayerVsObstacle();
+	if(!playerInvincibleFlg)CollisionPlayerVsObstacle();
 
 	// プレイヤーとコインとの衝突判定
 	CollisionPlayerVsCoin();
+
+	//プレイヤーの無敵処理
+	InvincibleUpdate();
 
 	/*if (KeyInput::KeyRelease() & KEY_X && playerCoinCount == 3 && playerSpeed > 0.25f)
 	{
@@ -190,59 +196,67 @@ void Player::DrawDebugGUI()
 //プレイヤー関係ギミック更新処理
 void Player::GimmickUpdate()
 {
+	//プレイヤー色とスピードの初期値
+	SetPlayerColor({ 1.0f,1.0f,1.0f,1.0f });
+	playerSpeed = oldPlayerSpeed;
+
 	//////////////////
 	//赤パネル
 	//////////////////
-	//スクロール加速処理
 	if (RedGimmickFlg)
 	{
-		gimmickTime = 300.0f;
+		playerCoinCount = 0;
+		SetPlayerColor({ 1.0f,0.0f,0.0f,1.0f });
 	}
 
+	//////////////////
+	//青パネル
+	//////////////////
+	//スクロール加速処理
+	if (BlueGimmickFlg)blueGimmickTime = 300.0f;
 	//ギミックタイムの時間だけスクロールスピードを上げる
-	if (gimmickTime >= 0.0f)
+	if (blueGimmickTime >= 0.0f)
 	{
-		gimmickTime--;
+		blueGimmickTime--;
 		playerSpeed = oldPlayerSpeed + 0.15f;
+		SetPlayerColor({ 0.0f,1.0f,2.0f,1.0f });
+	}
+
+	//////////////////
+	//黄パネル
+	//////////////////
+	if (YellowGimmickFlg)yellowGimmickTime = 300.0f;
+	//ギミックタイムの時間だけ左右操作を反転
+	if (yellowGimmickTime >= 0.0f)
+	{
+		yellowGimmickTime--;
+		reversalFlg = true;
+		SetPlayerColor({ 2.0f,1.0f,0.0f,1.0f });
 	}
 	else
 	{
-		playerSpeed = oldPlayerSpeed;
+		reversalFlg = false;
 	}
 
-	//playerのカラーを変える
-	Color = { R,G,B,1.0f };
-	if (gimmickTime > 0)
+	//////////////////
+	//紫パネル
+	//////////////////
+	if (PurpleGimmickFlg)purpleGimmickTime = 300.0f;
+	//ギミックタイムの時間だけスクロールスピードを下げる
+	if (purpleGimmickTime >= 0.0f)
 	{
-		switch (colorState)
-		{
-		case REDMINUS:
-			G -= 0.05f;
-			B -= 0.05f;
-			if (G < 0.0f)
-			{
-				colorState = REDPULS;
-			}
-			break;
-		case REDPULS:
-			G += 0.05f;
-			B += 0.05f;
-			if (G > 1.0f)
-			{
-				colorState = REDMINUS;
-			}
-			break;
-		}
-	}
-	else
-	{
-		if (G < 1.0f)
-		{
-			G += 0.01f;
-			B += 0.01f;
-		}
+		purpleGimmickTime--;
+		playerSpeed = oldPlayerSpeed - 0.15f;
+		SetPlayerColor({ 1.0f,0.0f,1.0f,1.0f });
 	}
 
+	//青と黄色を踏んだ時
+	if (blueGimmickTime >= 0.0f && yellowGimmickTime >= 0.0f)
+	{
+		SetPlayerColor({ 0.0f,1.0f,0.0f,1.0f });
+	}
+
+	
 	///////////////
 	//緑パネル
 	///////////////
@@ -257,6 +271,78 @@ void Player::GimmickUpdate()
 			Jump(28.5f);
 		}
 	}
+}
+
+//プレイヤー無敵更新処理
+void Player::InvincibleUpdate()
+{
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	//無敵の準備完了を知らせるプレイヤー点滅処理
+	if (playerCoinCount >= 5)
+	{
+		SetPlayerColor({ R,R,R,1.0f });
+		switch (colorState)
+		{
+		case 0:
+			R -= 0.1f;
+			if (R < 0.5f)colorState = 1;
+			break;
+		case 1:
+			R += 0.1f;
+			if (R > 1.0f)colorState = 0;
+			break;
+		}
+
+	}
+
+	//5個コインをためてBボタンで無敵モードに入る
+	if (playerCoinCount >= 5 && gamePad.GetButtonDown() & GamePad::BTN_B)
+	{
+		playerInvincibleTime = 600;
+		playerCoinCount -= 5;
+	}
+	if (playerInvincibleTime >= 0)
+	{
+		//時間を減らしてる
+		playerInvincibleTime--;
+
+		playerInvincibleFlg = true;
+
+		//プレイヤーのスピードを無敵中だけアップ
+		playerSpeed = oldPlayerSpeed + 0.40f;
+
+		//無敵中がわかりやすいように色を変えている
+		SetPlayerColor({ R,G,B,1.0f });
+		switch (colorState)
+		{
+		case 0:
+			R -= 0.1f;
+			if (R < 0.0f)colorState = 1;
+			break;
+		case 1:
+			R += 0.1f;
+			if (R > 1.0f)colorState = 2;
+			break;
+		case 2:
+			G -= 0.1f;
+			if (G < 0.0f)colorState = 3;
+			break;
+		case 3:
+			G += 0.1f;
+			if (G > 1.0f)colorState = 4;
+			break;
+		case 4:
+			B -= 0.1f;
+			if (B < 0.0f)colorState = 5;
+			break;
+		case 5:
+			B += 0.1f;
+			if (B > 1.0f)colorState = 0;
+			break;
+		}
+	}
+	else playerInvincibleFlg = false;
 }
 
 // スティック入力値から移動ベクトルを取得
@@ -301,8 +387,10 @@ DirectX::XMFLOAT3 Player::GetMoveVec()const
 	// スティックの垂直入力値をカメラ前方向に反映し、
 	// 進行ベクトルを計算
 	DirectX::XMFLOAT3 vec;
+	//黄色の床を踏んだ時の左右反転処理
+	if (reversalFlg)vec.x = -ax;
+	else vec.x = ax;
 	//vec.x = (cameraRightX * ax) + (cameraFrontX * ay);
-	vec.x = ax;
 	//vec.z = (cameraRightZ * ax) + (cameraFrontZ * ay);
 	if (debugFlg)
 	{
